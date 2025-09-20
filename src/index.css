@@ -2,41 +2,89 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* AI Audit & Governance Platform Design System */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base colors - Professional enterprise palette */
+    --background: 248 250 252;
+    --foreground: 203 24% 12%;
 
+    /* Cards & surfaces */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 203 24% 12%;
+    --card-elevated: 0 0% 98%;
 
+    /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 203 24% 12%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Professional blue */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 217 91% 70%;
+    --primary-deep: 217 91% 45%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Sophisticated gray */
+    --secondary: 215 25% 97%;
+    --secondary-foreground: 203 24% 12%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted tones */
+    --muted: 215 25% 97%;
+    --muted-foreground: 210 10% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Trust blue */
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Status colors for health scores */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 142 71% 95%;
+    
+    --warning: 45 93% 58%;
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 45 93% 95%;
+    
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+    --danger-light: 0 84% 95%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Governance colors */
+    --audit: 217 91% 60%;
+    --audit-foreground: 0 0% 100%;
+    --governance: 142 71% 45%;
+    --governance-foreground: 0 0% 100%;
+    --risk: 262 52% 47%;
+    --risk-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders & inputs */
+    --border: 215 20% 90%;
+    --input: 215 20% 90%;
+    --ring: 217 91% 60%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 70%));
+    --gradient-dashboard: linear-gradient(180deg, hsl(248 250 252) 0%, hsl(241 245 249) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(0 0% 98%) 100%);
+    --gradient-status-success: linear-gradient(135deg, hsl(142 71% 45%), hsl(142 71% 55%));
+    --gradient-status-warning: linear-gradient(135deg, hsl(45 93% 58%), hsl(45 93% 68%));
+    --gradient-status-danger: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 70%));
+
+    /* Shadows for depth */
+    --shadow-card: 0 1px 3px 0 hsl(203 24% 12% / 0.1), 0 1px 2px -1px hsl(203 24% 12% / 0.1);
+    --shadow-elevated: 0 4px 6px -1px hsl(203 24% 12% / 0.1), 0 2px 4px -2px hsl(203 24% 12% / 0.1);
+    --shadow-dashboard: 0 10px 15px -3px hsl(203 24% 12% / 0.1), 0 4px 6px -4px hsl(203 24% 12% / 0.1);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +104,71 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark mode - Professional enterprise dark theme */
+    --background: 203 23% 8%;
+    --foreground: 215 25% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 203 23% 10%;
+    --card-foreground: 215 25% 95%;
+    --card-elevated: 203 23% 12%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 203 23% 10%;
+    --popover-foreground: 215 25% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 217 91% 65%;
+    --primary-foreground: 203 23% 8%;
+    --primary-glow: 217 91% 75%;
+    --primary-deep: 217 91% 50%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 203 23% 15%;
+    --secondary-foreground: 215 25% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 203 23% 15%;
+    --muted-foreground: 215 15% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 217 91% 65%;
+    --accent-foreground: 203 23% 8%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* Status colors - adjusted for dark mode */
+    --success: 142 71% 50%;
+    --success-foreground: 203 23% 8%;
+    --success-light: 142 71% 15%;
+    
+    --warning: 45 93% 63%;
+    --warning-foreground: 203 23% 8%;
+    --warning-light: 45 93% 15%;
+    
+    --danger: 0 84% 65%;
+    --danger-foreground: 203 23% 8%;
+    --danger-light: 0 84% 15%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    /* Governance colors - dark mode */
+    --audit: 217 91% 65%;
+    --audit-foreground: 203 23% 8%;
+    --governance: 142 71% 50%;
+    --governance-foreground: 203 23% 8%;
+    --risk: 262 52% 55%;
+    --risk-foreground: 203 23% 8%;
+
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 203 23% 8%;
+
+    --border: 203 23% 20%;
+    --input: 203 23% 20%;
+    --ring: 217 91% 65%;
+
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 65%), hsl(217 91% 75%));
+    --gradient-dashboard: linear-gradient(180deg, hsl(203 23% 8%) 0%, hsl(203 23% 10%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(203 23% 10%) 0%, hsl(203 23% 12%) 100%);
+    --gradient-status-success: linear-gradient(135deg, hsl(142 71% 50%), hsl(142 71% 60%));
+    --gradient-status-warning: linear-gradient(135deg, hsl(45 93% 63%), hsl(45 93% 73%));
+    --gradient-status-danger: linear-gradient(135deg, hsl(0 84% 65%), hsl(0 84% 75%));
+
+    /* Dark shadows */
+    --shadow-card: 0 1px 3px 0 hsl(0 0% 0% / 0.3), 0 1px 2px -1px hsl(0 0% 0% / 0.3);
+    --shadow-elevated: 0 4px 6px -1px hsl(0 0% 0% / 0.3), 0 2px 4px -2px hsl(0 0% 0% / 0.3);
+    --shadow-dashboard: 0 10px 15px -3px hsl(0 0% 0% / 0.3), 0 4px 6px -4px hsl(0 0% 0% / 0.3);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
