@@ -1,0 +1,21 @@
+TransactionID,Date,Account,Description,Amount,Category,Risk_Flag
+TXN-2024-001,2024-01-15,ACC-1001,Office Supplies Purchase,245.67,Operating Expenses,Low
+TXN-2024-002,2024-01-16,ACC-1002,Software License Renewal,2400.00,Technology,Low
+TXN-2024-003,2024-01-17,ACC-1001,Unusual Cash Withdrawal,15000.00,Cash Management,High
+TXN-2024-004,2024-01-18,ACC-1003,Travel Expenses - Conference,890.45,Travel,Medium
+TXN-2024-005,2024-01-19,ACC-1001,Client Entertainment,456.78,Marketing,Low
+TXN-2024-006,2024-01-20,ACC-1002,Equipment Purchase,8500.00,Capital Expenditure,Medium
+TXN-2024-007,2024-01-21,ACC-1004,Vendor Payment - Late Hours,3200.00,Consulting,Medium
+TXN-2024-008,2024-01-22,ACC-1001,Office Rent,4500.00,Facilities,Low
+TXN-2024-009,2024-01-23,ACC-1003,Duplicate Payment to Vendor,1200.00,Accounts Payable,High
+TXN-2024-010,2024-01-24,ACC-1002,Marketing Campaign,2800.00,Marketing,Low
+TXN-2024-011,2024-01-25,ACC-1001,Petty Cash Replenishment,500.00,Cash Management,Low
+TXN-2024-012,2024-01-26,ACC-1004,Executive Bonus Payment,25000.00,Payroll,High
+TXN-2024-013,2024-01-27,ACC-1002,Cloud Services,1200.00,Technology,Low
+TXN-2024-014,2024-01-28,ACC-1003,Legal Fees,4800.00,Professional Services,Medium
+TXN-2024-015,2024-01-29,ACC-1001,Utility Bills,890.23,Utilities,Low
+TXN-2024-016,2024-01-30,ACC-1002,Round-Sum Payment to Shell Company,10000.00,Consulting,High
+TXN-2024-017,2024-02-01,ACC-1003,Insurance Premium,2400.00,Insurance,Low
+TXN-2024-018,2024-02-02,ACC-1001,Office Cleaning Services,380.00,Facilities,Low
+TXN-2024-019,2024-02-03,ACC-1004,Training and Development,1500.00,Human Resources,Low
+TXN-2024-020,2024-02-04,ACC-1002,Weekend Transaction - Suspicious Timing,7500.00,Miscellaneous,High

@@ -1,0 +1,16 @@
+Finding_ID,Audit_Date,Department,Finding_Type,Severity,Description,Status,Remediation_Date
+AUD-2024-001,2024-01-10,Finance,Control Deficiency,Medium,Missing segregation of duties in cash handling,Open,2024-03-15
+AUD-2024-002,2024-01-12,IT,Security Vulnerability,High,Unencrypted sensitive data transmission,Remediated,2024-02-01
+AUD-2024-003,2024-01-15,HR,Process Gap,Low,Employee onboarding checklist incomplete,Open,2024-02-28
+AUD-2024-004,2024-01-18,Procurement,Compliance Issue,High,Vendor payments without proper authorization,Open,2024-03-01
+AUD-2024-005,2024-01-20,Operations,Documentation,Medium,Standard operating procedures outdated,In Progress,2024-04-01
+AUD-2024-006,2024-01-22,Finance,Calculation Error,Low,Depreciation schedule minor discrepancy,Remediated,2024-01-30
+AUD-2024-007,2024-01-25,Legal,Policy Violation,High,Contract terms not adhering to company policy,Open,2024-03-30
+AUD-2024-008,2024-01-28,Marketing,Budget Variance,Medium,Campaign spending exceeded approved budget,In Progress,2024-02-15
+AUD-2024-009,2024-02-01,IT,Access Control,Critical,Administrator privileges not properly managed,Open,2024-02-20
+AUD-2024-010,2024-02-03,Finance,Reconciliation,Medium,Bank reconciliation not performed timely,Remediated,2024-02-10
+AUD-2024-011,2024-02-05,Operations,Safety Compliance,High,Emergency procedures not regularly tested,Open,2024-03-15
+AUD-2024-012,2024-02-08,HR,Record Keeping,Low,Personnel files missing required documentation,In Progress,2024-03-01
+AUD-2024-013,2024-02-10,Procurement,Vendor Management,Medium,Vendor performance evaluations overdue,Open,2024-04-01
+AUD-2024-014,2024-02-12,Finance,Revenue Recognition,Critical,Revenue booking timing issues identified,Open,2024-02-28
+AUD-2024-015,2024-02-15,IT,Backup Systems,Medium,Data backup verification not performed,Remediated,2024-02-25
