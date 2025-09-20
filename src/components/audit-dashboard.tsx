@@ -26,6 +26,9 @@ import {
   Settings,
   Bell
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { DataUpload } from "@/components/data-upload";
+import { useState } from "react";
 
 // Mock data for demonstrations
 const riskTrendData = [
@@ -55,6 +58,87 @@ interface AuditDashboardProps {
 }
 
 export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
+  const { toast } = useToast();
+  const [showUpload, setShowUpload] = useState(false);
+
+  const handleUploadData = () => {
+    setShowUpload(true);
+  };
+
+  const handleGenerateReport = () => {
+    toast({
+      title: "Report Generation Started",
+      description: "Your audit report is being generated. You'll be notified when it's ready.",
+    });
+    
+    // Simulate report generation
+    setTimeout(() => {
+      toast({
+        title: "Report Ready",
+        description: "Your audit report has been generated successfully.",
+      });
+    }, 3000);
+  };
+
+  const handleExportAnalysis = () => {
+    toast({
+      title: "Export Started",
+      description: "Your analysis data is being prepared for download.",
+    });
+    
+    // Simulate export
+    setTimeout(() => {
+      const data = {
+        auditHealth: 91,
+        governanceIntegrity: 97,
+        riskIndex: 88,
+        exportDate: new Date().toISOString(),
+        riskTrends: riskTrendData,
+        riskDistribution: riskDistribution,
+        recentAlerts: recentAlerts
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: 'application/json'
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `audit-analysis-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Export Complete",
+        description: "Analysis data has been downloaded successfully.",
+      });
+    }, 2000);
+  };
+
+  const handleAnalysisComplete = (results: any) => {
+    toast({
+      title: "Analysis Complete",
+      description: `Processed ${results.fileName} with ${results.insights.records} records found.`,
+    });
+    setShowUpload(false);
+  };
+
+  if (showUpload) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Data Upload & Analysis</h2>
+          <Button variant="outline" onClick={() => setShowUpload(false)}>
+            Back to Dashboard
+          </Button>
+        </div>
+        <DataUpload onAnalysisComplete={handleAnalysisComplete} />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Health Score Overview */}
@@ -92,15 +176,15 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
-            <Button variant="default" className="flex items-center gap-2">
+            <Button variant="default" className="flex items-center gap-2" onClick={handleUploadData}>
               <Upload className="h-4 w-4" />
               Upload Data
             </Button>
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button variant="outline" className="flex items-center gap-2" onClick={handleGenerateReport}>
               <FileText className="h-4 w-4" />
               Generate Report
             </Button>
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button variant="outline" className="flex items-center gap-2" onClick={handleExportAnalysis}>
               <Download className="h-4 w-4" />
               Export Analysis
             </Button>
