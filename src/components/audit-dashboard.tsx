@@ -29,6 +29,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { DataUpload } from "@/components/data-upload";
 import { SampleDataTester } from "@/components/sample-data-tester";
+import { AlertDetailReport } from "@/components/alert-detail-report";
 import { useState } from "react";
 
 // Realistic audit data based on sample datasets
@@ -48,11 +49,11 @@ const riskDistribution = [
 ];
 
 const recentAlerts = [
-  { id: 1, type: "danger", message: "Critical: Revenue booking timing issues identified in Finance", time: "2 hours ago" },
-  { id: 2, type: "danger", message: "IT Administrator privileges not properly managed", time: "4 hours ago" },
-  { id: 3, type: "warning", message: "Vendor payments without proper authorization in Procurement", time: "1 day ago" },
-  { id: 4, type: "warning", message: "Round-sum payment to shell company flagged", time: "2 days ago" },
-  { id: 5, type: "info", message: "Monthly governance review completed - 94.5% compliance rate", time: "3 days ago" },
+  { id: 1, type: "danger" as const, message: "Critical: Revenue booking timing issues identified in Finance", time: "2 hours ago" },
+  { id: 2, type: "danger" as const, message: "IT Administrator privileges not properly managed", time: "4 hours ago" },
+  { id: 3, type: "warning" as const, message: "Vendor payments without proper authorization in Procurement", time: "1 day ago" },
+  { id: 4, type: "warning" as const, message: "Round-sum payment to shell company flagged", time: "2 days ago" },
+  { id: 5, type: "info" as const, message: "Monthly governance review completed - 94.5% compliance rate", time: "3 days ago" },
 ];
 
 // Sample file analysis results for more realistic testing
@@ -100,6 +101,15 @@ interface AuditDashboardProps {
 export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
   const { toast } = useToast();
   const [showUpload, setShowUpload] = useState(false);
+  const [selectedAlert, setSelectedAlert] = useState<typeof recentAlerts[0] | null>(null);
+
+  const handleAlertClick = (alert: typeof recentAlerts[0]) => {
+    setSelectedAlert(alert);
+  };
+
+  const handleCloseAlertDetail = () => {
+    setSelectedAlert(null);
+  };
 
   const handleUploadData = () => {
     setShowUpload(true);
@@ -394,7 +404,11 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
         <CardContent>
           <div className="space-y-3">
             {recentAlerts.map((alert) => (
-              <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+              <div 
+                key={alert.id} 
+                className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted/70 cursor-pointer transition-colors"
+                onClick={() => handleAlertClick(alert)}
+              >
                 <div className={`h-2 w-2 rounded-full mt-2 ${
                   alert.type === "danger" ? "bg-danger" :
                   alert.type === "warning" ? "bg-warning" : "bg-primary"
@@ -443,6 +457,13 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
           </CardContent>
         </Card>
       )}
+      
+      {/* Alert Detail Report */}
+      <AlertDetailReport 
+        alert={selectedAlert}
+        isOpen={!!selectedAlert}
+        onClose={handleCloseAlertDetail}
+      />
     </div>
   );
 }
