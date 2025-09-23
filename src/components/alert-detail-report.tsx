@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { CausalChainVisualizer } from "@/components/causal-chain-visualizer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -205,6 +206,9 @@ export function AlertDetailReport({ alert, isOpen, onClose }: AlertDetailReportP
         </DialogHeader>
 
         <div className="space-y-6">
+          {/* Causal Chain Visualizer */}
+          <CausalChainVisualizer alert={alert} />
+
           {/* Alert Context & Metadata */}
           <Card>
             <CardHeader>

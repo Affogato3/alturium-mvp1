@@ -49,7 +49,7 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <div className="min-h-screen bg-gradient-to-br from-background to-muted">
+          <div className="min-h-screen bg-background">
             <NavigationHeader
               userRole={user.role}
               userName={user.name}
