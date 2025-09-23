@@ -1,7 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HealthScoreCard } from "@/components/health-score-card";
+import { WhatIfSimulator } from "@/components/what-if-simulator";
+import { ComplianceHeatmap } from "@/components/compliance-heatmap";
+import { AlertClustering } from "@/components/alert-clustering";
+import { TaskManagement } from "@/components/task-management";
 import { 
   LineChart, 
   Line, 
@@ -283,6 +288,112 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
         />
       </div>
 
+      {/* AI-Powered Analytics */}
+      <Tabs defaultValue="simulator" className="w-full">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="simulator">What-If Simulator</TabsTrigger>
+          <TabsTrigger value="heatmap">Compliance Heatmap</TabsTrigger>
+          <TabsTrigger value="clustering">Alert Clusters</TabsTrigger>
+          <TabsTrigger value="tasks">Task Management</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="simulator" className="mt-6">
+          <WhatIfSimulator />
+        </TabsContent>
+
+        <TabsContent value="heatmap" className="mt-6">
+          <ComplianceHeatmap />
+        </TabsContent>
+
+        <TabsContent value="clustering" className="mt-6">
+          <AlertClustering />
+        </TabsContent>
+
+        <TabsContent value="tasks" className="mt-6">
+          <TaskManagement />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Risk Trends Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" />
+                  Risk Trends (6 Months)
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={riskTrendData}>
+                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                      <XAxis dataKey="month" />
+                      <YAxis domain={[0, 100]} />
+                      <Tooltip />
+                      <Line 
+                        type="monotone" 
+                        dataKey="audit" 
+                        stroke="hsl(var(--audit))" 
+                        strokeWidth={2} 
+                        name="Audit Health"
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="governance" 
+                        stroke="hsl(var(--governance))" 
+                        strokeWidth={2}
+                        name="Governance"
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="risk" 
+                        stroke="hsl(var(--risk))" 
+                        strokeWidth={2}
+                        name="Risk Score"
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Risk Distribution */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5" />
+                  Risk Distribution
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={riskDistribution}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }: any) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {riskDistribution.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
+
       {/* Quick Actions */}
       <Card>
         <CardHeader>
@@ -315,83 +426,6 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Risk Trends Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Risk Trends (6 Months)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={riskTrendData}>
-                  <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                  <XAxis dataKey="month" />
-                  <YAxis domain={[0, 100]} />
-                  <Tooltip />
-                  <Line 
-                    type="monotone" 
-                    dataKey="audit" 
-                    stroke="hsl(var(--audit))" 
-                    strokeWidth={2} 
-                    name="Audit Health"
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="governance" 
-                    stroke="hsl(var(--governance))" 
-                    strokeWidth={2}
-                    name="Governance"
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="risk" 
-                    stroke="hsl(var(--risk))" 
-                    strokeWidth={2}
-                    name="Risk Score"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Risk Distribution */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5" />
-              Risk Distribution
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={riskDistribution}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }: any) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {riskDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
 
       {/* Recent Alerts */}
       <Card>
