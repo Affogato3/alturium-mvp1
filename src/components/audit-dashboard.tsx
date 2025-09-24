@@ -7,6 +7,10 @@ import { WhatIfSimulator } from "@/components/what-if-simulator";
 import { ComplianceHeatmap } from "@/components/compliance-heatmap";
 import { AlertClustering } from "@/components/alert-clustering";
 import { TaskManagement } from "@/components/task-management";
+import DecisionRoom from "@/components/decision-room";
+import TeamAlignmentCompass from "@/components/team-alignment-compass";
+import KPIWarRoom from "@/components/kpi-war-room";
+import LeadershipMirror from "@/components/leadership-mirror";
 import { 
   LineChart, 
   Line, 
@@ -290,11 +294,14 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
 
       {/* AI-Powered Analytics */}
       <Tabs defaultValue="simulator" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="simulator">What-If Simulator</TabsTrigger>
-          <TabsTrigger value="heatmap">Compliance Heatmap</TabsTrigger>
-          <TabsTrigger value="clustering">Alert Clusters</TabsTrigger>
-          <TabsTrigger value="tasks">Task Management</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-7">
+          <TabsTrigger value="simulator">What-If</TabsTrigger>
+          <TabsTrigger value="clustering">Alerts</TabsTrigger>
+          <TabsTrigger value="tasks">Tasks</TabsTrigger>
+          <TabsTrigger value="decision-room">Decisions</TabsTrigger>
+          <TabsTrigger value="team-alignment">Alignment</TabsTrigger>
+          <TabsTrigger value="kpi-war-room">KPI Room</TabsTrigger>
+          <TabsTrigger value="leadership-mirror">Leadership</TabsTrigger>
         </TabsList>
 
         <TabsContent value="simulator" className="mt-6">
@@ -311,6 +318,22 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
 
         <TabsContent value="tasks" className="mt-6">
           <TaskManagement />
+        </TabsContent>
+
+        <TabsContent value="decision-room" className="mt-6">
+          <DecisionRoom />
+        </TabsContent>
+
+        <TabsContent value="team-alignment" className="mt-6">
+          <TeamAlignmentCompass />
+        </TabsContent>
+
+        <TabsContent value="kpi-war-room" className="mt-6">
+          <KPIWarRoom />
+        </TabsContent>
+
+        <TabsContent value="leadership-mirror" className="mt-6">
+          <LeadershipMirror />
         </TabsContent>
 
         <TabsContent value="analytics" className="mt-6">
