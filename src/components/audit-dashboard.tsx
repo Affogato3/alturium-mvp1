@@ -11,6 +11,10 @@ import DecisionRoom from "@/components/decision-room";
 import TeamAlignmentCompass from "@/components/team-alignment-compass";
 import KPIWarRoom from "@/components/kpi-war-room";
 import LeadershipMirror from "@/components/leadership-mirror";
+import { InvestmentPortfolio } from "@/components/investment-portfolio";
+import { MarketPulse } from "@/components/market-pulse";
+import { RiskAnalyzer } from "@/components/risk-analyzer";
+import { BudgetPlanner } from "@/components/budget-planner";
 import { 
   LineChart, 
   Line, 
@@ -294,8 +298,12 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
 
       {/* AI-Powered Analytics */}
       <Tabs defaultValue="simulator" className="w-full">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-6 md:grid-cols-11">
           <TabsTrigger value="simulator">What-If</TabsTrigger>
+          <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
+          <TabsTrigger value="market">Market</TabsTrigger>
+          <TabsTrigger value="risk">Risk</TabsTrigger>
+          <TabsTrigger value="budget">Budget</TabsTrigger>
           <TabsTrigger value="clustering">Alerts</TabsTrigger>
           <TabsTrigger value="tasks">Tasks</TabsTrigger>
           <TabsTrigger value="decision-room">Decisions</TabsTrigger>
@@ -306,6 +314,22 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
 
         <TabsContent value="simulator" className="mt-6">
           <WhatIfSimulator />
+        </TabsContent>
+
+        <TabsContent value="portfolio" className="mt-6">
+          <InvestmentPortfolio />
+        </TabsContent>
+
+        <TabsContent value="market" className="mt-6">
+          <MarketPulse />
+        </TabsContent>
+
+        <TabsContent value="risk" className="mt-6">
+          <RiskAnalyzer />
+        </TabsContent>
+
+        <TabsContent value="budget" className="mt-6">
+          <BudgetPlanner />
         </TabsContent>
 
         <TabsContent value="heatmap" className="mt-6">
