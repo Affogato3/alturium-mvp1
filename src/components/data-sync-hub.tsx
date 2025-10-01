@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Cloud, Mail, FileText, MessageSquare, Video, Database, ShoppingCart, Activity } from "lucide-react";
+import { Cloud, Mail, FileText, MessageSquare, Video, Database, ShoppingCart, Activity, TrendingUp, TrendingDown, Minus, Brain, Zap } from "lucide-react";
 
 const integrations = [
   {
@@ -81,11 +81,20 @@ const integrations = [
 ];
 
 const recentSyncs = [
-  { time: '2 mins ago', source: 'Gmail', type: 'Invoice', action: 'Auto-categorized as expense', confidence: 0.94 },
-  { time: '3 mins ago', source: 'Zoom', type: 'Meeting Transcript', action: 'Extracted 3 action items', confidence: 0.89 },
-  { time: '5 mins ago', source: 'Slack', type: 'Decision', action: 'Linked to Q1 budget revision', confidence: 0.92 },
-  { time: '6 mins ago', source: 'Drive', type: 'Contract', action: 'Risk analysis completed', confidence: 0.87 },
-  { time: '8 mins ago', source: 'CRM', type: 'Customer Data', action: 'Churn risk detected for 3 accounts', confidence: 0.91 }
+  { time: '2 mins ago', source: 'Gmail', type: 'Invoice', action: 'Auto-categorized as expense', confidence: 0.94, dataExtracted: 'Revenue: $45,000' },
+  { time: '3 mins ago', source: 'Zoom', type: 'Meeting Transcript', action: 'Extracted 3 action items + budget variance detected', confidence: 0.89, dataExtracted: 'Budget impact: -$12K' },
+  { time: '5 mins ago', source: 'Slack', type: 'Decision', action: 'Linked to Q1 budget revision', confidence: 0.92, dataExtracted: 'Target: +15% growth' },
+  { time: '6 mins ago', source: 'Drive', type: 'Financial Report', action: 'Auto-extracted KPIs: Revenue, Churn, CAC', confidence: 0.91, dataExtracted: '23 metrics parsed' },
+  { time: '8 mins ago', source: 'CRM', type: 'Customer Data', action: 'Churn risk detected for 3 accounts', confidence: 0.91, dataExtracted: 'ARR at risk: $180K' },
+  { time: '10 mins ago', source: 'QuickBooks', type: 'Transaction Log', action: 'Detected expense anomaly in Marketing', confidence: 0.88, dataExtracted: '+240% variance' },
+  { time: '12 mins ago', source: 'Sheets', type: 'KPI Dashboard', action: 'Auto-synced 47 operational metrics', confidence: 0.95, dataExtracted: 'Productivity: +8%' }
+];
+
+const autoDetectedMetrics = [
+  { category: 'Revenue Metrics', metrics: ['MRR', 'ARR', 'Growth Rate', 'Revenue/Customer'], count: 12, trend: 'up' },
+  { category: 'Customer Health', metrics: ['Churn %', 'NPS', 'CAC', 'LTV', 'Retention'], count: 8, trend: 'stable' },
+  { category: 'Operational KPIs', metrics: ['Burn Rate', 'Runway', 'Team Productivity', 'Velocity'], count: 15, trend: 'up' },
+  { category: 'Financial Health', metrics: ['Gross Margin', 'EBITDA', 'Cash Flow', 'Budget Variance'], count: 10, trend: 'down' }
 ];
 
 export const DataSyncHub = () => {
@@ -216,6 +225,82 @@ export const DataSyncHub = () => {
         </CardContent>
       </Card>
 
+      {/* AI Intelligence Overview */}
+      <Card className="bg-gradient-to-br from-primary/10 via-primary/5 to-background border-primary/20">
+        <CardHeader>
+          <div className="flex items-center space-x-2">
+            <Brain className="h-5 w-5 text-primary" />
+            <CardTitle>AI-Powered Intelligence Engine</CardTitle>
+          </div>
+          <CardDescription>Automatically processes raw data without manual configuration</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-lg bg-card border">
+              <div className="flex items-center space-x-2 mb-3">
+                <Zap className="h-4 w-4 text-warning" />
+                <p className="font-semibold">Auto-Detection Capabilities</p>
+              </div>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>• Revenue & expense patterns from transactions</li>
+                <li>• Customer growth & churn signals from CRM</li>
+                <li>• Budget variance from financial reports</li>
+                <li>• Productivity metrics from team data</li>
+                <li>• Risk indicators across all data sources</li>
+              </ul>
+            </div>
+            <div className="p-4 rounded-lg bg-card border">
+              <div className="flex items-center space-x-2 mb-3">
+                <Activity className="h-4 w-4 text-success" />
+                <p className="font-semibold">Real-Time Processing</p>
+              </div>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>• Instant numerical data extraction</li>
+                <li>• Automatic KPI identification</li>
+                <li>• Smart categorization (no manual tags)</li>
+                <li>• Cross-source data correlation</li>
+                <li>• Anomaly detection on all metrics</li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Auto-Detected Metrics */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Auto-Detected Business Metrics</CardTitle>
+          <CardDescription>AI automatically identifies and tracks key metrics without configuration</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {autoDetectedMetrics.map((category, idx) => (
+              <div key={idx} className="p-4 rounded-lg border bg-card">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <Database className="h-4 w-4 text-primary" />
+                    <p className="font-semibold">{category.category}</p>
+                  </div>
+                  {category.trend === 'up' && <TrendingUp className="h-4 w-4 text-success" />}
+                  {category.trend === 'down' && <TrendingDown className="h-4 w-4 text-destructive" />}
+                  {category.trend === 'stable' && <Minus className="h-4 w-4 text-muted-foreground" />}
+                </div>
+                <div className="space-y-2">
+                  <div className="flex flex-wrap gap-1">
+                    {category.metrics.map((metric, midx) => (
+                      <Badge key={midx} variant="outline" className="text-xs">
+                        {metric}
+                      </Badge>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground">{category.count} metrics tracked</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Recent Activity */}
       <Card>
         <CardHeader>
@@ -225,14 +310,15 @@ export const DataSyncHub = () => {
         <CardContent>
           <div className="space-y-4">
             {recentSyncs.map((sync, idx) => (
-              <div key={idx} className="flex items-start justify-between p-3 rounded-lg bg-muted/30">
+              <div key={idx} className="flex items-start justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-1">
                     <Badge variant="outline" className="text-xs">{sync.source}</Badge>
                     <Badge variant="secondary" className="text-xs">{sync.type}</Badge>
                     <span className="text-xs text-muted-foreground">{sync.time}</span>
                   </div>
-                  <p className="text-sm">{sync.action}</p>
+                  <p className="text-sm mb-1">{sync.action}</p>
+                  <p className="text-xs text-primary font-medium">{sync.dataExtracted}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-muted-foreground">Confidence</p>
