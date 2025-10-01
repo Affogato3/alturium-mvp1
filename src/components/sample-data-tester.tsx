@@ -13,25 +13,60 @@ export function SampleDataTester({ onFileTest }: SampleDataTesterProps) {
 
   const sampleFiles = [
     {
+      name: "tech-startup-metrics.csv",
+      description: "10 months of SaaS KPIs: MRR, ARR, churn, CAC, LTV, burn rate",
+      category: "Tech Startup",
+      records: 10,
+      metrics: "Revenue, Growth, Customer"
+    },
+    {
+      name: "retail-operations.csv",
+      description: "Multi-store retail data: sales, inventory, margins, foot traffic",
+      category: "Retail",
+      records: 12,
+      metrics: "Sales, Conversion, Inventory"
+    },
+    {
+      name: "manufacturing-production.csv",
+      description: "Production line metrics: units, defects, efficiency, costs",
+      category: "Manufacturing",
+      records: 12,
+      metrics: "Production, Quality, Cost"
+    },
+    {
+      name: "saas-customer-health.csv",
+      description: "Customer health scores: usage, NPS, risk, engagement",
+      category: "SaaS B2B",
+      records: 12,
+      metrics: "Churn Risk, Adoption, Health"
+    },
+    {
+      name: "ecommerce-performance.csv",
+      description: "Multi-channel e-commerce: conversion, AOV, CAC, ROAS",
+      category: "E-commerce",
+      records: 12,
+      metrics: "Revenue, Marketing, Conversion"
+    },
+    {
       name: "financial-transactions.csv",
       description: "20 financial transactions with risk flags",
       category: "Financial Data",
       records: 20,
-      riskFlags: 5
+      metrics: "Compliance, Risk"
     },
     {
       name: "audit-findings.csv", 
       description: "15 audit findings across departments",
       category: "Audit Reports",
       records: 15,
-      riskFlags: 3
+      metrics: "Compliance, Risk"
     },
     {
       name: "governance-metrics.csv",
       description: "Quarterly governance metrics over 2+ years",
       category: "Governance Data", 
       records: 10,
-      riskFlags: 1
+      metrics: "Compliance, Performance"
     }
   ];
 
@@ -113,7 +148,7 @@ export function SampleDataTester({ onFileTest }: SampleDataTesterProps) {
                 <p className="text-sm text-muted-foreground mb-2">{file.description}</p>
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
                   <span>{file.records} records</span>
-                  <span>{file.riskFlags} risk flags</span>
+                  <span>{file.metrics}</span>
                 </div>
               </div>
               
