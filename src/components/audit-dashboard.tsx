@@ -15,6 +15,13 @@ import { InvestmentPortfolio } from "@/components/investment-portfolio";
 import { MarketPulse } from "@/components/market-pulse";
 import { RiskAnalyzer } from "@/components/risk-analyzer";
 import { BudgetPlanner } from "@/components/budget-planner";
+import { DataSyncHub } from "@/components/data-sync-hub";
+import { DemandPreSignal } from "@/components/demand-pre-signal";
+import { ContractValidator } from "@/components/contract-validator";
+import { MarketAnomalyRadar } from "@/components/market-anomaly-radar";
+import { ExpenseLeakDetector } from "@/components/expense-leak-detector";
+import { TruthLedger } from "@/components/truth-ledger";
+import { EconomicSignalFusion } from "@/components/economic-signal-fusion";
 import { 
   LineChart, 
   Line, 
@@ -298,12 +305,19 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
 
       {/* AI-Powered Analytics */}
       <Tabs defaultValue="simulator" className="w-full">
-        <TabsList className="grid w-full grid-cols-6 md:grid-cols-11">
+        <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 lg:grid-cols-9 gap-1">
           <TabsTrigger value="simulator">What-If</TabsTrigger>
           <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
           <TabsTrigger value="market">Market</TabsTrigger>
           <TabsTrigger value="risk">Risk</TabsTrigger>
           <TabsTrigger value="budget">Budget</TabsTrigger>
+          <TabsTrigger value="data-sync">Data Sync</TabsTrigger>
+          <TabsTrigger value="demand">Demand</TabsTrigger>
+          <TabsTrigger value="contracts">Contracts</TabsTrigger>
+          <TabsTrigger value="anomaly">Anomaly</TabsTrigger>
+          <TabsTrigger value="leaks">Leaks</TabsTrigger>
+          <TabsTrigger value="truth">Truth</TabsTrigger>
+          <TabsTrigger value="signals">Signals</TabsTrigger>
           <TabsTrigger value="clustering">Alerts</TabsTrigger>
           <TabsTrigger value="tasks">Tasks</TabsTrigger>
           <TabsTrigger value="decision-room">Decisions</TabsTrigger>
@@ -330,6 +344,34 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
 
         <TabsContent value="budget" className="mt-6">
           <BudgetPlanner />
+        </TabsContent>
+
+        <TabsContent value="data-sync" className="mt-6">
+          <DataSyncHub />
+        </TabsContent>
+
+        <TabsContent value="demand" className="mt-6">
+          <DemandPreSignal />
+        </TabsContent>
+
+        <TabsContent value="contracts" className="mt-6">
+          <ContractValidator />
+        </TabsContent>
+
+        <TabsContent value="anomaly" className="mt-6">
+          <MarketAnomalyRadar />
+        </TabsContent>
+
+        <TabsContent value="leaks" className="mt-6">
+          <ExpenseLeakDetector />
+        </TabsContent>
+
+        <TabsContent value="truth" className="mt-6">
+          <TruthLedger />
+        </TabsContent>
+
+        <TabsContent value="signals" className="mt-6">
+          <EconomicSignalFusion />
         </TabsContent>
 
         <TabsContent value="heatmap" className="mt-6">
