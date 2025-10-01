@@ -6,24 +6,24 @@
 
 @layer base {
   :root {
-    /* Apple-style design system - Pure white backgrounds with Apple Blue accents */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 13%;
+    /* Premium Executive Dashboard - Light Mode Base */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 10%;
 
-    /* Cards & surfaces - Pure white with subtle borders */
+    /* Cards & surfaces */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 13%;
+    --card-foreground: 0 0% 10%;
     --card-elevated: 0 0% 99%;
 
     /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 13%;
+    --popover-foreground: 0 0% 10%;
 
-    /* Primary - Apple Blue (#007AFF) */
-    --primary: 211 100% 50%;
+    /* Primary - Gold Accent */
+    --primary: 43 74% 49%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 211 100% 60%;
-    --primary-deep: 211 100% 40%;
+    --primary-glow: 43 74% 59%;
+    --primary-deep: 43 74% 39%;
 
     /* Secondary - Light gray backgrounds */
     --secondary: 0 0% 97%;
@@ -104,71 +104,74 @@
   }
 
   .dark {
-    /* Dark mode - Professional enterprise dark theme */
-    --background: 203 23% 8%;
-    --foreground: 215 25% 95%;
+    /* Premium Executive Dark Mode - Luxury Financial Terminal */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
 
-    --card: 203 23% 10%;
-    --card-foreground: 215 25% 95%;
-    --card-elevated: 203 23% 12%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 95%;
+    --card-elevated: 0 0% 12%;
 
-    --popover: 203 23% 10%;
-    --popover-foreground: 215 25% 95%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 217 91% 65%;
-    --primary-foreground: 203 23% 8%;
-    --primary-glow: 217 91% 75%;
-    --primary-deep: 217 91% 50%;
+    /* Gold accent for premium feel */
+    --primary: 43 74% 49%;
+    --primary-foreground: 0 0% 10%;
+    --primary-glow: 43 74% 59%;
+    --primary-deep: 43 74% 39%;
 
-    --secondary: 203 23% 15%;
-    --secondary-foreground: 215 25% 95%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 203 23% 15%;
-    --muted-foreground: 215 15% 65%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 217 91% 65%;
-    --accent-foreground: 203 23% 8%;
+    /* Emerald accent */
+    --accent: 158 64% 52%;
+    --accent-foreground: 0 0% 10%;
 
-    /* Status colors - adjusted for dark mode */
-    --success: 142 71% 50%;
-    --success-foreground: 203 23% 8%;
-    --success-light: 142 71% 15%;
+    /* Status colors - Refined for executive dashboard */
+    --success: 158 64% 52%;
+    --success-foreground: 0 0% 10%;
+    --success-light: 158 64% 20%;
     
-    --warning: 45 93% 63%;
-    --warning-foreground: 203 23% 8%;
-    --warning-light: 45 93% 15%;
+    --warning: 43 96% 56%;
+    --warning-foreground: 0 0% 10%;
+    --warning-light: 43 96% 20%;
     
-    --danger: 0 84% 65%;
-    --danger-foreground: 203 23% 8%;
-    --danger-light: 0 84% 15%;
+    --danger: 0 72% 51%;
+    --danger-foreground: 0 0% 100%;
+    --danger-light: 0 72% 20%;
 
-    /* Governance colors - dark mode */
-    --audit: 217 91% 65%;
-    --audit-foreground: 203 23% 8%;
-    --governance: 142 71% 50%;
-    --governance-foreground: 203 23% 8%;
-    --risk: 262 52% 55%;
-    --risk-foreground: 203 23% 8%;
+    /* Governance colors - Executive palette */
+    --audit: 43 74% 49%;
+    --audit-foreground: 0 0% 10%;
+    --governance: 158 64% 52%;
+    --governance-foreground: 0 0% 10%;
+    --risk: 0 72% 51%;
+    --risk-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 65%;
-    --destructive-foreground: 203 23% 8%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 203 23% 20%;
-    --input: 203 23% 20%;
-    --ring: 217 91% 65%;
+    --border: 0 0% 20%;
+    --input: 0 0% 18%;
+    --ring: 43 74% 49%;
 
-    /* Dark mode gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 65%), hsl(217 91% 75%));
-    --gradient-dashboard: linear-gradient(180deg, hsl(203 23% 8%) 0%, hsl(203 23% 10%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(203 23% 10%) 0%, hsl(203 23% 12%) 100%);
-    --gradient-status-success: linear-gradient(135deg, hsl(142 71% 50%), hsl(142 71% 60%));
-    --gradient-status-warning: linear-gradient(135deg, hsl(45 93% 63%), hsl(45 93% 73%));
-    --gradient-status-danger: linear-gradient(135deg, hsl(0 84% 65%), hsl(0 84% 75%));
+    /* Luxury gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(43 74% 49%), hsl(43 74% 59%));
+    --gradient-dashboard: linear-gradient(180deg, hsl(0 0% 8%) 0%, hsl(0 0% 10%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 10%) 0%, hsl(0 0% 12%) 100%);
+    --gradient-status-success: linear-gradient(135deg, hsl(158 64% 52%), hsl(158 64% 62%));
+    --gradient-status-warning: linear-gradient(135deg, hsl(43 96% 56%), hsl(43 96% 66%));
+    --gradient-status-danger: linear-gradient(135deg, hsl(0 72% 51%), hsl(0 72% 61%));
 
-    /* Dark shadows */
-    --shadow-card: 0 1px 3px 0 hsl(0 0% 0% / 0.3), 0 1px 2px -1px hsl(0 0% 0% / 0.3);
-    --shadow-elevated: 0 4px 6px -1px hsl(0 0% 0% / 0.3), 0 2px 4px -2px hsl(0 0% 0% / 0.3);
-    --shadow-dashboard: 0 10px 15px -3px hsl(0 0% 0% / 0.3), 0 4px 6px -4px hsl(0 0% 0% / 0.3);
+    /* Premium shadows with gold glow */
+    --shadow-card: 0 2px 8px 0 hsl(0 0% 0% / 0.4);
+    --shadow-elevated: 0 8px 16px 0 hsl(0 0% 0% / 0.5);
+    --shadow-dashboard: 0 20px 40px -8px hsl(0 0% 0% / 0.6);
+    --shadow-gold: 0 4px 20px hsl(43 74% 49% / 0.2);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { HealthScoreCard } from "@/components/health-score-card";
 import { WhatIfSimulator } from "@/components/what-if-simulator";
 import { ComplianceHeatmap } from "@/components/compliance-heatmap";
@@ -30,8 +30,6 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer,
-  BarChart,
-  Bar,
   PieChart,
   Pie,
   Cell
@@ -44,15 +42,32 @@ import {
   Download,
   Upload,
   Settings,
-  Bell
+  Bell,
+  Target,
+  Briefcase,
+  Activity,
+  PieChart as PieChartIcon,
+  DollarSign,
+  Database,
+  TrendingDown,
+  FileCheck,
+  Radar,
+  AlertCircle,
+  Book,
+  Radio,
+  LayoutGrid,
+  CheckSquare,
+  Users,
+  Gauge,
+  Eye
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DataUpload } from "@/components/data-upload";
 import { SampleDataTester } from "@/components/sample-data-tester";
 import { AlertDetailReport } from "@/components/alert-detail-report";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
-// Realistic audit data based on sample datasets
 const riskTrendData = [
   { month: "Aug", audit: 84.9, governance: 89.2, risk: 76.3 },
   { month: "Sep", audit: 87.1, governance: 91.5, risk: 78.8 },
@@ -76,7 +91,6 @@ const recentAlerts = [
   { id: 5, type: "info" as const, message: "Monthly governance review completed - 94.5% compliance rate", time: "3 days ago" },
 ];
 
-// Sample file analysis results for more realistic testing
 const sampleAnalysisResults = {
   "financial-transactions.csv": {
     records: 1247,
@@ -113,6 +127,53 @@ const sampleAnalysisResults = {
   }
 };
 
+const navigationCategories = [
+  {
+    title: "Strategic Intelligence",
+    items: [
+      { id: "simulator", label: "What-If Simulator", icon: Target },
+      { id: "portfolio", label: "Investment Portfolio", icon: Briefcase },
+      { id: "market", label: "Market Pulse", icon: Activity },
+      { id: "kpi-war-room", label: "KPI War Room", icon: Gauge },
+    ]
+  },
+  {
+    title: "Risk & Compliance",
+    items: [
+      { id: "risk", label: "Risk Analyzer", icon: Shield },
+      { id: "anomaly", label: "Market Anomaly Radar", icon: Radar },
+      { id: "clustering", label: "Alert Clustering", icon: AlertCircle },
+      { id: "contracts", label: "Contract Validator", icon: FileCheck },
+    ]
+  },
+  {
+    title: "Financial Operations",
+    items: [
+      { id: "budget", label: "Budget Planner", icon: PieChartIcon },
+      { id: "leaks", label: "Expense Leak Detector", icon: TrendingDown },
+      { id: "truth", label: "Truth Ledger", icon: Book },
+      { id: "signals", label: "Economic Signals", icon: Radio },
+    ]
+  },
+  {
+    title: "Data & Insights",
+    items: [
+      { id: "data-sync", label: "Data Sync Hub", icon: Database },
+      { id: "demand", label: "Demand Pre-Signal", icon: TrendingUp },
+      { id: "analytics", label: "Analytics Dashboard", icon: LayoutGrid },
+    ]
+  },
+  {
+    title: "Leadership & Team",
+    items: [
+      { id: "decision-room", label: "Decision Room", icon: Users },
+      { id: "team-alignment", label: "Team Alignment", icon: Target },
+      { id: "leadership-mirror", label: "Leadership Mirror", icon: Eye },
+      { id: "tasks", label: "Task Management", icon: CheckSquare },
+    ]
+  },
+];
+
 interface AuditDashboardProps {
   userRole: "admin" | "auditor" | "founder";
   auditMode: boolean;
@@ -122,6 +183,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
   const { toast } = useToast();
   const [showUpload, setShowUpload] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<typeof recentAlerts[0] | null>(null);
+  const [activeView, setActiveView] = useState("simulator");
 
   const handleAlertClick = (alert: typeof recentAlerts[0]) => {
     setSelectedAlert(alert);
@@ -141,7 +203,6 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
       description: "Your audit report is being generated. You'll be notified when it's ready.",
     });
     
-    // Simulate report generation
     setTimeout(() => {
       toast({
         title: "Report Ready",
@@ -156,7 +217,6 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
       description: "Your analysis data is being prepared for download.",
     });
     
-    // Simulate comprehensive export with realistic data
     setTimeout(() => {
       const data = {
         exportMetadata: {
@@ -224,7 +284,6 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
   };
 
   const handleAnalysisComplete = (results: any) => {
-    // Use realistic analysis based on file type if available
     const fileName = results.fileName.toLowerCase();
     let enhancedResults = results;
     
@@ -247,7 +306,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Data Upload & Analysis</h2>
+          <h2 className="text-3xl font-light tracking-tight">Data Upload & Analysis</h2>
           <Button variant="outline" onClick={() => setShowUpload(false)}>
             Back to Dashboard
           </Button>
@@ -258,7 +317,6 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
             description: `Analyzing ${fileName} with ${content.split('\n').length - 1} records...`,
           });
           
-          // Simulate the file analysis process
           setTimeout(() => {
             const results = {
               fileName,
@@ -276,316 +334,268 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
     );
   }
 
+  const renderContent = () => {
+    switch (activeView) {
+      case "simulator": return <WhatIfSimulator />;
+      case "portfolio": return <InvestmentPortfolio />;
+      case "market": return <MarketPulse />;
+      case "risk": return <RiskAnalyzer />;
+      case "budget": return <BudgetPlanner />;
+      case "data-sync": return <DataSyncHub />;
+      case "demand": return <DemandPreSignal />;
+      case "contracts": return <ContractValidator />;
+      case "anomaly": return <MarketAnomalyRadar />;
+      case "leaks": return <ExpenseLeakDetector />;
+      case "truth": return <TruthLedger />;
+      case "signals": return <EconomicSignalFusion />;
+      case "clustering": return <AlertClustering />;
+      case "tasks": return <TaskManagement />;
+      case "decision-room": return <DecisionRoom />;
+      case "team-alignment": return <TeamAlignmentCompass />;
+      case "kpi-war-room": return <KPIWarRoom />;
+      case "leadership-mirror": return <LeadershipMirror />;
+      case "analytics": return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="border-border/50 shadow-elevated">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-xl font-light">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                Risk Trends
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={riskTrendData}>
+                    <CartesianGrid strokeDasharray="3 3" className="opacity-20" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" style={{ fontSize: '12px' }} />
+                    <YAxis domain={[0, 100]} stroke="hsl(var(--muted-foreground))" style={{ fontSize: '12px' }} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))', 
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }} 
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="audit" 
+                      stroke="hsl(var(--audit))" 
+                      strokeWidth={2} 
+                      name="Audit Health"
+                      dot={{ fill: 'hsl(var(--audit))', r: 4 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="governance" 
+                      stroke="hsl(var(--governance))" 
+                      strokeWidth={2}
+                      name="Governance"
+                      dot={{ fill: 'hsl(var(--governance))', r: 4 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="risk" 
+                      stroke="hsl(var(--risk))" 
+                      strokeWidth={2}
+                      name="Risk Score"
+                      dot={{ fill: 'hsl(var(--risk))', r: 4 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border/50 shadow-elevated">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-xl font-light">
+                <AlertTriangle className="h-5 w-5 text-warning" />
+                Risk Distribution
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={riskDistribution}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }: any) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {riskDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      );
+      default: return <WhatIfSimulator />;
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      {/* Health Score Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <HealthScoreCard
-          title="Audit Health"
-          score={91}
-          type="audit"
-          trend="up"
-          description="Strong compliance posture with minor recommendations"
-        />
-        <HealthScoreCard
-          title="Governance Integrity"
-          score={97}
-          type="governance"
-          trend="up"
-          description="Excellent governance framework implementation"
-        />
-        <HealthScoreCard
-          title="Risk Index"
-          score={88}
-          type="risk"
-          trend="neutral"
-          description="Moderate risk profile with active monitoring"
-        />
+    <div className="flex gap-6 min-h-[calc(100vh-8rem)]">
+      {/* Vertical Navigation Rail */}
+      <div className="w-64 flex-shrink-0">
+        <Card className="h-full border-border/50 shadow-card sticky top-6">
+          <CardHeader className="border-b border-border/50">
+            <CardTitle className="text-lg font-light tracking-wide">Intelligence Hub</CardTitle>
+          </CardHeader>
+          <ScrollArea className="h-[calc(100vh-12rem)]">
+            <div className="p-4 space-y-6">
+              {navigationCategories.map((category) => (
+                <div key={category.title} className="space-y-2">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground px-2">
+                    {category.title}
+                  </h3>
+                  <div className="space-y-1">
+                    {category.items.map((item) => {
+                      const Icon = item.icon;
+                      const isActive = activeView === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => setActiveView(item.id)}
+                          className={cn(
+                            "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200",
+                            isActive 
+                              ? "bg-primary text-primary-foreground shadow-gold font-medium" 
+                              : "text-foreground hover:bg-muted/50"
+                          )}
+                        >
+                          <Icon className="h-4 w-4 flex-shrink-0" />
+                          <span className="truncate">{item.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </Card>
       </div>
 
-      {/* AI-Powered Analytics */}
-      <Tabs defaultValue="simulator" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 lg:grid-cols-9 gap-1">
-          <TabsTrigger value="simulator">What-If</TabsTrigger>
-          <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
-          <TabsTrigger value="market">Market</TabsTrigger>
-          <TabsTrigger value="risk">Risk</TabsTrigger>
-          <TabsTrigger value="budget">Budget</TabsTrigger>
-          <TabsTrigger value="data-sync">Data Sync</TabsTrigger>
-          <TabsTrigger value="demand">Demand</TabsTrigger>
-          <TabsTrigger value="contracts">Contracts</TabsTrigger>
-          <TabsTrigger value="anomaly">Anomaly</TabsTrigger>
-          <TabsTrigger value="leaks">Leaks</TabsTrigger>
-          <TabsTrigger value="truth">Truth</TabsTrigger>
-          <TabsTrigger value="signals">Signals</TabsTrigger>
-          <TabsTrigger value="clustering">Alerts</TabsTrigger>
-          <TabsTrigger value="tasks">Tasks</TabsTrigger>
-          <TabsTrigger value="decision-room">Decisions</TabsTrigger>
-          <TabsTrigger value="team-alignment">Alignment</TabsTrigger>
-          <TabsTrigger value="kpi-war-room">KPI Room</TabsTrigger>
-          <TabsTrigger value="leadership-mirror">Leadership</TabsTrigger>
-        </TabsList>
+      {/* Main Content Area */}
+      <div className="flex-1 space-y-6">
+        {/* Executive KPI Overview - 3 Column Grid */}
+        <div className="grid grid-cols-3 gap-6">
+          <HealthScoreCard
+            title="Audit Health"
+            score={91}
+            type="audit"
+            trend="up"
+            description="Strong compliance posture with minor recommendations"
+          />
+          <HealthScoreCard
+            title="Governance Integrity"
+            score={97}
+            type="governance"
+            trend="up"
+            description="Excellent governance framework implementation"
+          />
+          <HealthScoreCard
+            title="Risk Index"
+            score={88}
+            type="risk"
+            trend="neutral"
+            description="Moderate risk profile with active monitoring"
+          />
+        </div>
 
-        <TabsContent value="simulator" className="mt-6">
-          <WhatIfSimulator />
-        </TabsContent>
-
-        <TabsContent value="portfolio" className="mt-6">
-          <InvestmentPortfolio />
-        </TabsContent>
-
-        <TabsContent value="market" className="mt-6">
-          <MarketPulse />
-        </TabsContent>
-
-        <TabsContent value="risk" className="mt-6">
-          <RiskAnalyzer />
-        </TabsContent>
-
-        <TabsContent value="budget" className="mt-6">
-          <BudgetPlanner />
-        </TabsContent>
-
-        <TabsContent value="data-sync" className="mt-6">
-          <DataSyncHub />
-        </TabsContent>
-
-        <TabsContent value="demand" className="mt-6">
-          <DemandPreSignal />
-        </TabsContent>
-
-        <TabsContent value="contracts" className="mt-6">
-          <ContractValidator />
-        </TabsContent>
-
-        <TabsContent value="anomaly" className="mt-6">
-          <MarketAnomalyRadar />
-        </TabsContent>
-
-        <TabsContent value="leaks" className="mt-6">
-          <ExpenseLeakDetector />
-        </TabsContent>
-
-        <TabsContent value="truth" className="mt-6">
-          <TruthLedger />
-        </TabsContent>
-
-        <TabsContent value="signals" className="mt-6">
-          <EconomicSignalFusion />
-        </TabsContent>
-
-        <TabsContent value="heatmap" className="mt-6">
-          <ComplianceHeatmap />
-        </TabsContent>
-
-        <TabsContent value="clustering" className="mt-6">
-          <AlertClustering />
-        </TabsContent>
-
-        <TabsContent value="tasks" className="mt-6">
-          <TaskManagement />
-        </TabsContent>
-
-        <TabsContent value="decision-room" className="mt-6">
-          <DecisionRoom />
-        </TabsContent>
-
-        <TabsContent value="team-alignment" className="mt-6">
-          <TeamAlignmentCompass />
-        </TabsContent>
-
-        <TabsContent value="kpi-war-room" className="mt-6">
-          <KPIWarRoom />
-        </TabsContent>
-
-        <TabsContent value="leadership-mirror" className="mt-6">
-          <LeadershipMirror />
-        </TabsContent>
-
-        <TabsContent value="analytics" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Risk Trends Chart */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
-                  Risk Trends (6 Months)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={riskTrendData}>
-                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                      <XAxis dataKey="month" />
-                      <YAxis domain={[0, 100]} />
-                      <Tooltip />
-                      <Line 
-                        type="monotone" 
-                        dataKey="audit" 
-                        stroke="hsl(var(--audit))" 
-                        strokeWidth={2} 
-                        name="Audit Health"
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="governance" 
-                        stroke="hsl(var(--governance))" 
-                        strokeWidth={2}
-                        name="Governance"
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="risk" 
-                        stroke="hsl(var(--risk))" 
-                        strokeWidth={2}
-                        name="Risk Score"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Risk Distribution */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5" />
-                  Risk Distribution
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={riskDistribution}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ name, percent }: any) => `${name} ${(percent * 100).toFixed(0)}%`}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {riskDistribution.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="h-5 w-5" />
-            Quick Actions
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-3">
-            <Button variant="default" className="flex items-center gap-2" onClick={handleUploadData}>
-              <Upload className="h-4 w-4" />
-              Upload Data
-            </Button>
-            <Button variant="outline" className="flex items-center gap-2" onClick={handleGenerateReport}>
-              <FileText className="h-4 w-4" />
-              Generate Report
-            </Button>
-            <Button variant="outline" className="flex items-center gap-2" onClick={handleExportAnalysis}>
-              <Download className="h-4 w-4" />
-              Export Analysis
-            </Button>
-            {(userRole === "admin" || userRole === "auditor") && (
-              <Button variant="outline" className="flex items-center gap-2">
-                <Shield className="h-4 w-4" />
-                Audit Console
-              </Button>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-
-      {/* Recent Alerts */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bell className="h-5 w-5" />
-            Recent Alerts
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {recentAlerts.map((alert) => (
-              <div 
-                key={alert.id} 
-                className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted/70 cursor-pointer transition-colors"
-                onClick={() => handleAlertClick(alert)}
-              >
-                <div className={`h-2 w-2 rounded-full mt-2 ${
-                  alert.type === "danger" ? "bg-danger" :
-                  alert.type === "warning" ? "bg-warning" : "bg-primary"
-                }`} />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{alert.message}</p>
-                  <p className="text-xs text-muted-foreground">{alert.time}</p>
-                </div>
-                <Badge variant={
-                  alert.type === "danger" ? "destructive" :
-                  alert.type === "warning" ? "secondary" : "default"
-                }>
-                  {alert.type}
-                </Badge>
+        {/* Quick Actions Bar */}
+        <Card className="border-border/50 shadow-card">
+          <CardContent className="py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex gap-3">
+                <Button 
+                  variant="default" 
+                  className="shadow-gold"
+                  onClick={handleUploadData}
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Upload Data
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={handleGenerateReport}
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  Generate Report
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={handleExportAnalysis}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Analysis
+                </Button>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Auditor Mode Additional Details */}
-      {auditMode && (userRole === "admin" || userRole === "auditor") && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Auditor Console</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="text-center p-4 border rounded-lg">
-                <div className="text-2xl font-bold text-primary">247</div>
-                <div className="text-sm text-muted-foreground">Total Audits</div>
-              </div>
-              <div className="text-center p-4 border rounded-lg">
-                <div className="text-2xl font-bold text-warning">12</div>
-                <div className="text-sm text-muted-foreground">Pending Reviews</div>
-              </div>
-              <div className="text-center p-4 border rounded-lg">
-                <div className="text-2xl font-bold text-success">98.5%</div>
-                <div className="text-sm text-muted-foreground">Compliance Rate</div>
-              </div>
-              <div className="text-center p-4 border rounded-lg">
-                <div className="text-2xl font-bold text-danger">3</div>
-                <div className="text-sm text-muted-foreground">Critical Issues</div>
-              </div>
+              <Badge variant="outline" className="text-xs font-light px-3 py-1">
+                <Bell className="h-3 w-3 mr-1" />
+                {recentAlerts.filter(a => a.type === "danger").length} Critical Alerts
+              </Badge>
             </div>
           </CardContent>
         </Card>
-      )}
-      
-      {/* Alert Detail Report */}
+
+        {/* Dynamic Content Area */}
+        <div className="min-h-[600px]">
+          {renderContent()}
+        </div>
+
+        {/* Recent Alerts - Compact View */}
+        {activeView === "simulator" && (
+          <Card className="border-border/50 shadow-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-xl font-light">
+                <Bell className="h-5 w-5 text-primary" />
+                Recent Alerts
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {recentAlerts.slice(0, 3).map((alert) => (
+                  <div
+                    key={alert.id}
+                    className="flex items-start gap-3 p-3 rounded-lg border border-border/50 hover:bg-muted/30 cursor-pointer transition-all"
+                    onClick={() => handleAlertClick(alert)}
+                  >
+                    <AlertCircle 
+                      className={cn(
+                        "h-5 w-5 mt-0.5 flex-shrink-0",
+                        alert.type === "danger" && "text-danger",
+                        alert.type === "warning" && "text-warning",
+                        alert.type === "info" && "text-primary"
+                      )} 
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground">{alert.message}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{alert.time}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
       <AlertDetailReport 
-        alert={selectedAlert}
-        isOpen={!!selectedAlert}
-        onClose={handleCloseAlertDetail}
+        alert={selectedAlert} 
+        isOpen={selectedAlert !== null}
+        onClose={handleCloseAlertDetail} 
       />
     </div>
   );

@@ -55,45 +55,53 @@ export function HealthScoreCard({
 
   return (
     <Card className={cn(
-      "relative overflow-hidden transition-all duration-300 hover:shadow-elevated border-0",
-      "bg-gradient-to-br from-card to-card-elevated",
+      "relative overflow-hidden transition-all duration-300 hover:shadow-elevated border-border/50",
+      "bg-gradient-to-br from-card to-card-elevated shadow-card",
       className
     )}>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <span className="text-xl">{typeIcon}</span>
-            {title}
-          </CardTitle>
+      <CardHeader className="pb-4 space-y-0">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              {title}
+            </p>
+          </div>
           <div className={cn(
-            "flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium",
-            trend === "up" && "bg-success-light text-success",
-            trend === "down" && "bg-danger-light text-danger",
-            trend === "neutral" && "bg-muted text-muted-foreground"
+            "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
+            trend === "up" && "bg-success/10 text-success border-success/20",
+            trend === "down" && "bg-danger/10 text-danger border-danger/20",
+            trend === "neutral" && "bg-muted text-muted-foreground border-border"
           )}>
             <TrendIcon className="h-3 w-3" />
-            {trend}
+            <span className="capitalize">{trend}</span>
           </div>
         </div>
       </CardHeader>
       
-      <CardContent className="pt-0">
-        <div className="flex items-end gap-4">
+      <CardContent className="pt-0 space-y-4">
+        <div className="flex items-baseline gap-2">
           <div className={cn(
-            "text-4xl font-bold bg-clip-text text-transparent",
+            "text-5xl font-light tracking-tight bg-clip-text text-transparent",
             statusColors.replace("bg-gradient-to-br", "bg-gradient-to-r")
           )}>
             {score}
           </div>
-          <div className="flex-1">
-            <div className="w-full bg-muted rounded-full h-2 mb-2">
-              <div 
-                className={cn("h-2 rounded-full transition-all duration-500", statusColors)}
-                style={{ width: `${score}%` }}
-              />
-            </div>
-            <p className="text-sm text-muted-foreground">{description}</p>
+          <span className="text-2xl font-light text-muted-foreground">/100</span>
+        </div>
+        
+        <div className="space-y-2">
+          <div className="w-full bg-muted/30 rounded-full h-1.5 overflow-hidden">
+            <div 
+              className={cn(
+                "h-1.5 rounded-full transition-all duration-700 ease-out",
+                statusColors
+              )}
+              style={{ width: `${score}%` }}
+            />
           </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            {description}
+          </p>
         </div>
       </CardContent>
     </Card>
