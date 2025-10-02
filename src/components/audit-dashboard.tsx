@@ -24,6 +24,7 @@ import { TruthLedger } from "@/components/truth-ledger";
 import { EconomicSignalFusion } from "@/components/economic-signal-fusion";
 import { MarketIntelligenceHub } from "@/components/market-intelligence-hub";
 import { AIStockTracker } from "@/components/ai-stock-tracker";
+import EventImpactTimeline from "@/components/event-impact-timeline";
 import { 
   LineChart, 
   Line, 
@@ -62,7 +63,8 @@ import {
   Users,
   Gauge,
   Eye,
-  BarChart3
+  BarChart3,
+  Calendar
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DataUpload } from "@/components/data-upload";
@@ -135,6 +137,7 @@ const navigationCategories = [
     title: "Strategic Intelligence",
     items: [
       { id: "intelligence-hub", label: "Intelligence Hub", icon: TrendingUp },
+      { id: "event-impact", label: "Event Impact", icon: Calendar },
       { id: "simulator", label: "What-If Simulator", icon: Target },
       { id: "portfolio", label: "Investment Portfolio", icon: Briefcase },
       { id: "market", label: "Market Pulse", icon: Activity },
@@ -342,6 +345,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
   const renderContent = () => {
     switch (activeView) {
       case "intelligence-hub": return <MarketIntelligenceHub />;
+      case "event-impact": return <EventImpactTimeline />;
       case "simulator": return <WhatIfSimulator />;
       case "portfolio": return <InvestmentPortfolio />;
       case "market": return <MarketPulse />;
