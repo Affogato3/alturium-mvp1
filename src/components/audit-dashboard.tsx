@@ -28,6 +28,7 @@ import EventImpactTimeline from "@/components/event-impact-timeline";
 import ImpactResonanceEngine from "@/components/impact-resonance-engine";
 import { HiddenMarketMapper } from "@/components/hidden-market-mapper";
 import { MarketTimingOptimizer } from "@/components/market-timing-optimizer";
+import { PersonalizedOpportunityEngine } from "@/components/personalized-opportunity-engine";
 import { 
   LineChart,
   Line, 
@@ -69,7 +70,8 @@ import {
   BarChart3,
   Calendar,
   Network,
-  MapPin
+  MapPin,
+  Sparkles
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DataUpload } from "@/components/data-upload";
@@ -151,6 +153,7 @@ const navigationCategories = [
       { id: "kpi-war-room", label: "KPI War Room", icon: Gauge },
       { id: "hidden-market", label: "Hidden Market Mapper", icon: MapPin },
       { id: "timing-optimizer", label: "Market Timing", icon: Calendar },
+      { id: "personalized-opportunity", label: "Opportunity Engine", icon: Sparkles },
     ]
   },
   {
@@ -376,6 +379,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
       case "leadership-mirror": return <LeadershipMirror />;
       case "hidden-market": return <HiddenMarketMapper />;
       case "timing-optimizer": return <MarketTimingOptimizer />;
+      case "personalized-opportunity": return <PersonalizedOpportunityEngine />;
       case "analytics": return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="border-border/50 shadow-elevated">
