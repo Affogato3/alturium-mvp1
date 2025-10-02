@@ -22,6 +22,8 @@ import { MarketAnomalyRadar } from "@/components/market-anomaly-radar";
 import { ExpenseLeakDetector } from "@/components/expense-leak-detector";
 import { TruthLedger } from "@/components/truth-ledger";
 import { EconomicSignalFusion } from "@/components/economic-signal-fusion";
+import { MarketIntelligenceHub } from "@/components/market-intelligence-hub";
+import { AIStockTracker } from "@/components/ai-stock-tracker";
 import { 
   LineChart, 
   Line, 
@@ -59,7 +61,8 @@ import {
   CheckSquare,
   Users,
   Gauge,
-  Eye
+  Eye,
+  BarChart3
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DataUpload } from "@/components/data-upload";
@@ -131,9 +134,11 @@ const navigationCategories = [
   {
     title: "Strategic Intelligence",
     items: [
+      { id: "intelligence-hub", label: "Intelligence Hub", icon: TrendingUp },
       { id: "simulator", label: "What-If Simulator", icon: Target },
       { id: "portfolio", label: "Investment Portfolio", icon: Briefcase },
       { id: "market", label: "Market Pulse", icon: Activity },
+      { id: "stock-tracker", label: "Stock Tracker", icon: BarChart3 },
       { id: "kpi-war-room", label: "KPI War Room", icon: Gauge },
     ]
   },
@@ -183,7 +188,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
   const { toast } = useToast();
   const [showUpload, setShowUpload] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<typeof recentAlerts[0] | null>(null);
-  const [activeView, setActiveView] = useState("simulator");
+  const [activeView, setActiveView] = useState("intelligence-hub");
 
   const handleAlertClick = (alert: typeof recentAlerts[0]) => {
     setSelectedAlert(alert);
@@ -336,9 +341,11 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
 
   const renderContent = () => {
     switch (activeView) {
+      case "intelligence-hub": return <MarketIntelligenceHub />;
       case "simulator": return <WhatIfSimulator />;
       case "portfolio": return <InvestmentPortfolio />;
       case "market": return <MarketPulse />;
+      case "stock-tracker": return <AIStockTracker />;
       case "risk": return <RiskAnalyzer />;
       case "budget": return <BudgetPlanner />;
       case "data-sync": return <DataSyncHub />;
