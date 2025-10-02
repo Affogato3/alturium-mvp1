@@ -19,22 +19,22 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
 
-    /* Primary - Gold Accent */
-    --primary: 43 74% 49%;
+    /* Primary - Professional Blue */
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 43 74% 59%;
-    --primary-deep: 43 74% 39%;
+    --primary-glow: 217 91% 70%;
+    --primary-deep: 217 91% 50%;
 
     /* Secondary - Light gray backgrounds */
     --secondary: 0 0% 97%;
     --secondary-foreground: 0 0% 13%;
 
-    /* Muted tones - Apple style subtle grays */
+    /* Muted tones - Subtle grays */
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
 
-    /* Accent - Apple Blue */
-    --accent: 211 100% 50%;
+    /* Accent - Steel Blue */
+    --accent: 210 50% 60%;
     --accent-foreground: 0 0% 100%;
 
     /* Status colors for health scores */
@@ -53,9 +53,9 @@
     /* Governance colors */
     --audit: 217 91% 60%;
     --audit-foreground: 0 0% 100%;
-    --governance: 142 71% 45%;
+    --governance: 210 50% 55%;
     --governance-foreground: 0 0% 100%;
-    --risk: 262 52% 47%;
+    --risk: 220 40% 50%;
     --risk-foreground: 0 0% 100%;
 
     /* Destructive */
@@ -115,11 +115,11 @@
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 95%;
 
-    /* Gold accent for premium feel */
-    --primary: 43 74% 49%;
-    --primary-foreground: 0 0% 10%;
-    --primary-glow: 43 74% 59%;
-    --primary-deep: 43 74% 39%;
+    /* Blue accent for premium feel */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 217 91% 70%;
+    --primary-deep: 217 91% 50%;
 
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 95%;
@@ -127,9 +127,9 @@
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 60%;
 
-    /* Emerald accent */
-    --accent: 158 64% 52%;
-    --accent-foreground: 0 0% 10%;
+    /* Steel Blue accent */
+    --accent: 210 50% 60%;
+    --accent-foreground: 0 0% 100%;
 
     /* Status colors - Refined for executive dashboard */
     --success: 158 64% 52%;
@@ -145,11 +145,11 @@
     --danger-light: 0 72% 20%;
 
     /* Governance colors - Executive palette */
-    --audit: 43 74% 49%;
-    --audit-foreground: 0 0% 10%;
-    --governance: 158 64% 52%;
-    --governance-foreground: 0 0% 10%;
-    --risk: 0 72% 51%;
+    --audit: 217 91% 60%;
+    --audit-foreground: 0 0% 100%;
+    --governance: 210 50% 55%;
+    --governance-foreground: 0 0% 100%;
+    --risk: 220 40% 50%;
     --risk-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
@@ -157,21 +157,21 @@
 
     --border: 0 0% 20%;
     --input: 0 0% 18%;
-    --ring: 43 74% 49%;
+    --ring: 217 91% 60%;
 
     /* Luxury gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(43 74% 49%), hsl(43 74% 59%));
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 70%));
     --gradient-dashboard: linear-gradient(180deg, hsl(0 0% 8%) 0%, hsl(0 0% 10%) 100%);
     --gradient-card: linear-gradient(145deg, hsl(0 0% 10%) 0%, hsl(0 0% 12%) 100%);
     --gradient-status-success: linear-gradient(135deg, hsl(158 64% 52%), hsl(158 64% 62%));
     --gradient-status-warning: linear-gradient(135deg, hsl(43 96% 56%), hsl(43 96% 66%));
     --gradient-status-danger: linear-gradient(135deg, hsl(0 72% 51%), hsl(0 72% 61%));
 
-    /* Premium shadows with gold glow */
+    /* Premium shadows with blue glow */
     --shadow-card: 0 2px 8px 0 hsl(0 0% 0% / 0.4);
     --shadow-elevated: 0 8px 16px 0 hsl(0 0% 0% / 0.5);
     --shadow-dashboard: 0 20px 40px -8px hsl(0 0% 0% / 0.6);
-    --shadow-gold: 0 4px 20px hsl(43 74% 49% / 0.2);
+    --shadow-blue: 0 4px 20px hsl(217 91% 60% / 0.2);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
