@@ -26,8 +26,9 @@ import { MarketIntelligenceHub } from "@/components/market-intelligence-hub";
 import { AIStockTracker } from "@/components/ai-stock-tracker";
 import EventImpactTimeline from "@/components/event-impact-timeline";
 import ImpactResonanceEngine from "@/components/impact-resonance-engine";
+import { HiddenMarketMapper } from "@/components/hidden-market-mapper";
 import { 
-  LineChart, 
+  LineChart,
   Line, 
   XAxis, 
   YAxis, 
@@ -66,7 +67,8 @@ import {
   Eye,
   BarChart3,
   Calendar,
-  Network
+  Network,
+  MapPin
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DataUpload } from "@/components/data-upload";
@@ -146,6 +148,7 @@ const navigationCategories = [
       { id: "market", label: "Market Pulse", icon: Activity },
       { id: "stock-tracker", label: "Stock Tracker", icon: BarChart3 },
       { id: "kpi-war-room", label: "KPI War Room", icon: Gauge },
+      { id: "hidden-market", label: "Hidden Market Mapper", icon: MapPin },
     ]
   },
   {
@@ -369,6 +372,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
       case "team-alignment": return <TeamAlignmentCompass />;
       case "kpi-war-room": return <KPIWarRoom />;
       case "leadership-mirror": return <LeadershipMirror />;
+      case "hidden-market": return <HiddenMarketMapper />;
       case "analytics": return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="border-border/50 shadow-elevated">
