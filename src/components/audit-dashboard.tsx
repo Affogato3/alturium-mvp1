@@ -25,6 +25,7 @@ import { EconomicSignalFusion } from "@/components/economic-signal-fusion";
 import { MarketIntelligenceHub } from "@/components/market-intelligence-hub";
 import { AIStockTracker } from "@/components/ai-stock-tracker";
 import EventImpactTimeline from "@/components/event-impact-timeline";
+import ImpactResonanceEngine from "@/components/impact-resonance-engine";
 import { 
   LineChart, 
   Line, 
@@ -64,7 +65,8 @@ import {
   Gauge,
   Eye,
   BarChart3,
-  Calendar
+  Calendar,
+  Network
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DataUpload } from "@/components/data-upload";
@@ -138,6 +140,7 @@ const navigationCategories = [
     items: [
       { id: "intelligence-hub", label: "Intelligence Hub", icon: TrendingUp },
       { id: "event-impact", label: "Event Impact", icon: Calendar },
+      { id: "resonance", label: "Impact Resonance", icon: Network },
       { id: "simulator", label: "What-If Simulator", icon: Target },
       { id: "portfolio", label: "Investment Portfolio", icon: Briefcase },
       { id: "market", label: "Market Pulse", icon: Activity },
@@ -346,6 +349,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
     switch (activeView) {
       case "intelligence-hub": return <MarketIntelligenceHub />;
       case "event-impact": return <EventImpactTimeline />;
+      case "resonance": return <ImpactResonanceEngine />;
       case "simulator": return <WhatIfSimulator />;
       case "portfolio": return <InvestmentPortfolio />;
       case "market": return <MarketPulse />;
