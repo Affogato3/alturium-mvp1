@@ -30,6 +30,7 @@ import { HiddenMarketMapper } from "@/components/hidden-market-mapper";
 import { MarketTimingOptimizer } from "@/components/market-timing-optimizer";
 import { MarketSentinel } from "@/components/market-sentinel";
 import { PersonalizedOpportunityEngine } from "@/components/personalized-opportunity-engine";
+import { StockMatrix } from "@/components/stock-matrix";
 import { 
   LineChart,
   Line, 
@@ -156,6 +157,7 @@ const navigationCategories = [
       { id: "timing-optimizer", label: "Market Timing", icon: Calendar },
       { id: "market-sentinel", label: "Market Sentinel", icon: Shield },
       { id: "personalized-opportunity", label: "Opportunity Engine", icon: Sparkles },
+      { id: "stock-matrix", label: "Stock Matrix", icon: TrendingUp },
     ]
   },
   {
@@ -383,6 +385,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
       case "timing-optimizer": return <MarketTimingOptimizer />;
       case "market-sentinel": return <MarketSentinel />;
       case "personalized-opportunity": return <PersonalizedOpportunityEngine />;
+      case "stock-matrix": return <StockMatrix />;
       case "analytics": return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="border-border/50 shadow-elevated">
