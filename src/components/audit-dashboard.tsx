@@ -28,6 +28,7 @@ import EventImpactTimeline from "@/components/event-impact-timeline";
 import ImpactResonanceEngine from "@/components/impact-resonance-engine";
 import { HiddenMarketMapper } from "@/components/hidden-market-mapper";
 import { MarketTimingOptimizer } from "@/components/market-timing-optimizer";
+import { MarketSentinel } from "@/components/market-sentinel";
 import { PersonalizedOpportunityEngine } from "@/components/personalized-opportunity-engine";
 import { 
   LineChart,
@@ -153,6 +154,7 @@ const navigationCategories = [
       { id: "kpi-war-room", label: "KPI War Room", icon: Gauge },
       { id: "hidden-market", label: "Hidden Market Mapper", icon: MapPin },
       { id: "timing-optimizer", label: "Market Timing", icon: Calendar },
+      { id: "market-sentinel", label: "Market Sentinel", icon: Shield },
       { id: "personalized-opportunity", label: "Opportunity Engine", icon: Sparkles },
     ]
   },
@@ -379,6 +381,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
       case "leadership-mirror": return <LeadershipMirror />;
       case "hidden-market": return <HiddenMarketMapper />;
       case "timing-optimizer": return <MarketTimingOptimizer />;
+      case "market-sentinel": return <MarketSentinel />;
       case "personalized-opportunity": return <PersonalizedOpportunityEngine />;
       case "analytics": return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
