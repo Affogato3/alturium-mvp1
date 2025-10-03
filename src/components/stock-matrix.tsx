@@ -338,13 +338,23 @@ export const StockMatrix = () => {
 
   const updateLayoutPreference = async (layout: string) => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-
+    
     setLayoutPreference(layout as 'grid' | 'table' | 'chart');
     
+    if (!user) {
+      toast({ 
+        title: "Layout changed", 
+        description: "Sign in to save your preferences",
+        variant: "default" 
+      });
+      return;
+    }
+
     await supabase
       .from('user_preferences')
       .upsert({ user_id: user.id, layout_preference: layout });
+    
+    toast({ title: "Layout preference saved" });
   };
 
   const handleExport = async (format: 'pdf' | 'word') => {
