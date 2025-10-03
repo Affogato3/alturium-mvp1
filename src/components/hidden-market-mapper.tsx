@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ExportDialog } from "./export-dialog";
+import { useReportExport } from "@/hooks/use-report-export";
 import { useState } from "react";
 import {
   MapPin,
@@ -185,6 +187,8 @@ export function HiddenMarketMapper() {
   const [selectedOpportunity, setSelectedOpportunity] = useState<MarketOpportunity | null>(null);
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"score" | "revenue" | "risk">("score");
+  const [showExportDialog, setShowExportDialog] = useState(false);
+  const { exportReport, isGenerating } = useReportExport();
 
   const filteredOpportunities = mockOpportunities
     .filter(opp => filterCategory === "all" || opp.category === filterCategory)
@@ -197,7 +201,7 @@ export function HiddenMarketMapper() {
   const totalPotentialRevenue = filteredOpportunities.reduce((sum, opp) => sum + opp.revenue, 0);
   const avgProfitScore = Math.round(filteredOpportunities.reduce((sum, opp) => sum + opp.profitScore, 0) / filteredOpportunities.length);
 
-  const handleExport = () => {
+  const handleExport = async (format: "pdf" | "word") => {
     const exportData = {
       generatedAt: new Date().toISOString(),
       totalOpportunities: filteredOpportunities.length,
@@ -210,15 +214,13 @@ export function HiddenMarketMapper() {
       }))
     };
 
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `market-opportunities-${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    await exportReport(
+      "Hidden Market Opportunities Analysis",
+      exportData,
+      `Comprehensive market opportunity analysis identifying ${filteredOpportunities.length} revenue opportunities worth $${(totalPotentialRevenue / 1000000).toFixed(1)}M`,
+      format
+    );
+    setShowExportDialog(false);
   };
 
   return (
@@ -231,7 +233,7 @@ export function HiddenMarketMapper() {
             AI-powered revenue opportunity discovery and competitive intelligence
           </p>
         </div>
-        <Button onClick={handleExport} variant="outline" className="gap-2">
+        <Button onClick={() => setShowExportDialog(true)} variant="outline" className="gap-2" disabled={isGenerating}>
           <Download className="h-4 w-4" />
           Export Analysis
         </Button>
@@ -645,6 +647,13 @@ export function HiddenMarketMapper() {
           )}
         </div>
       </div>
+
+      <ExportDialog
+        open={showExportDialog}
+        onOpenChange={setShowExportDialog}
+        onExport={handleExport}
+        isGenerating={isGenerating}
+      />
     </div>
   );
 }

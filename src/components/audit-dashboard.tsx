@@ -31,6 +31,8 @@ import { MarketTimingOptimizer } from "@/components/market-timing-optimizer";
 import { MarketSentinel } from "@/components/market-sentinel";
 import { PersonalizedOpportunityEngine } from "@/components/personalized-opportunity-engine";
 import { StockMatrix } from "@/components/stock-matrix";
+import { ExportDialog } from "@/components/export-dialog";
+import { useReportExport } from "@/hooks/use-report-export";
 import { 
   LineChart,
   Line, 
@@ -207,6 +209,8 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
   const [showUpload, setShowUpload] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<typeof recentAlerts[0] | null>(null);
   const [activeView, setActiveView] = useState("intelligence-hub");
+  const [showExportDialog, setShowExportDialog] = useState(false);
+  const { exportReport, isGenerating } = useReportExport();
 
   const handleAlertClick = (alert: typeof recentAlerts[0]) => {
     setSelectedAlert(alert);
@@ -234,76 +238,60 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
     }, 3000);
   };
 
-  const handleExportAnalysis = () => {
-    toast({
-      title: "Export Started",
-      description: "Your analysis data is being prepared for download.",
-    });
-    
-    setTimeout(() => {
-      const data = {
-        exportMetadata: {
-          exportDate: new Date().toISOString(),
-          generatedBy: "Audit Dashboard v1.0",
-          dataRange: "2024-01-01 to 2024-02-15",
-          totalRecords: 1443
-        },
-        healthScores: {
-          auditHealth: 91.2,
-          governanceIntegrity: 96.8,
-          riskIndex: 88.1,
-          overallScore: 92.0
-        },
-        trends: {
-          sixMonthRiskTrends: riskTrendData,
-          riskDistribution: riskDistribution,
-          keyMetrics: {
-            totalTransactions: 1247,
-            flaggedTransactions: 8,
-            criticalFindings: 2,
-            complianceRate: 94.5
-          }
-        },
-        alerts: {
-          recentAlerts: recentAlerts,
-          alertSummary: {
-            critical: 2,
-            warning: 3,
-            info: 1,
-            totalActive: 6
-          }
-        },
-        analyticsInsights: {
-          financialAnalysis: sampleAnalysisResults["financial-transactions.csv"],
-          auditFindings: sampleAnalysisResults["audit-findings.csv"],
-          governanceMetrics: sampleAnalysisResults["governance-metrics.csv"]
-        },
-        recommendations: [
-          "Address critical revenue booking timing issues immediately",
-          "Implement stronger IT access controls",
-          "Review vendor authorization processes",
-          "Enhance weekend transaction monitoring",
-          "Conduct quarterly governance reviews"
-        ]
-      };
-      
-      const blob = new Blob([JSON.stringify(data, null, 2)], {
-        type: 'application/json'
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `comprehensive-audit-analysis-${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      toast({
-        title: "Export Complete",
-        description: "Comprehensive analysis data downloaded with 1,443 records analyzed.",
-      });
-    }, 2000);
+  const handleExportAnalysis = async (format: "pdf" | "word") => {
+    const data = {
+      exportMetadata: {
+        exportDate: new Date().toISOString(),
+        generatedBy: "Audit Dashboard v1.0",
+        dataRange: "2024-01-01 to 2024-02-15",
+        totalRecords: 1443
+      },
+      healthScores: {
+        auditHealth: 91.2,
+        governanceIntegrity: 96.8,
+        riskIndex: 88.1,
+        overallScore: 92.0
+      },
+      trends: {
+        sixMonthRiskTrends: riskTrendData,
+        riskDistribution: riskDistribution,
+        keyMetrics: {
+          totalTransactions: 1247,
+          flaggedTransactions: 8,
+          criticalFindings: 2,
+          complianceRate: 94.5
+        }
+      },
+      alerts: {
+        recentAlerts: recentAlerts,
+        alertSummary: {
+          critical: 2,
+          warning: 3,
+          info: 1,
+          totalActive: 6
+        }
+      },
+      analyticsInsights: {
+        financialAnalysis: sampleAnalysisResults["financial-transactions.csv"],
+        auditFindings: sampleAnalysisResults["audit-findings.csv"],
+        governanceMetrics: sampleAnalysisResults["governance-metrics.csv"]
+      },
+      recommendations: [
+        "Address critical revenue booking timing issues immediately",
+        "Implement stronger IT access controls",
+        "Review vendor authorization processes",
+        "Enhance weekend transaction monitoring",
+        "Conduct quarterly governance reviews"
+      ]
+    };
+
+    await exportReport(
+      "Comprehensive Audit Analysis",
+      data,
+      `Complete audit analysis for ${data.exportMetadata.dataRange} with ${data.exportMetadata.totalRecords} records analyzed`,
+      format
+    );
+    setShowExportDialog(false);
   };
 
   const handleAnalysisComplete = (results: any) => {
@@ -568,7 +556,8 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
                 </Button>
                 <Button 
                   variant="outline"
-                  onClick={handleExportAnalysis}
+                  onClick={() => setShowExportDialog(true)}
+                  disabled={isGenerating}
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Export Analysis
@@ -628,6 +617,13 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
         alert={selectedAlert} 
         isOpen={selectedAlert !== null}
         onClose={handleCloseAlertDetail} 
+      />
+
+      <ExportDialog
+        open={showExportDialog}
+        onOpenChange={setShowExportDialog}
+        onExport={handleExportAnalysis}
+        isGenerating={isGenerating}
       />
     </div>
   );

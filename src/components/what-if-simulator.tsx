@@ -3,7 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
-import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, DollarSign, Clock } from "lucide-react";
+import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, DollarSign, Clock, Download } from "lucide-react";
+import { ExportDialog } from "./export-dialog";
+import { useReportExport } from "@/hooks/use-report-export";
 
 interface ScenarioImpact {
   id: string;
@@ -53,6 +55,23 @@ const mockScenarios: ScenarioImpact[] = [
 export function WhatIfSimulator({ alertId, alertTitle = "Unauthorized Vendor Payment" }: WhatIfSimulatorProps) {
   const [timeHorizon, setTimeHorizon] = useState([6]);
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
+  const [showExportDialog, setShowExportDialog] = useState(false);
+  const { exportReport, isGenerating } = useReportExport();
+
+  const handleExport = async (format: "pdf" | "word") => {
+    await exportReport(
+      "What-If Risk Simulation",
+      {
+        alert: alertTitle,
+        timeHorizon: timeHorizon[0],
+        scenarios: mockScenarios,
+        selectedScenario: selectedScenario ? mockScenarios.find(s => s.id === selectedScenario) : null,
+      },
+      `Risk simulation analysis for ${alertTitle} over ${timeHorizon[0]} month timeframe`,
+      format
+    );
+    setShowExportDialog(false);
+  };
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
@@ -187,11 +206,24 @@ export function WhatIfSimulator({ alertId, alertTitle = "Unauthorized Vendor Pay
           <Button className="flex-1">
             Generate Mitigation Plan
           </Button>
-          <Button variant="outline" className="flex-1">
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={() => setShowExportDialog(true)}
+            disabled={isGenerating}
+          >
+            <Download className="h-4 w-4 mr-2" />
             Export Analysis
           </Button>
         </div>
       </CardContent>
+
+      <ExportDialog
+        open={showExportDialog}
+        onOpenChange={setShowExportDialog}
+        onExport={handleExport}
+        isGenerating={isGenerating}
+      />
     </Card>
   );
 }
