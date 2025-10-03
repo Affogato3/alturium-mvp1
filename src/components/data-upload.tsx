@@ -73,49 +73,84 @@ export function DataUpload({ onAnalysisComplete }: DataUploadProps) {
 
     setFiles(prev => [...prev, ...newFiles]);
 
-    // Simulate file processing
-    for (const file of newFiles) {
+    // Process each file
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      const uploadedFile = newFiles[i];
+
       // Upload simulation
       for (let progress = 0; progress <= 100; progress += 20) {
         await new Promise(resolve => setTimeout(resolve, 200));
         setFiles(prev => prev.map(f => 
-          f.id === file.id ? { ...f, progress } : f
+          f.id === uploadedFile.id ? { ...f, progress } : f
         ));
       }
 
       // Processing simulation
       setFiles(prev => prev.map(f => 
-        f.id === file.id ? { ...f, status: "processing", progress: 0 } : f
+        f.id === uploadedFile.id ? { ...f, status: "processing", progress: 0 } : f
       ));
 
-      for (let progress = 0; progress <= 100; progress += 25) {
-        await new Promise(resolve => setTimeout(resolve, 300));
+      try {
+        // Read file content
+        const content = await file.text();
+        
+        // Parse CSV content
+        const lines = content.trim().split('\n');
+        const headers = lines[0]?.split(',') || [];
+        const records = Math.max(0, lines.length - 1);
+        
+        // Analyze data for anomalies
+        let anomalies = 0;
+        for (let j = 1; j < lines.length; j++) {
+          await new Promise(resolve => setTimeout(resolve, 50));
+          const values = lines[j].split(',');
+          
+          // Update progress
+          const progress = Math.round((j / lines.length) * 100);
+          setFiles(prev => prev.map(f => 
+            f.id === uploadedFile.id ? { ...f, progress } : f
+          ));
+          
+          // Detect anomalies: empty cells, wrong column count
+          if (values.length !== headers.length || values.some(v => !v.trim())) {
+            anomalies++;
+          }
+        }
+
+        // Calculate risk score based on anomaly percentage
+        const riskScore = records > 0 ? Math.min(100, Math.round((anomalies / records) * 100)) : 0;
+        
+        const insights = {
+          records,
+          anomalies,
+          riskScore
+        };
+
         setFiles(prev => prev.map(f => 
-          f.id === file.id ? { ...f, progress } : f
+          f.id === uploadedFile.id ? { 
+            ...f, 
+            status: "completed", 
+            progress: 100,
+            insights 
+          } : f
+        ));
+
+        // Trigger analysis complete callback
+        onAnalysisComplete({
+          fileName: file.name,
+          insights
+        });
+      } catch (error) {
+        console.error('Error processing file:', error);
+        setFiles(prev => prev.map(f => 
+          f.id === uploadedFile.id ? { 
+            ...f, 
+            status: "error", 
+            progress: 0
+          } : f
         ));
       }
-
-      // Generate mock insights
-      const insights = {
-        records: Math.floor(Math.random() * 10000) + 1000,
-        anomalies: Math.floor(Math.random() * 50) + 1,
-        riskScore: Math.floor(Math.random() * 40) + 60
-      };
-
-      setFiles(prev => prev.map(f => 
-        f.id === file.id ? { 
-          ...f, 
-          status: "completed", 
-          progress: 100,
-          insights 
-        } : f
-      ));
-
-      // Trigger analysis complete callback
-      onAnalysisComplete({
-        fileName: file.name,
-        insights
-      });
     }
   };
 
