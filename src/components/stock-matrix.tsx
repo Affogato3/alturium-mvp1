@@ -3,6 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -15,9 +19,22 @@ import {
   Users,
   Lightbulb,
   Play,
-  Pause
+  Pause,
+  Bell,
+  Star,
+  Download,
+  Calendar,
+  Grid3x3,
+  List,
+  LineChart as LineChartIcon,
+  Plus,
+  Trash2
 } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, ComposedChart, Bar } from 'recharts';
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { ExportDialog } from "@/components/export-dialog";
+import { useReportExport } from "@/hooks/use-report-export";
 
 // Mock live stock data
 const initialStocks = [
@@ -144,10 +161,68 @@ const priceHistory = [
   { time: '12:30', price: 178.34, volume: 10.2 },
 ];
 
+// Historical candlestick data
+const historicalData = [
+  { date: '2025-01', open: 170.50, high: 178.20, low: 168.30, close: 176.45, volume: 45.2 },
+  { date: '2025-02', open: 176.45, high: 182.10, low: 174.20, close: 180.23, volume: 52.1 },
+  { date: '2025-03', open: 180.23, high: 185.50, low: 177.80, close: 178.45, volume: 48.7 },
+  { date: '2025-04', open: 178.45, high: 183.20, low: 175.90, close: 181.67, volume: 50.3 },
+  { date: '2025-05', open: 181.67, high: 188.40, low: 179.50, close: 185.89, volume: 56.8 },
+  { date: '2025-06', open: 185.89, high: 192.30, low: 183.20, close: 189.12, volume: 62.4 },
+];
+
+// Predictive indicators
+const predictions = [
+  {
+    timeframe: '1 Week',
+    predicted: 182.45,
+    confidence: 78,
+    sentiment: 'Bullish',
+    factors: ['Strong earnings forecast', 'Positive market sentiment', 'Increased institutional buying']
+  },
+  {
+    timeframe: '1 Month',
+    predicted: 195.20,
+    confidence: 72,
+    sentiment: 'Bullish',
+    factors: ['Product launch expected', 'Sector momentum', 'Technical breakout pattern']
+  },
+  {
+    timeframe: '3 Months',
+    predicted: 208.75,
+    confidence: 65,
+    sentiment: 'Bullish',
+    factors: ['Market expansion', 'Revenue growth projection', 'Competitive advantages']
+  },
+];
+
+// Sector performance data
+const sectorData = [
+  { sector: 'Technology', performance: 8.4, correlation: 0.92, trend: 'up', leaders: ['AAPL', 'MSFT', 'NVDA'] },
+  { sector: 'Financial', performance: 3.2, correlation: 0.67, trend: 'up', leaders: ['JPM', 'BAC', 'GS'] },
+  { sector: 'Consumer', performance: -1.8, correlation: 0.45, trend: 'down', leaders: ['AMZN', 'WMT', 'HD'] },
+  { sector: 'Healthcare', performance: 2.1, correlation: 0.34, trend: 'up', leaders: ['JNJ', 'UNH', 'PFE'] },
+  { sector: 'Energy', performance: 5.7, correlation: 0.58, trend: 'up', leaders: ['XOM', 'CVX', 'COP'] },
+];
+
 export const StockMatrix = () => {
   const [stocks, setStocks] = useState(initialStocks);
   const [isLive, setIsLive] = useState(true);
   const [selectedStock, setSelectedStock] = useState(stocks[0]);
+  const [watchlist, setWatchlist] = useState<string[]>([]);
+  const [alerts, setAlerts] = useState<any[]>([]);
+  const [layoutPreference, setLayoutPreference] = useState<'grid' | 'table' | 'chart'>('grid');
+  const [showAlertDialog, setShowAlertDialog] = useState(false);
+  const [showExportDialog, setShowExportDialog] = useState(false);
+  const { toast } = useToast();
+  const { exportReport, isGenerating } = useReportExport();
+
+  // Load user data
+  useEffect(() => {
+    loadWatchlist();
+    loadAlerts();
+    loadPreferences();
+  }, []);
 
   // Simulate live price updates
   useEffect(() => {
@@ -164,6 +239,131 @@ export const StockMatrix = () => {
 
     return () => clearInterval(interval);
   }, [isLive]);
+
+  const loadWatchlist = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from('watchlists')
+      .select('symbol')
+      .eq('user_id', user.id);
+
+    if (data) {
+      setWatchlist(data.map(w => w.symbol));
+    }
+  };
+
+  const loadAlerts = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from('stock_alerts')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('is_active', true);
+
+    if (data) {
+      setAlerts(data);
+    }
+  };
+
+  const loadPreferences = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from('user_preferences')
+      .select('layout_preference')
+      .eq('user_id', user.id)
+      .single();
+
+    if (data) {
+      setLayoutPreference(data.layout_preference as 'grid' | 'table' | 'chart');
+    }
+  };
+
+  const toggleWatchlist = async (symbol: string) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast({ title: "Please sign in to use watchlists", variant: "destructive" });
+      return;
+    }
+
+    if (watchlist.includes(symbol)) {
+      await supabase
+        .from('watchlists')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('symbol', symbol);
+      setWatchlist(prev => prev.filter(s => s !== symbol));
+      toast({ title: "Removed from watchlist" });
+    } else {
+      await supabase
+        .from('watchlists')
+        .insert({ user_id: user.id, symbol, name: stocks.find(s => s.symbol === symbol)?.name || symbol });
+      setWatchlist(prev => [...prev, symbol]);
+      toast({ title: "Added to watchlist" });
+    }
+  };
+
+  const createAlert = async (alertData: any) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast({ title: "Please sign in to create alerts", variant: "destructive" });
+      return;
+    }
+
+    const { error } = await supabase
+      .from('stock_alerts')
+      .insert({ ...alertData, user_id: user.id });
+
+    if (!error) {
+      loadAlerts();
+      toast({ title: "Alert created successfully" });
+      setShowAlertDialog(false);
+    }
+  };
+
+  const deleteAlert = async (alertId: string) => {
+    await supabase
+      .from('stock_alerts')
+      .delete()
+      .eq('id', alertId);
+    
+    loadAlerts();
+    toast({ title: "Alert deleted" });
+  };
+
+  const updateLayoutPreference = async (layout: string) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    setLayoutPreference(layout as 'grid' | 'table' | 'chart');
+    
+    await supabase
+      .from('user_preferences')
+      .upsert({ user_id: user.id, layout_preference: layout });
+  };
+
+  const handleExport = async (format: 'pdf' | 'word') => {
+    const reportTitle = `Stock Matrix Analysis - ${selectedStock.symbol}`;
+    const reportData = {
+      selectedStock,
+      marketEvents,
+      competitorStocks,
+      scenarios,
+      investorBehavior,
+      strategicRecommendations,
+      predictions,
+      sectorData,
+      historicalData
+    };
+    const context = 'Comprehensive stock market analysis including live data, historical trends, competitor analysis, and AI-driven predictions';
+
+    await exportReport(reportTitle, reportData, context, format);
+  };
 
   const getChangeColor = (change: number) => {
     if (change > 0) return 'text-success';
@@ -189,6 +389,37 @@ export const StockMatrix = () => {
           <p className="text-muted-foreground">Real-time market intelligence & strategic recommendations</p>
         </div>
         <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 border rounded-lg p-1">
+            <Button
+              variant={layoutPreference === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => updateLayoutPreference('grid')}
+            >
+              <Grid3x3 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={layoutPreference === 'table' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => updateLayoutPreference('table')}
+            >
+              <List className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={layoutPreference === 'chart' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => updateLayoutPreference('chart')}
+            >
+              <LineChartIcon className="h-4 w-4" />
+            </Button>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowExportDialog(true)}
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export Report
+          </Button>
           <Badge variant={isLive ? "default" : "outline"} className="gap-2">
             <div className={`w-2 h-2 rounded-full ${isLive ? 'bg-success animate-pulse' : 'bg-muted-foreground'}`} />
             {isLive ? 'LIVE' : 'PAUSED'}
@@ -214,46 +445,128 @@ export const StockMatrix = () => {
           <CardDescription>Real-time prices across your ecosystem</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-            {stocks.map((stock) => (
-              <div
-                key={stock.symbol}
-                className="p-4 rounded-lg border bg-card hover:bg-accent/50 cursor-pointer transition-all"
-                onClick={() => setSelectedStock(stock)}
-              >
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <p className="font-bold text-lg">{stock.symbol}</p>
-                    <p className="text-xs text-muted-foreground">{stock.sector}</p>
+          {layoutPreference === 'grid' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+              {stocks.map((stock) => (
+                <div
+                  key={stock.symbol}
+                  className="p-4 rounded-lg border bg-card hover:bg-accent/50 cursor-pointer transition-all"
+                  onClick={() => setSelectedStock(stock)}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <p className="font-bold text-lg">{stock.symbol}</p>
+                      <p className="text-xs text-muted-foreground">{stock.sector}</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleWatchlist(stock.symbol);
+                        }}
+                      >
+                        <Star className={`h-3 w-3 ${watchlist.includes(stock.symbol) ? 'fill-primary text-primary' : ''}`} />
+                      </Button>
+                      {stock.changePercent > 0 ? 
+                        <TrendingUp className="h-4 w-4 text-success" /> : 
+                        <TrendingDown className="h-4 w-4 text-destructive" />
+                      }
+                    </div>
                   </div>
-                  {stock.changePercent > 0 ? 
-                    <TrendingUp className="h-4 w-4 text-success" /> : 
-                    <TrendingDown className="h-4 w-4 text-destructive" />
-                  }
+                  <p className="text-2xl font-bold mb-1">${stock.price.toFixed(2)}</p>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className={getChangeColor(stock.change)}>
+                      {stock.change > 0 ? '+' : ''}{stock.change.toFixed(2)}
+                    </span>
+                    <span className={getChangeColor(stock.changePercent)}>
+                      {stock.changePercent > 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">Vol: {stock.volume}</p>
                 </div>
-                <p className="text-2xl font-bold mb-1">${stock.price.toFixed(2)}</p>
-                <div className="flex items-center justify-between text-sm">
-                  <span className={getChangeColor(stock.change)}>
-                    {stock.change > 0 ? '+' : ''}{stock.change.toFixed(2)}
-                  </span>
-                  <span className={getChangeColor(stock.changePercent)}>
-                    {stock.changePercent > 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">Vol: {stock.volume}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+          {layoutPreference === 'table' && (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-2">Symbol</th>
+                    <th className="text-left p-2">Name</th>
+                    <th className="text-right p-2">Price</th>
+                    <th className="text-right p-2">Change</th>
+                    <th className="text-right p-2">%Change</th>
+                    <th className="text-right p-2">Volume</th>
+                    <th className="text-center p-2">Watch</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stocks.map((stock) => (
+                    <tr key={stock.symbol} className="border-b hover:bg-accent/50 cursor-pointer" onClick={() => setSelectedStock(stock)}>
+                      <td className="p-2 font-bold">{stock.symbol}</td>
+                      <td className="p-2">{stock.name}</td>
+                      <td className="p-2 text-right">${stock.price.toFixed(2)}</td>
+                      <td className={`p-2 text-right ${getChangeColor(stock.change)}`}>
+                        {stock.change > 0 ? '+' : ''}{stock.change.toFixed(2)}
+                      </td>
+                      <td className={`p-2 text-right ${getChangeColor(stock.changePercent)}`}>
+                        {stock.changePercent > 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
+                      </td>
+                      <td className="p-2 text-right">{stock.volume}</td>
+                      <td className="p-2 text-center">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleWatchlist(stock.symbol);
+                          }}
+                        >
+                          <Star className={`h-3 w-3 ${watchlist.includes(stock.symbol) ? 'fill-primary text-primary' : ''}`} />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {layoutPreference === 'chart' && (
+            <ResponsiveContainer width="100%" height={400}>
+              <ComposedChart data={stocks}>
+                <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                <XAxis dataKey="symbol" />
+                <YAxis />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--background))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px'
+                  }} 
+                />
+                <Bar dataKey="price" fill="hsl(var(--primary))" fillOpacity={0.6} />
+                <Line type="monotone" dataKey="changePercent" stroke="hsl(var(--success))" strokeWidth={2} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          )}
         </CardContent>
       </Card>
 
       <Tabs defaultValue="events" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="events">Events & Impact</TabsTrigger>
-          <TabsTrigger value="competitors">Competitor Heatmap</TabsTrigger>
-          <TabsTrigger value="scenarios">Scenario Simulation</TabsTrigger>
-          <TabsTrigger value="investors">Investor Behavior</TabsTrigger>
-          <TabsTrigger value="recommendations">AI Recommendations</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-8 lg:grid-cols-8">
+          <TabsTrigger value="events">Events</TabsTrigger>
+          <TabsTrigger value="historical">Historical</TabsTrigger>
+          <TabsTrigger value="predictions">Predictions</TabsTrigger>
+          <TabsTrigger value="sectors">Sectors</TabsTrigger>
+          <TabsTrigger value="competitors">Competitors</TabsTrigger>
+          <TabsTrigger value="scenarios">Scenarios</TabsTrigger>
+          <TabsTrigger value="investors">Investors</TabsTrigger>
+          <TabsTrigger value="alerts">Alerts</TabsTrigger>
         </TabsList>
 
         {/* Event-to-Stock Analyzer */}
@@ -492,7 +805,311 @@ export const StockMatrix = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {/* Historical Analysis */}
+        <TabsContent value="historical" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                Historical Price Analysis
+              </CardTitle>
+              <CardDescription>Candlestick patterns and volume trends for {selectedStock.symbol}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={400}>
+                <ComposedChart data={historicalData}>
+                  <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                  <XAxis dataKey="date" />
+                  <YAxis yAxisId="price" orientation="left" />
+                  <YAxis yAxisId="volume" orientation="right" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--background))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px'
+                    }} 
+                  />
+                  <Bar yAxisId="volume" dataKey="volume" fill="hsl(var(--muted))" fillOpacity={0.3} />
+                  <Line yAxisId="price" type="monotone" dataKey="high" stroke="hsl(var(--success))" strokeWidth={2} />
+                  <Line yAxisId="price" type="monotone" dataKey="low" stroke="hsl(var(--destructive))" strokeWidth={2} />
+                  <Line yAxisId="price" type="monotone" dataKey="close" stroke="hsl(var(--primary))" strokeWidth={3} />
+                </ComposedChart>
+              </ResponsiveContainer>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div className="p-4 rounded-lg border bg-card">
+                  <p className="text-sm text-muted-foreground mb-1">6M High</p>
+                  <p className="text-2xl font-bold">${Math.max(...historicalData.map(d => d.high)).toFixed(2)}</p>
+                </div>
+                <div className="p-4 rounded-lg border bg-card">
+                  <p className="text-sm text-muted-foreground mb-1">6M Low</p>
+                  <p className="text-2xl font-bold">${Math.min(...historicalData.map(d => d.low)).toFixed(2)}</p>
+                </div>
+                <div className="p-4 rounded-lg border bg-card">
+                  <p className="text-sm text-muted-foreground mb-1">Avg Volume</p>
+                  <p className="text-2xl font-bold">{(historicalData.reduce((sum, d) => sum + d.volume, 0) / historicalData.length).toFixed(1)}M</p>
+                </div>
+                <div className="p-4 rounded-lg border bg-card">
+                  <p className="text-sm text-muted-foreground mb-1">6M Return</p>
+                  <p className={`text-2xl font-bold ${getChangeColor(historicalData[historicalData.length - 1].close - historicalData[0].open)}`}>
+                    +{(((historicalData[historicalData.length - 1].close - historicalData[0].open) / historicalData[0].open) * 100).toFixed(2)}%
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Predictive Indicators */}
+        <TabsContent value="predictions" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="h-5 w-5" />
+                AI-Powered Price Predictions
+              </CardTitle>
+              <CardDescription>Data-driven forecasts for {selectedStock.symbol}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {predictions.map((pred, index) => (
+                  <div key={index} className="p-5 rounded-lg border bg-gradient-to-br from-primary/5 to-primary/0">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h4 className="font-semibold text-lg mb-1">{pred.timeframe} Forecast</h4>
+                        <Badge variant={pred.sentiment === 'Bullish' ? 'default' : 'destructive'}>{pred.sentiment}</Badge>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-3xl font-bold text-primary">${pred.predicted.toFixed(2)}</p>
+                        <p className="text-sm text-muted-foreground">{pred.confidence}% confidence</p>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium">Key Factors:</p>
+                      <ul className="space-y-1">
+                        {pred.factors.map((factor, i) => (
+                          <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                            <span className="text-primary">•</span>
+                            {factor}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Sector Analysis */}
+        <TabsContent value="sectors" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                Sector Performance & Correlations
+              </CardTitle>
+              <CardDescription>Market trends and sector leadership analysis</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {sectorData.map((sector, index) => (
+                  <div key={index} className={`p-4 rounded-lg border ${
+                    sector.trend === 'up' ? 'bg-success/5 border-success/20' : 'bg-destructive/5 border-destructive/20'
+                  }`}>
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h4 className="font-semibold text-lg mb-1">{sector.sector}</h4>
+                        <div className="flex gap-2 flex-wrap">
+                          {sector.leaders.map((leader, i) => (
+                            <Badge key={i} variant="outline">{leader}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className={`text-2xl font-bold ${sector.trend === 'up' ? 'text-success' : 'text-destructive'}`}>
+                          {sector.performance > 0 ? '+' : ''}{sector.performance}%
+                        </p>
+                        <p className="text-sm text-muted-foreground">Correlation: {sector.correlation}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Card className="mt-6 bg-muted/20">
+                <CardContent className="pt-6">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <ComposedChart data={sectorData}>
+                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                      <XAxis dataKey="sector" />
+                      <YAxis />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'hsl(var(--background))', 
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px'
+                        }} 
+                      />
+                      <Bar dataKey="performance" fill="hsl(var(--primary))" />
+                      <Line type="monotone" dataKey="correlation" stroke="hsl(var(--success))" strokeWidth={2} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Alerts Management */}
+        <TabsContent value="alerts" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bell className="h-5 w-5" />
+                    Custom Price Alerts
+                  </CardTitle>
+                  <CardDescription>Manage your stock price notifications</CardDescription>
+                </div>
+                <Dialog open={showAlertDialog} onOpenChange={setShowAlertDialog}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Alert
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Create New Alert</DialogTitle>
+                      <DialogDescription>Set up a custom alert for stock price movements</DialogDescription>
+                    </DialogHeader>
+                    <AlertForm onSubmit={createAlert} stocks={stocks} />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {alerts.length === 0 ? (
+                <div className="text-center py-12">
+                  <Bell className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">No alerts configured yet</p>
+                  <Button className="mt-4" onClick={() => setShowAlertDialog(true)}>
+                    Create Your First Alert
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {alerts.map((alert) => (
+                    <div key={alert.id} className="p-4 rounded-lg border bg-card flex items-center justify-between">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="font-bold">{alert.symbol}</p>
+                          <Badge variant="outline">{alert.alert_type.replace('_', ' ')}</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Threshold: ${alert.threshold_value} • {alert.notification_method}
+                        </p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteAlert(alert.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
+
+      <ExportDialog
+        open={showExportDialog}
+        onOpenChange={setShowExportDialog}
+        onExport={handleExport}
+        isGenerating={isGenerating}
+      />
     </div>
+  );
+};
+
+// Alert Form Component
+const AlertForm = ({ onSubmit, stocks }: { onSubmit: (data: any) => void, stocks: any[] }) => {
+  const [formData, setFormData] = useState({
+    symbol: stocks[0]?.symbol || '',
+    alert_type: 'price_above',
+    threshold_value: '',
+    notification_method: 'in_app'
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({
+      ...formData,
+      threshold_value: parseFloat(formData.threshold_value)
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label>Stock Symbol</Label>
+        <Select value={formData.symbol} onValueChange={(value) => setFormData({ ...formData, symbol: value })}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {stocks.map((stock) => (
+              <SelectItem key={stock.symbol} value={stock.symbol}>
+                {stock.symbol} - {stock.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label>Alert Type</Label>
+        <Select value={formData.alert_type} onValueChange={(value) => setFormData({ ...formData, alert_type: value })}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="price_above">Price Above</SelectItem>
+            <SelectItem value="price_below">Price Below</SelectItem>
+            <SelectItem value="percent_change">Percent Change</SelectItem>
+            <SelectItem value="volume_spike">Volume Spike</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label>Threshold Value</Label>
+        <Input
+          type="number"
+          step="0.01"
+          placeholder="Enter value"
+          value={formData.threshold_value}
+          onChange={(e) => setFormData({ ...formData, threshold_value: e.target.value })}
+          required
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Notification Method</Label>
+        <Select value={formData.notification_method} onValueChange={(value) => setFormData({ ...formData, notification_method: value })}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="in_app">In-App</SelectItem>
+            <SelectItem value="email">Email</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <Button type="submit" className="w-full">Create Alert</Button>
+    </form>
   );
 };
