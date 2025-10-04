@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ const newsIntelligence = [
     impact: -7.2,
     confidence: 87,
     sector: "Technology",
+    url: "https://www.wsj.com/economy/central-banking/federal-reserve-interest-rates",
     aiInsight: "Interest-sensitive sectors in your portfolio may decline 7-10% over next quarter. Debt-heavy assets require immediate review.",
     predictedImpact: {
       stock: -3.5,
@@ -44,6 +45,7 @@ const newsIntelligence = [
     impact: -4.5,
     confidence: 92,
     sector: "Manufacturing",
+    url: "https://www.forbes.com/supply-chain-technology/",
     aiInsight: "Your import dependency on APAC regions creates 15% exposure risk. Production delays projected at 12-18 days.",
     predictedImpact: {
       stock: -2.1,
@@ -65,6 +67,7 @@ const newsIntelligence = [
     impact: 5.8,
     confidence: 78,
     sector: "Technology",
+    url: "https://www.bloomberg.com/technology",
     aiInsight: "Increased consolidation may pressure market share. Competitor acquisitions could erode your position by 1.2% next quarter.",
     predictedImpact: {
       stock: 1.5,
@@ -108,6 +111,38 @@ const scenarioOptions = [
 export const MarketIntelligenceHub = () => {
   const [selectedNews, setSelectedNews] = useState(newsIntelligence[0]);
   const [activeScenarios, setActiveScenarios] = useState<string[]>([]);
+  const [liveNews, setLiveNews] = useState(newsIntelligence);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
+
+  // Simulate live news updates every 5 minutes
+  useEffect(() => {
+    const updateNews = () => {
+      // Update timestamps and slight variations in data
+      setLiveNews(prev => prev.map(news => ({
+        ...news,
+        timestamp: getRelativeTime(news.id),
+        impact: news.impact + (Math.random() - 0.5) * 0.5,
+        confidence: Math.min(99, Math.max(70, news.confidence + (Math.random() - 0.5) * 2))
+      })));
+      setLastUpdate(new Date());
+    };
+
+    const interval = setInterval(updateNews, 300000); // 5 minutes
+    return () => clearInterval(interval);
+  }, []);
+
+  const getRelativeTime = (id: number) => {
+    const hours = id * 2;
+    return `${hours} hours ago`;
+  };
+
+  const handleNewsClick = (news: typeof newsIntelligence[0], event: React.MouseEvent) => {
+    // Only open URL if clicking on the card itself, not when selecting for detail view
+    if ((event.target as HTMLElement).closest('.news-card-content')) {
+      return;
+    }
+    window.open(news.url, '_blank', 'noopener,noreferrer');
+  };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -188,35 +223,53 @@ export const MarketIntelligenceHub = () => {
             <CardDescription>AI-interpreted business insights</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            {newsIntelligence.map((news) => (
+            {liveNews.map((news) => (
               <div 
-                key={news.id} 
-                onClick={() => setSelectedNews(news)}
-                className={`p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
+                key={news.id}
+                className={`p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md group ${
                   selectedNews.id === news.id 
                     ? "bg-primary/5 border-primary/30" 
                     : "bg-muted/20 border-border/30 hover:bg-muted/40"
                 }`}
               >
-                <div className="flex items-start justify-between mb-2">
-                  <Badge variant="outline" className="text-xs">{news.source}</Badge>
-                  <div className="flex items-center gap-2">
-                    <Badge 
-                      variant={news.impact >= 0 ? "default" : "destructive"}
-                      className="text-xs"
-                    >
-                      {news.impact >= 0 ? "+" : ""}{news.impact}%
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">{news.confidence}% conf.</span>
+                <div 
+                  className="news-card-content"
+                  onClick={() => setSelectedNews(news)}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <Badge variant="outline" className="text-xs">{news.source}</Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge 
+                        variant={news.impact >= 0 ? "default" : "destructive"}
+                        className="text-xs"
+                      >
+                        {news.impact >= 0 ? "+" : ""}{news.impact.toFixed(1)}%
+                      </Badge>
+                      <span className="text-xs text-muted-foreground">{Math.round(news.confidence)}% conf.</span>
+                    </div>
+                  </div>
+                  <div className="font-medium text-sm line-clamp-2 mb-1">{news.headline}</div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{news.timestamp}</span>
+                    <ChevronRight className="h-3 w-3" />
                   </div>
                 </div>
-                <div className="font-medium text-sm line-clamp-2 mb-1">{news.headline}</div>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{news.timestamp}</span>
-                  <ChevronRight className="h-3 w-3" />
-                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full mt-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(news.url, '_blank', 'noopener,noreferrer');
+                  }}
+                >
+                  Read Full Article →
+                </Button>
               </div>
             ))}
+            <div className="text-xs text-muted-foreground text-center pt-2">
+              Last updated: {lastUpdate.toLocaleTimeString()}
+            </div>
           </CardContent>
         </Card>
       </div>
