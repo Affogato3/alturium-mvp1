@@ -32,6 +32,7 @@ import { MarketSentinel } from "@/components/market-sentinel";
 import { PersonalizedOpportunityEngine } from "@/components/personalized-opportunity-engine";
 import { StockMatrix } from "@/components/stock-matrix";
 import { LiveValuationMatrix } from "@/components/live-valuation-matrix";
+import { OmniQuantNexus } from "@/components/omniquant-nexus";
 import { ExportDialog } from "@/components/export-dialog";
 import { useReportExport } from "@/hooks/use-report-export";
 import { 
@@ -76,7 +77,8 @@ import {
   Calendar,
   Network,
   MapPin,
-  Sparkles
+  Sparkles,
+  Brain
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DataUpload } from "@/components/data-upload";
@@ -148,6 +150,7 @@ const navigationCategories = [
   {
     title: "Strategic Intelligence",
     items: [
+      { id: "omniquant-nexus", label: "OmniQuant Nexus™", icon: Brain },
       { id: "valuation-matrix", label: "Live Valuation Matrix", icon: Network },
       { id: "intelligence-hub", label: "Intelligence Hub", icon: TrendingUp },
       { id: "event-impact", label: "Event Impact", icon: Calendar },
@@ -210,7 +213,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
   const { toast } = useToast();
   const [showUpload, setShowUpload] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<typeof recentAlerts[0] | null>(null);
-  const [activeView, setActiveView] = useState("valuation-matrix");
+  const [activeView, setActiveView] = useState("omniquant-nexus");
   const [showExportDialog, setShowExportDialog] = useState(false);
   const { exportReport, isGenerating } = useReportExport();
 
@@ -349,6 +352,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
 
   const renderContent = () => {
     switch (activeView) {
+      case "omniquant-nexus": return <OmniQuantNexus />;
       case "valuation-matrix": return <LiveValuationMatrix />;
       case "intelligence-hub": return <MarketIntelligenceHub />;
       case "event-impact": return <EventImpactTimeline />;
