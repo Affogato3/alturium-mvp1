@@ -7,12 +7,18 @@ import { ProfitCurvatureConsole } from "@/components/pse/profit-curvature-consol
 import { DepartmentalPortals } from "@/components/pse/departmental-portals";
 import { ExecutiveMode } from "@/components/pse/executive-mode";
 import { DataSourceConnector } from "@/components/pse/data-source-connector";
+import { AIProfitOptimizer } from "@/components/pse/ai-profit-optimizer";
+import { QuantumScenarioSimulator } from "@/components/pse/quantum-scenario-simulator";
+import { OpportunityDiscovery } from "@/components/pse/opportunity-discovery";
+import { MarketPredictionGrid } from "@/components/pse/market-prediction-grid";
 import { Button } from "@/components/ui/button";
-import { Brain, Minimize2, Maximize2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Brain, Minimize2, Maximize2, Zap, Target, TrendingUp, Activity } from "lucide-react";
 
 export const ProfitSingularityEngine = () => {
   const [executiveMode, setExecutiveMode] = useState(false);
   const [showDataConnector, setShowDataConnector] = useState(false);
+  const [activeTab, setActiveTab] = useState("universe");
 
   if (executiveMode) {
     return (
@@ -82,30 +88,73 @@ export const ProfitSingularityEngine = () => {
         <MacroControlHub />
       </div>
 
-      {/* Main Grid Layout */}
-      <div className="grid grid-cols-12 gap-2 h-[calc(100vh-200px)]">
-        {/* Left Dock - Operational Intelligence */}
-        <div className="col-span-3 overflow-y-auto">
-          <OperationalIntelligenceFeed />
-        </div>
+      {/* Tabbed Interface */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-2">
+        <TabsList className="grid grid-cols-5 w-full bg-black/40 backdrop-blur-sm border border-primary/20">
+          <TabsTrigger value="universe" className="data-[state=active]:bg-primary/20">
+            <Brain className="w-4 h-4 mr-2" />
+            Universe
+          </TabsTrigger>
+          <TabsTrigger value="optimizer" className="data-[state=active]:bg-primary/20">
+            <Zap className="w-4 h-4 mr-2" />
+            AI Optimizer
+          </TabsTrigger>
+          <TabsTrigger value="scenarios" className="data-[state=active]:bg-primary/20">
+            <Activity className="w-4 h-4 mr-2" />
+            Scenarios
+          </TabsTrigger>
+          <TabsTrigger value="opportunities" className="data-[state=active]:bg-primary/20">
+            <Target className="w-4 h-4 mr-2" />
+            Opportunities
+          </TabsTrigger>
+          <TabsTrigger value="predictions" className="data-[state=active]:bg-primary/20">
+            <TrendingUp className="w-4 h-4 mr-2" />
+            Predictions
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Center - Profit Universe Hologram */}
-        <div className="col-span-6 relative">
-          <ProfitUniverseHologram />
-          {/* Floating Departmental Portals */}
-          <DepartmentalPortals />
-        </div>
+        <TabsContent value="universe" className="space-y-2">
+          <div className="grid grid-cols-12 gap-2 h-[calc(100vh-250px)]">
+            {/* Left Dock - Operational Intelligence */}
+            <div className="col-span-3 overflow-y-auto">
+              <OperationalIntelligenceFeed />
+            </div>
 
-        {/* Right Dock - Quantum Risk Panel */}
-        <div className="col-span-3 overflow-y-auto">
-          <QuantumRiskPanel />
-        </div>
-      </div>
+            {/* Center - Profit Universe Hologram */}
+            <div className="col-span-6 relative">
+              <ProfitUniverseHologram />
+              {/* Floating Departmental Portals */}
+              <DepartmentalPortals />
+            </div>
 
-      {/* Bottom Dock - Profit Curvature Console */}
-      <div className="mt-2">
-        <ProfitCurvatureConsole />
-      </div>
+            {/* Right Dock - Quantum Risk Panel */}
+            <div className="col-span-3 overflow-y-auto">
+              <QuantumRiskPanel />
+            </div>
+          </div>
+
+          {/* Bottom Dock - Profit Curvature Console */}
+          <div className="mt-2">
+            <ProfitCurvatureConsole />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="optimizer">
+          <AIProfitOptimizer />
+        </TabsContent>
+
+        <TabsContent value="scenarios">
+          <QuantumScenarioSimulator />
+        </TabsContent>
+
+        <TabsContent value="opportunities">
+          <OpportunityDiscovery />
+        </TabsContent>
+
+        <TabsContent value="predictions">
+          <MarketPredictionGrid />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
