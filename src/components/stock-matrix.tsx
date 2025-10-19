@@ -36,6 +36,9 @@ import { useToast } from "@/hooks/use-toast";
 import { ExportDialog } from "@/components/export-dialog";
 import { useReportExport } from "@/hooks/use-report-export";
 
+// Temporary workaround for Supabase types not being synced
+const supabaseAny = supabase as any;
+
 // Mock live stock data
 const initialStocks = [
   { symbol: 'AAPL', name: 'Apple Inc.', price: 178.45, change: 2.34, changePercent: 1.33, volume: '52.3M', marketCap: '2.81T', sector: 'Technology' },
@@ -244,13 +247,13 @@ export const StockMatrix = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAny
       .from('watchlists')
       .select('symbol')
       .eq('user_id', user.id);
 
     if (data) {
-      setWatchlist(data.map(w => w.symbol));
+      setWatchlist(data.map((w: any) => w.symbol));
     }
   };
 
@@ -258,7 +261,7 @@ export const StockMatrix = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAny
       .from('stock_alerts')
       .select('*')
       .eq('user_id', user.id)
@@ -273,14 +276,14 @@ export const StockMatrix = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAny
       .from('user_preferences')
       .select('layout_preference')
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
     if (data) {
-      setLayoutPreference(data.layout_preference as 'grid' | 'table' | 'chart');
+      setLayoutPreference((data as any).layout_preference as 'grid' | 'table' | 'chart');
     }
   };
 
@@ -292,7 +295,7 @@ export const StockMatrix = () => {
     }
 
     if (watchlist.includes(symbol)) {
-      await supabase
+      await supabaseAny
         .from('watchlists')
         .delete()
         .eq('user_id', user.id)
@@ -300,7 +303,7 @@ export const StockMatrix = () => {
       setWatchlist(prev => prev.filter(s => s !== symbol));
       toast({ title: "Removed from watchlist" });
     } else {
-      await supabase
+      await supabaseAny
         .from('watchlists')
         .insert({ user_id: user.id, symbol, name: stocks.find(s => s.symbol === symbol)?.name || symbol });
       setWatchlist(prev => [...prev, symbol]);
@@ -315,7 +318,7 @@ export const StockMatrix = () => {
       return;
     }
 
-    const { error } = await supabase
+    const { error } = await supabaseAny
       .from('stock_alerts')
       .insert({ ...alertData, user_id: user.id });
 
@@ -327,7 +330,7 @@ export const StockMatrix = () => {
   };
 
   const deleteAlert = async (alertId: string) => {
-    await supabase
+    await supabaseAny
       .from('stock_alerts')
       .delete()
       .eq('id', alertId);
@@ -350,7 +353,7 @@ export const StockMatrix = () => {
       return;
     }
 
-    await supabase
+    await supabaseAny
       .from('user_preferences')
       .upsert({ user_id: user.id, layout_preference: layout });
     
