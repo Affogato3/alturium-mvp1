@@ -34,6 +34,7 @@ import { StockMatrix } from "@/components/stock-matrix";
 import { LiveValuationMatrix } from "@/components/live-valuation-matrix";
 import { OmniQuantNexus } from "@/components/omniquant-nexus";
 import { ProfitSingularityEngine } from "@/components/profit-singularity-engine";
+import { HyperConvergentDataMesh } from "@/components/hyper-convergent-data-mesh";
 import { ExportDialog } from "@/components/export-dialog";
 import { useReportExport } from "@/hooks/use-report-export";
 import { 
@@ -153,6 +154,7 @@ const navigationCategories = [
     items: [
       { id: "omniquant-nexus", label: "OmniQuant Nexus™", icon: Brain },
       { id: "profit-singularity", label: "Profit Singularity Engine™", icon: TrendingUp },
+      { id: "data-mesh", label: "Hyper-Convergent Data Mesh™", icon: Network },
       { id: "valuation-matrix", label: "Live Valuation Matrix", icon: Network },
       { id: "intelligence-hub", label: "Intelligence Hub", icon: TrendingUp },
       { id: "event-impact", label: "Event Impact", icon: Calendar },
@@ -356,6 +358,7 @@ export function AuditDashboard({ userRole, auditMode }: AuditDashboardProps) {
     switch (activeView) {
       case "omniquant-nexus": return <OmniQuantNexus />;
       case "profit-singularity": return <ProfitSingularityEngine />;
+      case "data-mesh": return <HyperConvergentDataMesh />;
       case "valuation-matrix": return <LiveValuationMatrix />;
       case "intelligence-hub": return <MarketIntelligenceHub />;
       case "event-impact": return <EventImpactTimeline />;
