@@ -18,7 +18,8 @@ import {
   Settings, 
   Shield,
   BookOpen,
-  Activity
+  Activity,
+  Network
 } from "lucide-react";
 
 interface NavigationHeaderProps {
@@ -98,6 +99,17 @@ export function NavigationHeader({
 
           {/* Right side - Actions and User Menu */}
           <div className="flex items-center gap-3">
+            {/* CNL Grid Link */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center gap-2"
+              onClick={() => window.location.href = '/cnl-grid'}
+            >
+              <Network className="h-4 w-4 text-[hsl(var(--cnl-flow))]" />
+              <span className="hidden sm:inline text-sm">CNL Grid</span>
+            </Button>
+
             {/* Notifications */}
             <Button variant="ghost" size="sm" className="relative">
               <Bell className="h-4 w-4" />
@@ -140,10 +152,16 @@ export function NavigationHeader({
                   Settings
                 </DropdownMenuItem>
                 {userRole === "admin" && (
-                  <DropdownMenuItem>
-                    <Shield className="mr-2 h-4 w-4" />
-                    Admin Console
-                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem>
+                      <Shield className="mr-2 h-4 w-4" />
+                      Admin Console
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = '/cnl-grid'}>
+                      <Network className="mr-2 h-4 w-4" />
+                      CNL Grid™
+                    </DropdownMenuItem>
+                  </>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={onSignOut} className="text-danger">

@@ -58,6 +58,14 @@
     --risk: 220 40% 50%;
     --risk-foreground: 0 0% 100%;
 
+    /* CNL Grid colors */
+    --cnl-profit: 158 64% 52%;
+    --cnl-profit-foreground: 0 0% 100%;
+    --cnl-risk: 0 84% 60%;
+    --cnl-risk-foreground: 0 0% 100%;
+    --cnl-flow: 189 94% 43%;
+    --cnl-flow-foreground: 0 0% 100%;
+
     /* Destructive */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -151,6 +159,14 @@
     --governance-foreground: 0 0% 100%;
     --risk: 220 40% 50%;
     --risk-foreground: 0 0% 100%;
+
+    /* CNL Grid colors - Dark mode */
+    --cnl-profit: 158 64% 52%;
+    --cnl-profit-foreground: 0 0% 10%;
+    --cnl-risk: 0 72% 51%;
+    --cnl-risk-foreground: 0 0% 100%;
+    --cnl-flow: 189 94% 43%;
+    --cnl-flow-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;

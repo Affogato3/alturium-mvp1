@@ -79,6 +79,12 @@ export default {
           DEFAULT: "hsl(var(--risk))",
           foreground: "hsl(var(--risk-foreground))",
         },
+        // CNL Grid colors
+        cnl: {
+          profit: "hsl(var(--cnl-profit))",
+          risk: "hsl(var(--cnl-risk))",
+          flow: "hsl(var(--cnl-flow))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

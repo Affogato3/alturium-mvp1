@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AlturiumAuth } from "@/components/alturium-auth";
 import { NavigationHeader } from "@/components/navigation-header";
 import { AuditDashboard } from "@/components/audit-dashboard";
+import { CNLGridDashboard } from "@/components/cnl-grid-dashboard";
 import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 import Index from "./pages/Index";
@@ -86,18 +87,26 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <div className="min-h-screen bg-background">
-            <NavigationHeader
-              userRole={userRole}
-              userName={user.user_metadata?.full_name || user.email || "User"}
-              auditMode={auditMode}
-              onAuditModeToggle={() => setAuditMode(!auditMode)}
-              onSignOut={handleSignOut}
-            />
-            <main className="container mx-auto px-4 py-6">
-              <AuditDashboard userRole={userRole} auditMode={auditMode} />
-            </main>
-          </div>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/cnl-grid" element={<CNLGridDashboard />} />
+              <Route path="/" element={
+                <div className="min-h-screen bg-background">
+                  <NavigationHeader
+                    userRole={userRole}
+                    userName={user.user_metadata?.full_name || user.email || "User"}
+                    auditMode={auditMode}
+                    onAuditModeToggle={() => setAuditMode(!auditMode)}
+                    onSignOut={handleSignOut}
+                  />
+                  <main className="container mx-auto px-4 py-6">
+                    <AuditDashboard userRole={userRole} auditMode={auditMode} />
+                  </main>
+                </div>
+              } />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>
