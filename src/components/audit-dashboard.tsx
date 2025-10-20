@@ -213,7 +213,7 @@ const navigationCategories = [
 ];
 
 interface AuditDashboardProps {
-  userRole: "admin" | "auditor" | "founder";
+  userRole: "admin" | "executive" | "analyst" | "auditor";
   auditMode: boolean;
 }
 

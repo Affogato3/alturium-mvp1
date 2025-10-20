@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 interface NavigationHeaderProps {
-  userRole: "admin" | "auditor" | "founder";
+  userRole: "admin" | "executive" | "analyst" | "auditor";
   userName: string;
   auditMode: boolean;
   onAuditModeToggle: () => void;
@@ -40,7 +40,8 @@ export function NavigationHeader({
     switch (role) {
       case "admin": return "bg-primary text-primary-foreground";
       case "auditor": return "bg-audit text-audit-foreground";
-      case "founder": return "bg-governance text-governance-foreground";
+      case "executive": return "bg-governance text-governance-foreground";
+      case "analyst": return "bg-secondary text-secondary-foreground";
       default: return "bg-secondary text-secondary-foreground";
     }
   };
@@ -49,7 +50,8 @@ export function NavigationHeader({
     switch (role) {
       case "admin": return Shield;
       case "auditor": return BookOpen;
-      case "founder": return Activity;
+      case "executive": return Activity;
+      case "analyst": return User;
       default: return User;
     }
   };
@@ -68,9 +70,9 @@ export function NavigationHeader({
               </div>
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                  AuditFlow
+                  ALTURIUM
                 </h1>
-                <p className="text-xs text-muted-foreground">AI Governance Platform</p>
+                <p className="text-xs text-muted-foreground">Enterprise Intelligence Core</p>
               </div>
             </div>
           </div>
