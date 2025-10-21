@@ -91,10 +91,8 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
           <Routes>
-            <Route path="/cnl-grid" element={<CNLGridDashboard />} />
-            <Route path="/scribe" element={<ScribeDashboard />} />
-            <Route path="/alturium" element={<AlturiumDashboard />} />
-            <Route path="/" element={
+            <Route path="/" element={<AlturiumDashboard userRole={userRole} userName={user.user_metadata?.full_name || user.email || "User"} onSignOut={handleSignOut} />} />
+            <Route path="/audit" element={
                 <div className="min-h-screen bg-background">
                   <NavigationHeader
                     userRole={userRole}
@@ -108,8 +106,10 @@ const App = () => {
                   </main>
                 </div>
               } />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Route path="/cnl-grid" element={<CNLGridDashboard />} />
+            <Route path="/scribe" element={<ScribeDashboard />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
