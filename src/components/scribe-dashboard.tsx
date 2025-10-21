@@ -6,6 +6,11 @@ import { MoMSection } from "./scribe/mom-section";
 import { VisualInsights } from "./scribe/visual-insights";
 import { InsightsFeed } from "./scribe/insights-feed";
 import { EmployeeLogs } from "./scribe/employee-logs";
+import { AgendaBuilder } from "./scribe/agenda-builder";
+import { DecisionImpactAnalyzer } from "./scribe/decision-impact-analyzer";
+import { ContextualAwareness } from "./scribe/contextual-awareness";
+import { KnowledgeDocumentation } from "./scribe/knowledge-documentation";
+import { IntegrationHub } from "./scribe/integration-hub";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -112,10 +117,130 @@ export const ScribeDashboard = () => {
     });
   };
 
+  // Enhanced features data
+  const agendaItems = [
+    { id: "1", topic: "Review Q4 product launch progress", duration: 15, participants: ["A. Mehta", "R. Singh"], priority: "high" as const },
+    { id: "2", topic: "Discuss marketing campaign effectiveness", duration: 20, participants: ["R. Singh", "L. Fernandes"], priority: "high" as const },
+    { id: "3", topic: "Hiring pipeline update", duration: 10, participants: ["L. Fernandes"], priority: "medium" as const },
+    { id: "4", topic: "Budget allocation review", duration: 15, participants: ["All"], priority: "medium" as const },
+  ];
+
+  const decisionImpacts = [
+    {
+      id: "1",
+      decision: "Accelerate product launch to December 15th",
+      impacts: {
+        financial: { value: "+$120K revenue (Q4)", trend: "up" as const },
+        timeline: { value: "+4 days sprint", trend: "down" as const },
+        metrics: [
+          { name: "Customer retention", value: "+8%", trend: "up" as const },
+          { name: "Team velocity", value: "-12%", trend: "down" as const },
+          { name: "Market share", value: "+3.5%", trend: "up" as const },
+        ],
+      },
+      confidence: 87,
+      risks: ["Resource burnout risk", "QA coverage may be reduced"],
+    },
+    {
+      id: "2",
+      decision: "Increase marketing budget by 15%",
+      impacts: {
+        financial: { value: "+$45K spend", trend: "down" as const },
+        timeline: { value: "No impact", trend: "neutral" as const },
+        metrics: [
+          { name: "Lead generation", value: "+22%", trend: "up" as const },
+          { name: "CAC", value: "-8%", trend: "up" as const },
+          { name: "ROI", value: "+15%", trend: "up" as const },
+        ],
+      },
+      confidence: 92,
+      risks: ["Budget constraints in Q2 if performance drops"],
+    },
+  ];
+
+  const contextualLinks = [
+    { id: "1", type: "project" as const, title: "Product Launch Sprint", relation: "Timeline directly affected by acceleration decision", date: "Oct 15, 2025", impact: "high" as const },
+    { id: "2", type: "kpi" as const, title: "Q4 Revenue Target", relation: "Marketing budget increase supports this target", date: "Oct 1, 2025", impact: "high" as const },
+    { id: "3", type: "decision" as const, title: "Previous hiring freeze decision", relation: "Now reversed with new hiring targets", date: "Sep 10, 2025", impact: "medium" as const },
+    { id: "4", type: "dependency" as const, title: "Engineering capacity constraint", relation: "May impact delivery timeline", date: "Oct 18, 2025", impact: "medium" as const },
+  ];
+
+  const contradictions = [
+    "Previous meeting (Oct 10) indicated conservative timeline approach, now accelerating by 2 weeks",
+    "Budget constraints mentioned in Q3 review, but 15% marketing increase approved",
+  ];
+
+  const knowledgeItems = [
+    {
+      id: "1",
+      title: "Q4 Product Roadmap (Updated)",
+      summary: "Revised timeline showing accelerated feature delivery, dependency mapping, and resource allocation for December 15 launch target.",
+      attachments: [
+        { name: "roadmap-v3.pdf", type: "pdf" },
+        { name: "timeline.xlsx", type: "excel" },
+      ],
+      linkedMeetings: 4,
+      lastUpdated: "Oct 21, 2025",
+      owner: "A. Mehta",
+    },
+    {
+      id: "2",
+      title: "Marketing Campaign Performance Data",
+      summary: "Historical ROI analysis and projected impact of 15% budget increase on Q1 2026 lead generation and customer acquisition costs.",
+      attachments: [
+        { name: "campaign-analysis.pdf", type: "pdf" },
+        { name: "budget-forecast.xlsx", type: "excel" },
+      ],
+      linkedMeetings: 3,
+      lastUpdated: "Oct 20, 2025",
+      owner: "R. Singh",
+    },
+  ];
+
+  const integrations = [
+    { id: "slack", name: "Slack", icon: "💬", status: "connected" as const, lastSync: "2 min ago" },
+    { id: "asana", name: "Asana", icon: "✓", status: "connected" as const, lastSync: "5 min ago" },
+    { id: "notion", name: "Notion", icon: "📝", status: "connected" as const, lastSync: "10 min ago" },
+    { id: "jira", name: "Jira", icon: "🔷", status: "disconnected" as const, lastSync: "" },
+  ];
+
   const handleExport = (format: string) => {
     toast({
       title: "Export started",
       description: `Generating ${format.toUpperCase()} report...`,
+    });
+  };
+
+  const handleApproveAgenda = () => {
+    toast({
+      title: "Agenda approved",
+      description: "Next meeting has been scheduled with the approved agenda.",
+    });
+  };
+
+  const handleEditAgendaItem = (id: string) => {
+    toast({
+      title: "Edit agenda item",
+      description: `Opening editor for item ${id}...`,
+    });
+  };
+
+  const handleViewKnowledge = (id: string) => {
+    toast({
+      title: "Opening document",
+      description: `Loading knowledge item ${id}...`,
+    });
+  };
+
+  const handleSendToIntegration = async (integrationId: string) => {
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        toast({
+          title: "Sent successfully",
+          description: `Meeting intelligence sent to ${integrationId}`,
+        });
+        resolve();
+      }, 1500);
     });
   };
 
@@ -171,18 +296,55 @@ export const ScribeDashboard = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8 space-y-6">
+        {/* Meeting Summary */}
         <MeetingSummaryCard meeting={meeting} />
+
+        {/* Decision Impact Analysis */}
+        <DecisionImpactAnalyzer impacts={decisionImpacts} />
+
+        {/* MoM Section */}
         <MoMSection decisions={decisions} tasks={tasks} onTaskToggle={handleTaskToggle} />
+
+        {/* Two-column layout for Context and Knowledge */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ContextualAwareness
+            links={contextualLinks}
+            contradictions={contradictions}
+          />
+          <KnowledgeDocumentation
+            items={knowledgeItems}
+            onViewItem={handleViewKnowledge}
+          />
+        </div>
+
+        {/* Visual Insights */}
         <VisualInsights
           sentimentTimeline={sentimentTimeline}
           speakerBalance={speakerBalance}
           taskDensity={taskDensity}
         />
+
+        {/* Agenda Builder and Integration Hub */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <AgendaBuilder
+            agendaItems={agendaItems}
+            onApprove={handleApproveAgenda}
+            onEdit={handleEditAgendaItem}
+          />
+          <IntegrationHub
+            integrations={integrations}
+            onSend={handleSendToIntegration}
+          />
+        </div>
+
+        {/* Insights Feed */}
         <InsightsFeed
           insights={insights}
           onPin={handleInsightPin}
           onArchive={handleInsightArchive}
         />
+
+        {/* Employee Logs */}
         <EmployeeLogs employees={employees} />
       </main>
 
