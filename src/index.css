@@ -66,6 +66,12 @@
     --cnl-flow: 189 94% 43%;
     --cnl-flow-foreground: 0 0% 100%;
 
+    /* SCRIBE colors */
+    --scribe-bg: 220 13% 5%;
+    --scribe-card: 220 9% 18%;
+    --scribe-accent: 199 100% 50%;
+    --scribe-text: 220 9% 89%;
+
     /* Destructive */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;

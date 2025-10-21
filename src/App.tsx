@@ -9,6 +9,7 @@ import { AlturiumAuth } from "@/components/alturium-auth";
 import { NavigationHeader } from "@/components/navigation-header";
 import { AuditDashboard } from "@/components/audit-dashboard";
 import { CNLGridDashboard } from "@/components/cnl-grid-dashboard";
+import { ScribeDashboard } from "@/components/scribe-dashboard";
 import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 import Index from "./pages/Index";
@@ -88,9 +89,10 @@ const App = () => {
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/cnl-grid" element={<CNLGridDashboard />} />
-              <Route path="/" element={
+          <Routes>
+            <Route path="/cnl-grid" element={<CNLGridDashboard />} />
+            <Route path="/scribe" element={<ScribeDashboard />} />
+            <Route path="/" element={
                 <div className="min-h-screen bg-background">
                   <NavigationHeader
                     userRole={userRole}

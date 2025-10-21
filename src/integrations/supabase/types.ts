@@ -14,6 +14,270 @@ export type Database = {
   }
   public: {
     Tables: {
+      employee_logs: {
+        Row: {
+          attendance_score: number | null
+          contribution_keywords: Json | null
+          created_at: string | null
+          employee_name: string
+          id: string
+          key_actions: number | null
+          meeting_id: string | null
+          sentiment_score: number | null
+          talk_time_percent: number | null
+        }
+        Insert: {
+          attendance_score?: number | null
+          contribution_keywords?: Json | null
+          created_at?: string | null
+          employee_name: string
+          id?: string
+          key_actions?: number | null
+          meeting_id?: string | null
+          sentiment_score?: number | null
+          talk_time_percent?: number | null
+        }
+        Update: {
+          attendance_score?: number | null
+          contribution_keywords?: Json | null
+          created_at?: string | null
+          employee_name?: string
+          id?: string
+          key_actions?: number | null
+          meeting_id?: string | null
+          sentiment_score?: number | null
+          talk_time_percent?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_logs_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "meetings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meeting_analytics: {
+        Row: {
+          created_at: string | null
+          id: string
+          meeting_id: string | null
+          sentiment_timeline: Json | null
+          speaker_balance: Json | null
+          task_density: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          meeting_id?: string | null
+          sentiment_timeline?: Json | null
+          speaker_balance?: Json | null
+          task_density?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          meeting_id?: string | null
+          sentiment_timeline?: Json | null
+          speaker_balance?: Json | null
+          task_density?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_analytics_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "meetings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meeting_decisions: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          decision_text: string
+          id: string
+          meeting_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          decision_text: string
+          id?: string
+          meeting_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          decision_text?: string
+          id?: string
+          meeting_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_decisions_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "meetings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meeting_insights: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          insight_type: string
+          meeting_id: string | null
+          pinned: boolean | null
+          priority: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          insight_type: string
+          meeting_id?: string | null
+          pinned?: boolean | null
+          priority?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          insight_type?: string
+          meeting_id?: string | null
+          pinned?: boolean | null
+          priority?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_insights_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "meetings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meeting_tasks: {
+        Row: {
+          assignee: string
+          completed: boolean | null
+          created_at: string | null
+          deadline: string | null
+          id: string
+          meeting_id: string | null
+          task_title: string
+        }
+        Insert: {
+          assignee: string
+          completed?: boolean | null
+          created_at?: string | null
+          deadline?: string | null
+          id?: string
+          meeting_id?: string | null
+          task_title: string
+        }
+        Update: {
+          assignee?: string
+          completed?: boolean | null
+          created_at?: string | null
+          deadline?: string | null
+          id?: string
+          meeting_id?: string | null
+          task_title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_tasks_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "meetings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meeting_transcripts: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          meeting_id: string | null
+          speaker: string | null
+          timestamp_ms: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          meeting_id?: string | null
+          speaker?: string | null
+          timestamp_ms?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          meeting_id?: string | null
+          speaker?: string | null
+          timestamp_ms?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_transcripts_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "meetings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meetings: {
+        Row: {
+          created_at: string | null
+          duration: number | null
+          id: string
+          meeting_date: string
+          participants: Json | null
+          sentiment_score: number | null
+          status: string | null
+          summary: string | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          duration?: number | null
+          id?: string
+          meeting_date: string
+          participants?: Json | null
+          sentiment_score?: number | null
+          status?: string | null
+          summary?: string | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          duration?: number | null
+          id?: string
+          meeting_date?: string
+          participants?: Json | null
+          sentiment_score?: number | null
+          status?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company_name: string | null

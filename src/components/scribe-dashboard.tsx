@@ -1,0 +1,211 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Download, Settings, RefreshCw, Save, Share2, FileText } from "lucide-react";
+import { MeetingSummaryCard } from "./scribe/meeting-summary-card";
+import { MoMSection } from "./scribe/mom-section";
+import { VisualInsights } from "./scribe/visual-insights";
+import { InsightsFeed } from "./scribe/insights-feed";
+import { EmployeeLogs } from "./scribe/employee-logs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
+
+export const ScribeDashboard = () => {
+  const { toast } = useToast();
+
+  // Sample data
+  const meeting = {
+    title: "Q4 Strategy Review",
+    date: "Oct 21, 2025",
+    participants: ["A. Mehta", "R. Singh", "L. Fernandes", "S. Kumar"],
+    duration: 45,
+    summary: [
+      "Team agreed to accelerate product launch timeline by 2 weeks",
+      "Marketing budget increased by 15% for Q1 2026 campaign",
+      "New hiring targets set: 3 engineers, 2 designers by end of quarter",
+    ],
+    sentimentScore: 0.78,
+  };
+
+  const [decisions, setDecisions] = useState([
+    { id: "1", text: "Accelerate product launch to December 15th", category: "Strategy" },
+    { id: "2", text: "Increase marketing budget by 15% for Q1 2026", category: "Budget" },
+    { id: "3", text: "Hire 3 engineers and 2 designers by Q4 end", category: "HR" },
+  ]);
+
+  const [tasks, setTasks] = useState([
+    { id: "1", title: "Update product roadmap with new timeline", assignee: "A. Mehta", deadline: "Oct 25, 2025", completed: false },
+    { id: "2", title: "Prepare revised budget proposal", assignee: "R. Singh", deadline: "Oct 28, 2025", completed: false },
+    { id: "3", title: "Post job openings for engineering roles", assignee: "L. Fernandes", deadline: "Oct 23, 2025", completed: true },
+  ]);
+
+  const sentimentTimeline = [
+    { time: "0m", sentiment: 0.6 },
+    { time: "10m", sentiment: 0.7 },
+    { time: "20m", sentiment: 0.75 },
+    { time: "30m", sentiment: 0.8 },
+    { time: "40m", sentiment: 0.78 },
+  ];
+
+  const speakerBalance = [
+    { name: "A. Mehta", percentage: 35, keywords: ["strategy", "timeline", "launch"] },
+    { name: "R. Singh", percentage: 28, keywords: ["budget", "marketing", "Q1"] },
+    { name: "L. Fernandes", percentage: 22, keywords: ["hiring", "recruitment", "team"] },
+    { name: "S. Kumar", percentage: 15, keywords: ["technical", "roadmap", "features"] },
+  ];
+
+  const taskDensity = { completed: 1, new: 2, pending: 0 };
+
+  const [insights, setInsights] = useState([
+    {
+      id: "1",
+      type: "improvement" as const,
+      content: "Average decision turnaround time improving by 17% this month.",
+      pinned: false,
+    },
+    {
+      id: "2",
+      type: "bottleneck" as const,
+      content: "Repeated bottleneck identified: product QA delays in 3 consecutive meetings.",
+      pinned: false,
+    },
+    {
+      id: "3",
+      type: "sentiment" as const,
+      content: "Team sentiment increased 12% during strategy discussion — strong alignment detected.",
+      pinned: false,
+    },
+  ]);
+
+  const employees = [
+    { id: "1", name: "A. Mehta", talkTime: 35, keyActions: 3, sentiment: 0.85, attendanceScore: 96, keywords: ["strategy", "timeline", "launch"] },
+    { id: "2", name: "R. Singh", talkTime: 28, keyActions: 2, sentiment: 0.72, attendanceScore: 89, keywords: ["budget", "marketing", "Q1"] },
+    { id: "3", name: "L. Fernandes", talkTime: 22, keyActions: 2, sentiment: 0.88, attendanceScore: 92, keywords: ["hiring", "recruitment", "team"] },
+    { id: "4", name: "S. Kumar", talkTime: 15, keyActions: 1, sentiment: 0.68, attendanceScore: 85, keywords: ["technical", "roadmap"] },
+  ];
+
+  const handleTaskToggle = (taskId: string) => {
+    setTasks(tasks.map(task => 
+      task.id === taskId ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
+  const handleInsightPin = (id: string) => {
+    setInsights(insights.map(insight =>
+      insight.id === id ? { ...insight, pinned: !insight.pinned } : insight
+    ));
+    toast({
+      title: "Insight updated",
+      description: "Insight pin status changed",
+    });
+  };
+
+  const handleInsightArchive = (id: string) => {
+    setInsights(insights.filter(insight => insight.id !== id));
+    toast({
+      title: "Insight archived",
+      description: "Insight moved to archive",
+    });
+  };
+
+  const handleExport = (format: string) => {
+    toast({
+      title: "Export started",
+      description: `Generating ${format.toUpperCase()} report...`,
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-[hsl(var(--scribe-bg))]">
+      {/* Header Bar */}
+      <header className="sticky top-0 z-50 bg-[hsl(var(--scribe-bg))]/95 backdrop-blur-sm border-b border-[hsl(var(--scribe-text))]/10">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-3">
+                <FileText className="w-6 h-6 text-[hsl(var(--scribe-accent))]" />
+                <h1 className="text-xl font-semibold text-[hsl(var(--scribe-text))]">
+                  Alturium Scribe
+                </h1>
+              </div>
+              <div className="hidden lg:flex items-center gap-4 text-sm text-[hsl(var(--scribe-text))]/60">
+                <span className="font-medium text-[hsl(var(--scribe-text))]/80">{meeting.title}</span>
+                <span>•</span>
+                <span>{meeting.date}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="bg-transparent border-[hsl(var(--scribe-text))]/20 text-[hsl(var(--scribe-text))] hover:bg-[hsl(var(--scribe-card))]">
+                    <Download className="w-4 h-4 mr-2" />
+                    Export
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-[hsl(var(--scribe-card))] border-[hsl(var(--scribe-text))]/10">
+                  <DropdownMenuItem onClick={() => handleExport("pdf")} className="text-[hsl(var(--scribe-text))]">
+                    Export as PDF
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleExport("csv")} className="text-[hsl(var(--scribe-text))]">
+                    Export as CSV
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleExport("json")} className="text-[hsl(var(--scribe-text))]">
+                    Export as JSON
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button variant="ghost" size="sm" className="text-[hsl(var(--scribe-text))]/60 hover:text-[hsl(var(--scribe-text))] hover:bg-[hsl(var(--scribe-card))]">
+                <Settings className="w-4 h-4" />
+              </Button>
+              <Button variant="ghost" size="sm" className="text-[hsl(var(--scribe-text))]/60 hover:text-[hsl(var(--scribe-text))] hover:bg-[hsl(var(--scribe-card))]">
+                <RefreshCw className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-6 py-8 space-y-6">
+        <MeetingSummaryCard meeting={meeting} />
+        <MoMSection decisions={decisions} tasks={tasks} onTaskToggle={handleTaskToggle} />
+        <VisualInsights
+          sentimentTimeline={sentimentTimeline}
+          speakerBalance={speakerBalance}
+          taskDensity={taskDensity}
+        />
+        <InsightsFeed
+          insights={insights}
+          onPin={handleInsightPin}
+          onArchive={handleInsightArchive}
+        />
+        <EmployeeLogs employees={employees} />
+      </main>
+
+      {/* Footer Action Strip */}
+      <footer className="sticky bottom-0 bg-[hsl(var(--scribe-bg))]/95 backdrop-blur-sm border-t border-[hsl(var(--scribe-text))]/10">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" className="bg-transparent border-[hsl(var(--scribe-text))]/20 text-[hsl(var(--scribe-text))] hover:bg-[hsl(var(--scribe-card))]">
+                <Save className="w-4 h-4 mr-2" />
+                Save Meeting Pack
+              </Button>
+              <Button variant="outline" size="sm" className="bg-transparent border-[hsl(var(--scribe-text))]/20 text-[hsl(var(--scribe-text))] hover:bg-[hsl(var(--scribe-card))]">
+                <Share2 className="w-4 h-4 mr-2" />
+                Share Insights
+              </Button>
+            </div>
+            <Button variant="ghost" size="sm" className="text-[hsl(var(--scribe-text))]/60 hover:text-[hsl(var(--scribe-text))] hover:bg-[hsl(var(--scribe-card))]">
+              AI Audit Log
+            </Button>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};

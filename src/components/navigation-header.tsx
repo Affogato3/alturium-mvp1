@@ -19,7 +19,8 @@ import {
   Shield,
   BookOpen,
   Activity,
-  Network
+  Network,
+  Mic
 } from "lucide-react";
 
 interface NavigationHeaderProps {
@@ -110,6 +111,17 @@ export function NavigationHeader({
               <span className="hidden sm:inline text-sm">CNL Grid</span>
             </Button>
 
+            {/* Scribe Link */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center gap-2"
+              onClick={() => window.location.href = '/scribe'}
+            >
+              <Mic className="h-4 w-4 text-[hsl(var(--scribe-accent))]" />
+              <span className="hidden sm:inline text-sm">Scribe</span>
+            </Button>
+
             {/* Notifications */}
             <Button variant="ghost" size="sm" className="relative">
               <Bell className="h-4 w-4" />
@@ -160,6 +172,10 @@ export function NavigationHeader({
                     <DropdownMenuItem onClick={() => window.location.href = '/cnl-grid'}>
                       <Network className="mr-2 h-4 w-4" />
                       CNL Grid™
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = '/scribe'}>
+                      <Mic className="mr-2 h-4 w-4" />
+                      Scribe
                     </DropdownMenuItem>
                   </>
                 )}
