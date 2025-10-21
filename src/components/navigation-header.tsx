@@ -122,6 +122,17 @@ export function NavigationHeader({
               <span className="hidden sm:inline text-sm">Scribe</span>
             </Button>
 
+            {/* Alturium Link */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center gap-2"
+              onClick={() => window.location.href = '/alturium'}
+            >
+              <Shield className="h-4 w-4 text-[hsl(var(--alturium-accent))]" />
+              <span className="hidden sm:inline text-sm">Alturium</span>
+            </Button>
+
             {/* Notifications */}
             <Button variant="ghost" size="sm" className="relative">
               <Bell className="h-4 w-4" />
@@ -176,6 +187,10 @@ export function NavigationHeader({
                     <DropdownMenuItem onClick={() => window.location.href = '/scribe'}>
                       <Mic className="mr-2 h-4 w-4" />
                       Scribe
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = '/alturium'}>
+                      <Shield className="mr-2 h-4 w-4" />
+                      Alturium
                     </DropdownMenuItem>
                   </>
                 )}

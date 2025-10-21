@@ -72,6 +72,14 @@
     --scribe-accent: 199 100% 50%;
     --scribe-text: 220 9% 89%;
 
+    /* Alturium theme colors */
+    --alturium-bg: 0 0% 4%;
+    --alturium-card: 0 0% 10%;
+    --alturium-text: 0 0% 96%;
+    --alturium-accent: 195 100% 50%;
+    --alturium-border: 0 0% 20%;
+    --alturium-hover: 0 0% 15%;
+
     /* Destructive */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -213,4 +221,17 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1s ease-in-out;
 }

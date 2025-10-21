@@ -85,6 +85,15 @@ export default {
           risk: "hsl(var(--cnl-risk))",
           flow: "hsl(var(--cnl-flow))",
         },
+        // Alturium theme colors
+        alturium: {
+          bg: "hsl(var(--alturium-bg))",
+          card: "hsl(var(--alturium-card))",
+          text: "hsl(var(--alturium-text))",
+          accent: "hsl(var(--alturium-accent))",
+          border: "hsl(var(--alturium-border))",
+          hover: "hsl(var(--alturium-hover))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

@@ -11,6 +11,7 @@ import { AuditDashboard } from "@/components/audit-dashboard";
 import { CNLGridDashboard } from "@/components/cnl-grid-dashboard";
 import { supabase } from "@/integrations/supabase/client";
 import { ScribeDashboard } from "@/components/scribe-dashboard";
+import AlturiumDashboard from "@/components/alturium-dashboard";
 import { Session, User } from "@supabase/supabase-js";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -92,6 +93,7 @@ const App = () => {
           <Routes>
             <Route path="/cnl-grid" element={<CNLGridDashboard />} />
             <Route path="/scribe" element={<ScribeDashboard />} />
+            <Route path="/alturium" element={<AlturiumDashboard />} />
             <Route path="/" element={
                 <div className="min-h-screen bg-background">
                   <NavigationHeader
