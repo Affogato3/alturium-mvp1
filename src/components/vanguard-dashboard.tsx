@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
 import {
   Activity,
   TrendingUp,
@@ -25,12 +27,25 @@ import {
   Eye,
   Play,
   RotateCcw,
+  Bell,
+  Send,
+  Link2,
+  Network,
+  Workflow,
+  GitBranch,
+  Lock,
+  Blocks,
+  Layers,
+  MessageSquare,
+  ChevronRight,
 } from "lucide-react";
 
 export const VanguardDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [simulationRunning, setSimulationRunning] = useState(false);
   const [ghostMode, setGhostMode] = useState(false);
+  const [shadowMode, setShadowMode] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
   
   // Simulation state
   const [costDelta, setCostDelta] = useState([0]);
@@ -38,6 +53,19 @@ export const VanguardDashboard = () => {
   const [workforceDelta, setWorkforceDelta] = useState([0]);
   const [profitShift, setProfitShift] = useState(0);
   const [operationalLoad, setOperationalLoad] = useState(0);
+  
+  // Autonomous features state
+  const [autoMemoEnabled, setAutoMemoEnabled] = useState(true);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [integrations, setIntegrations] = useState({
+    slack: false,
+    teams: false,
+    zoom: false,
+    salesforce: false,
+    jira: false,
+    workspace: false,
+  });
+  const [auditLedger, setAuditLedger] = useState<any[]>([]);
 
   useEffect(() => {
     // Simulate initial loading
@@ -46,12 +74,42 @@ export const VanguardDashboard = () => {
     // Ghost mode keyboard shortcut
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.shiftKey && e.key === 'G') {
-        setGhostMode(!ghostMode);
+        setGhostMode(prev => {
+          const newMode = !prev;
+          toast.success(newMode ? "Ghost Mode Activated" : "Ghost Mode Deactivated");
+          return newMode;
+        });
       }
     };
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [ghostMode]);
+
+  // Simulate autonomous notifications
+  useEffect(() => {
+    if (autoMemoEnabled) {
+      const interval = setInterval(() => {
+        const newNotification = {
+          id: Date.now(),
+          type: Math.random() > 0.5 ? "memo" : "task",
+          title: Math.random() > 0.5 ? "Quarterly review memo generated" : "Task assigned: Cost optimization",
+          timestamp: new Date().toLocaleTimeString(),
+        };
+        setNotifications(prev => [newNotification, ...prev.slice(0, 4)]);
+      }, 15000);
+      return () => clearInterval(interval);
+    }
+  }, [autoMemoEnabled]);
+
+  // Simulate audit ledger entries
+  useEffect(() => {
+    const sampleAudits = [
+      { id: 1, action: "Workforce reallocation executed", outcome: "ROI +2.4%", timestamp: "2 hours ago", verified: true },
+      { id: 2, action: "Shadow simulation completed", outcome: "Risk: Low", timestamp: "5 hours ago", verified: true },
+      { id: 3, action: "AI task generation initiated", outcome: "12 tasks created", timestamp: "1 day ago", verified: true },
+    ];
+    setAuditLedger(sampleAudits);
+  }, []);
 
   // Command metrics
   const commandMetrics = [
@@ -297,19 +355,38 @@ export const VanguardDashboard = () => {
                 className="text-[hsl(var(--vanguard-text))]/60 hover:text-[hsl(var(--vanguard-accent))]"
                 onClick={() => {
                   setSimulationRunning(true);
+                  toast.info("Running comprehensive audit...");
                   setTimeout(() => {
                     setSimulationRunning(false);
                     setProfitShift(Math.random() * 10 - 2);
                     setOperationalLoad(Math.random() * -15);
+                    toast.success("Audit complete. Results updated.");
                   }, 2000);
                 }}
               >
                 <Zap className="w-4 h-4 mr-2" />
                 Run Audit
               </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-[hsl(var(--vanguard-text))]/60 hover:text-[hsl(var(--vanguard-accent))]"
+                onClick={() => {
+                  setShadowMode(!shadowMode);
+                  toast.success(shadowMode ? "Shadow Mode Disabled" : "Shadow Mode Enabled - Testing decisions virtually");
+                }}
+              >
+                <Layers className="w-4 h-4 mr-2" />
+                Shadow Mode
+              </Button>
               {ghostMode && (
                 <Badge variant="outline" className="border-[hsl(var(--vanguard-accent))] text-[hsl(var(--vanguard-accent))]">
                   GHOST MODE
+                </Badge>
+              )}
+              {shadowMode && (
+                <Badge variant="outline" className="border-amber-500 text-amber-500">
+                  SHADOW MODE
                 </Badge>
               )}
             </div>
@@ -418,15 +495,37 @@ export const VanguardDashboard = () => {
                 <Zap className="w-4 h-4 mr-2 text-[hsl(var(--vanguard-accent))]" />
                 Run Profit Simulation
               </Button>
-              <Button className="w-full justify-start bg-[hsl(var(--vanguard-bg))] hover:bg-[hsl(var(--vanguard-accent))]/10 text-[hsl(var(--vanguard-text))] border border-[hsl(var(--vanguard-accent))]/30">
+              <Button 
+                className="w-full justify-start bg-[hsl(var(--vanguard-bg))] hover:bg-[hsl(var(--vanguard-accent))]/10 text-[hsl(var(--vanguard-text))] border border-[hsl(var(--vanguard-accent))]/30"
+                onClick={() => {
+                  toast.info("Analyzing workforce efficiency...");
+                  setTimeout(() => {
+                    toast.success("Workforce reallocation plan generated. Expected ROI: +3.2%");
+                  }, 1500);
+                }}
+              >
                 <Users className="w-4 h-4 mr-2 text-[hsl(var(--vanguard-accent))]" />
                 Reallocate Workforce
               </Button>
-              <Button className="w-full justify-start bg-[hsl(var(--vanguard-bg))] hover:bg-[hsl(var(--vanguard-accent))]/10 text-[hsl(var(--vanguard-text))] border border-[hsl(var(--vanguard-accent))]/30">
+              <Button 
+                className="w-full justify-start bg-[hsl(var(--vanguard-bg))] hover:bg-[hsl(var(--vanguard-accent))]/10 text-[hsl(var(--vanguard-text))] border border-[hsl(var(--vanguard-accent))]/30"
+                onClick={() => {
+                  toast.info("Generating executive brief...");
+                  setTimeout(() => {
+                    toast.success("Executive brief generated and sent to leadership@company.com");
+                  }, 2000);
+                }}
+              >
                 <FileText className="w-4 h-4 mr-2 text-[hsl(var(--vanguard-accent))]" />
                 Generate Brief
               </Button>
-              <Button className="w-full justify-start bg-[hsl(var(--vanguard-bg))] hover:bg-[hsl(var(--vanguard-accent))]/10 text-[hsl(var(--vanguard-text))] border border-[hsl(var(--vanguard-accent))]/30">
+              <Button 
+                className="w-full justify-start bg-[hsl(var(--vanguard-bg))] hover:bg-[hsl(var(--vanguard-accent))]/10 text-[hsl(var(--vanguard-text))] border border-[hsl(var(--vanguard-accent))]/30"
+                onClick={() => {
+                  setFocusMode(!focusMode);
+                  toast.success(focusMode ? "Focus Mode Disabled" : "Focus Mode Enabled - Showing only critical metrics");
+                }}
+              >
                 <Eye className="w-4 h-4 mr-2 text-[hsl(var(--vanguard-accent))]" />
                 Focus Mode
               </Button>
@@ -523,6 +622,9 @@ export const VanguardDashboard = () => {
                       size="sm"
                       variant="ghost"
                       className="mt-2 text-[hsl(var(--vanguard-accent))] hover:text-[hsl(var(--vanguard-accent))]"
+                      onClick={() => {
+                        toast.success("Compliance alert marked as resolved");
+                      }}
                     >
                       Mark Resolved
                     </Button>
@@ -576,6 +678,12 @@ export const VanguardDashboard = () => {
             <Button
               size="sm"
               className="bg-[hsl(var(--vanguard-accent))]/20 hover:bg-[hsl(var(--vanguard-accent))]/30 text-[hsl(var(--vanguard-accent))] border border-[hsl(var(--vanguard-accent))]/50"
+              onClick={() => {
+                toast.info("Running AI optimization algorithm...");
+                setTimeout(() => {
+                  toast.success("Workforce optimized. 3 role shifts recommended. Expected profit impact: +$2.1M annually");
+                }, 2500);
+              }}
             >
               Auto-Optimize Workforce
             </Button>
@@ -784,6 +892,310 @@ export const VanguardDashboard = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </Card>
+
+        {/* Autonomous Task & Memo Generation */}
+        <Card className="bg-[hsl(var(--vanguard-card))] border-[hsl(var(--vanguard-text))]/10 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Bell className="w-5 h-5 text-[hsl(var(--vanguard-accent))]" />
+              <h2 className="text-lg font-bold text-[hsl(var(--vanguard-text))] uppercase tracking-wide">
+                Autonomous Task & Memo Generation
+              </h2>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-[hsl(var(--vanguard-text))]/60">Auto-Generate</span>
+              <Switch 
+                checked={autoMemoEnabled} 
+                onCheckedChange={(checked) => {
+                  setAutoMemoEnabled(checked);
+                  toast.success(checked ? "Autonomous generation enabled" : "Autonomous generation disabled");
+                }}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h3 className="text-sm font-semibold text-[hsl(var(--vanguard-text))] mb-3">Recent Notifications</h3>
+              <ScrollArea className="h-[200px]">
+                <div className="space-y-2">
+                  {notifications.length === 0 ? (
+                    <p className="text-xs text-[hsl(var(--vanguard-text))]/50">No notifications yet</p>
+                  ) : (
+                    notifications.map((notif) => (
+                      <div
+                        key={notif.id}
+                        className="bg-[hsl(var(--vanguard-bg))] p-3 rounded-lg border border-[hsl(var(--vanguard-accent))]/20 animate-fade-in"
+                      >
+                        <div className="flex items-start gap-2">
+                          {notif.type === "memo" ? (
+                            <FileText className="w-4 h-4 text-[hsl(var(--vanguard-accent))] mt-0.5" />
+                          ) : (
+                            <CheckCircle2 className="w-4 h-4 text-[hsl(var(--vanguard-accent))] mt-0.5" />
+                          )}
+                          <div className="flex-1">
+                            <p className="text-xs text-[hsl(var(--vanguard-text))]">{notif.title}</p>
+                            <p className="text-xs text-[hsl(var(--vanguard-text))]/50">{notif.timestamp}</p>
+                          </div>
+                          <Button 
+                            size="sm" 
+                            variant="ghost"
+                            onClick={() => toast.success("Sent to team via Slack")}
+                          >
+                            <Send className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-[hsl(var(--vanguard-text))] mb-3">Quick Actions</h3>
+              <Button 
+                className="w-full justify-start bg-[hsl(var(--vanguard-bg))] hover:bg-[hsl(var(--vanguard-accent))]/10 text-[hsl(var(--vanguard-text))] border border-[hsl(var(--vanguard-accent))]/30"
+                onClick={() => {
+                  toast.info("Generating memo from today's meetings...");
+                  setTimeout(() => {
+                    const newMemo = {
+                      id: Date.now(),
+                      type: "memo",
+                      title: "Daily executive memo generated",
+                      timestamp: new Date().toLocaleTimeString(),
+                    };
+                    setNotifications(prev => [newMemo, ...prev]);
+                    toast.success("Memo generated and distributed");
+                  }, 1500);
+                }}
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                Generate Memo
+              </Button>
+              <Button 
+                className="w-full justify-start bg-[hsl(var(--vanguard-bg))] hover:bg-[hsl(var(--vanguard-accent))]/10 text-[hsl(var(--vanguard-text))] border border-[hsl(var(--vanguard-accent))]/30"
+                onClick={() => {
+                  toast.info("Assigning tasks based on meeting insights...");
+                  setTimeout(() => {
+                    toast.success("5 tasks created and assigned to team members");
+                  }, 1500);
+                }}
+              >
+                <CheckCircle2 className="w-4 h-4 mr-2" />
+                Auto-Assign Tasks
+              </Button>
+              <Button 
+                className="w-full justify-start bg-[hsl(var(--vanguard-bg))] hover:bg-[hsl(var(--vanguard-accent))]/10 text-[hsl(var(--vanguard-text))] border border-[hsl(var(--vanguard-accent))]/30"
+                onClick={() => toast.info("Opening Slack integration panel...")}
+              >
+                <MessageSquare className="w-4 h-4 mr-2" />
+                Send to Slack
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        {/* Behavioral & Workflow AI Monitoring */}
+        <Card className="bg-[hsl(var(--vanguard-card))] border-[hsl(var(--vanguard-text))]/10 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Workflow className="w-5 h-5 text-[hsl(var(--vanguard-accent))]" />
+            <h2 className="text-lg font-bold text-[hsl(var(--vanguard-text))] uppercase tracking-wide">
+              Behavioral & Workflow AI Monitoring
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {[
+              { label: "Meeting Efficiency", value: 78, issue: "Long discussions detected" },
+              { label: "Email Response Time", value: 92, issue: null },
+              { label: "Task Completion Rate", value: 85, issue: null },
+              { label: "Decision Velocity", value: 64, issue: "Bottleneck in approvals" },
+            ].map((metric, idx) => (
+              <div
+                key={idx}
+                className={`bg-[hsl(var(--vanguard-bg))] p-4 rounded-lg border border-[hsl(var(--vanguard-text))]/5 hover:border-[hsl(var(--vanguard-accent))]/30 transition-all cursor-pointer ${
+                  metric.issue ? "animate-pulse border-amber-500/30" : ""
+                }`}
+                onClick={() => {
+                  if (metric.issue) {
+                    toast.warning(`Issue detected: ${metric.issue}`, {
+                      description: "Click for suggested actions",
+                    });
+                  }
+                }}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-[hsl(var(--vanguard-text))]/60">{metric.label}</span>
+                  {metric.issue && <AlertCircle className="w-4 h-4 text-amber-500" />}
+                </div>
+                <Progress value={metric.value} className="h-1 mb-2" />
+                <div className="text-2xl font-bold text-[hsl(var(--vanguard-text))]">{metric.value}%</div>
+                {metric.issue && (
+                  <p className="text-xs text-amber-500 mt-2">{metric.issue}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        {/* Cross-System Integration Panel */}
+        <Card className="bg-[hsl(var(--vanguard-card))] border-[hsl(var(--vanguard-text))]/10 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Network className="w-5 h-5 text-[hsl(var(--vanguard-accent))]" />
+            <h2 className="text-lg font-bold text-[hsl(var(--vanguard-text))] uppercase tracking-wide">
+              Cross-System Integration
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {Object.entries(integrations).map(([key, enabled]) => (
+              <div
+                key={key}
+                className={`bg-[hsl(var(--vanguard-bg))] p-4 rounded-lg border transition-all cursor-pointer hover:scale-105 ${
+                  enabled
+                    ? "border-[hsl(var(--vanguard-accent))]/50 shadow-[0_0_20px_rgba(0,255,255,0.2)]"
+                    : "border-[hsl(var(--vanguard-text))]/10"
+                }`}
+                onClick={() => {
+                  setIntegrations(prev => ({
+                    ...prev,
+                    [key]: !prev[key as keyof typeof prev],
+                  }));
+                  toast.success(
+                    !enabled
+                      ? `${key.charAt(0).toUpperCase() + key.slice(1)} connected`
+                      : `${key.charAt(0).toUpperCase() + key.slice(1)} disconnected`
+                  );
+                }}
+              >
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <Link2 className={`w-6 h-6 ${enabled ? "text-[hsl(var(--vanguard-accent))]" : "text-[hsl(var(--vanguard-text))]/40"}`} />
+                  <span className="text-xs font-semibold text-[hsl(var(--vanguard-text))] capitalize">
+                    {key}
+                  </span>
+                  <div className={`w-2 h-2 rounded-full ${enabled ? "bg-[hsl(var(--vanguard-accent))] animate-pulse" : "bg-[hsl(var(--vanguard-text))]/20"}`} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 pt-4 border-t border-[hsl(var(--vanguard-text))]/10">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-[hsl(var(--vanguard-text))]/60">
+                {Object.values(integrations).filter(Boolean).length} / {Object.keys(integrations).length} systems connected
+              </span>
+              <Button 
+                size="sm"
+                variant="ghost"
+                className="text-[hsl(var(--vanguard-accent))]"
+                onClick={() => {
+                  toast.info("Running cross-system sync...");
+                  setTimeout(() => toast.success("All systems synchronized"), 2000);
+                }}
+              >
+                <Zap className="w-3 h-3 mr-2" />
+                Sync All
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        {/* Immutable Audit Ledger */}
+        <Card className="bg-[hsl(var(--vanguard-card))] border-[hsl(var(--vanguard-text))]/10 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Lock className="w-5 h-5 text-[hsl(var(--vanguard-accent))]" />
+            <h2 className="text-lg font-bold text-[hsl(var(--vanguard-text))] uppercase tracking-wide">
+              Immutable Audit Ledger
+            </h2>
+            <Badge className="bg-[hsl(var(--vanguard-accent))]/20 text-[hsl(var(--vanguard-accent))] text-xs">
+              BLOCKCHAIN-SECURED
+            </Badge>
+          </div>
+          <ScrollArea className="h-[300px]">
+            <div className="space-y-3">
+              {auditLedger.map((entry, idx) => (
+                <div
+                  key={entry.id}
+                  className="bg-[hsl(var(--vanguard-bg))] p-4 rounded-lg border border-[hsl(var(--vanguard-text))]/5 hover:border-[hsl(var(--vanguard-accent))]/30 transition-all cursor-pointer"
+                  onClick={() => {
+                    toast.info("Audit Entry Details", {
+                      description: `Action: ${entry.action}\nOutcome: ${entry.outcome}\nVerified: ${entry.verified ? "Yes" : "Pending"}`,
+                    });
+                  }}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex flex-col items-center">
+                      <div className={`w-3 h-3 rounded-full ${entry.verified ? "bg-[hsl(var(--vanguard-accent))]" : "bg-amber-500"}`} />
+                      {idx < auditLedger.length - 1 && (
+                        <div className="w-0.5 h-12 bg-[hsl(var(--vanguard-text))]/10 my-1" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-1">
+                        <p className="text-sm font-semibold text-[hsl(var(--vanguard-text))]">{entry.action}</p>
+                        {entry.verified && <CheckCircle2 className="w-4 h-4 text-[hsl(var(--vanguard-accent))]" />}
+                      </div>
+                      <p className="text-xs text-[hsl(var(--vanguard-accent))] mb-1">{entry.outcome}</p>
+                      <p className="text-xs text-[hsl(var(--vanguard-text))]/50">{entry.timestamp}</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-[hsl(var(--vanguard-text))]/40" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </Card>
+
+        {/* Macro-Level Oversight */}
+        <Card className="bg-[hsl(var(--vanguard-card))] border-[hsl(var(--vanguard-text))]/10 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Blocks className="w-5 h-5 text-[hsl(var(--vanguard-accent))]" />
+            <h2 className="text-lg font-bold text-[hsl(var(--vanguard-text))] uppercase tracking-wide">
+              Macro-Level Oversight
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              { name: "Subsidiary Alpha", performance: 94, budget: "$2.4M", status: "optimal" },
+              { name: "Subsidiary Beta", performance: 78, budget: "$1.8M", status: "warning" },
+              { name: "Subsidiary Gamma", performance: 88, budget: "$3.1M", status: "optimal" },
+            ].map((sub) => (
+              <div
+                key={sub.name}
+                className={`bg-[hsl(var(--vanguard-bg))] p-5 rounded-lg border transition-all cursor-pointer hover:scale-105 ${
+                  sub.status === "optimal"
+                    ? "border-[hsl(var(--vanguard-accent))]/30"
+                    : "border-amber-500/30"
+                }`}
+                onClick={() => {
+                  toast.info(`${sub.name} Details`, {
+                    description: `Performance: ${sub.performance}%\nBudget: ${sub.budget}\nStatus: ${sub.status}`,
+                  });
+                }}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-[hsl(var(--vanguard-text))]">{sub.name}</h3>
+                  <Badge
+                    className={
+                      sub.status === "optimal"
+                        ? "bg-[hsl(var(--vanguard-accent))]/20 text-[hsl(var(--vanguard-accent))]"
+                        : "bg-amber-500/20 text-amber-500"
+                    }
+                  >
+                    {sub.status}
+                  </Badge>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[hsl(var(--vanguard-text))]/60">Performance</span>
+                    <span className="text-sm font-bold text-[hsl(var(--vanguard-text))]">{sub.performance}%</span>
+                  </div>
+                  <Progress value={sub.performance} className="h-1" />
+                  <div className="flex items-center justify-between pt-2">
+                    <span className="text-xs text-[hsl(var(--vanguard-text))]/60">Annual Budget</span>
+                    <span className="text-sm font-mono text-[hsl(var(--vanguard-accent))]">{sub.budget}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </Card>
       </main>
