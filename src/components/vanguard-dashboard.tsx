@@ -283,6 +283,10 @@ export const VanguardDashboard = () => {
                 variant="ghost"
                 size="sm"
                 className="text-[hsl(var(--vanguard-text))]/60 hover:text-[hsl(var(--vanguard-accent))]"
+                onClick={() => {
+                  const debriefSection = document.getElementById('executive-debrief');
+                  debriefSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
               >
                 <Eye className="w-4 h-4 mr-2" />
                 Executive Debrief
@@ -291,6 +295,14 @@ export const VanguardDashboard = () => {
                 variant="ghost"
                 size="sm"
                 className="text-[hsl(var(--vanguard-text))]/60 hover:text-[hsl(var(--vanguard-accent))]"
+                onClick={() => {
+                  setSimulationRunning(true);
+                  setTimeout(() => {
+                    setSimulationRunning(false);
+                    setProfitShift(Math.random() * 10 - 2);
+                    setOperationalLoad(Math.random() * -15);
+                  }, 2000);
+                }}
               >
                 <Zap className="w-4 h-4 mr-2" />
                 Run Audit
@@ -339,7 +351,7 @@ export const VanguardDashboard = () => {
         {/* Main Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* B. Executive Debrief */}
-          <Card className="lg:col-span-2 bg-[hsl(var(--vanguard-card))] border-[hsl(var(--vanguard-text))]/10 p-6">
+          <Card id="executive-debrief" className="lg:col-span-2 bg-[hsl(var(--vanguard-card))] border-[hsl(var(--vanguard-text))]/10 p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-[hsl(var(--vanguard-text))] uppercase tracking-wide">
                 Executive Debrief
