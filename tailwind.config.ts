@@ -94,6 +94,14 @@ export default {
           border: "hsl(var(--alturium-border))",
           hover: "hsl(var(--alturium-hover))",
         },
+        // Vanguard theme colors
+        vanguard: {
+          bg: "hsl(var(--vanguard-bg))",
+          card: "hsl(var(--vanguard-card))",
+          text: "hsl(var(--vanguard-text))",
+          accent: "hsl(var(--vanguard-accent))",
+          alert: "hsl(var(--vanguard-alert))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

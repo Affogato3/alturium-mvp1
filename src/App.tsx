@@ -10,7 +10,7 @@ import { NavigationHeader } from "@/components/navigation-header";
 import { AuditDashboard } from "@/components/audit-dashboard";
 import { CNLGridDashboard } from "@/components/cnl-grid-dashboard";
 import { supabase } from "@/integrations/supabase/client";
-import { ScribeDashboard } from "@/components/scribe-dashboard";
+import { VanguardDashboard } from "@/components/vanguard-dashboard";
 import AlturiumDashboard from "@/components/alturium-dashboard";
 import { Session, User } from "@supabase/supabase-js";
 import Index from "./pages/Index";
@@ -107,7 +107,7 @@ const App = () => {
                 </div>
               } />
             <Route path="/cnl-grid" element={<CNLGridDashboard />} />
-            <Route path="/scribe" element={<ScribeDashboard />} />
+            <Route path="/vanguard" element={<VanguardDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>

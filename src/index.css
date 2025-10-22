@@ -72,6 +72,13 @@
     --scribe-accent: 199 100% 50%;
     --scribe-text: 220 9% 89%;
 
+    /* Vanguard Theme - Ultra-minimalist Command Center */
+    --vanguard-bg: 0 0% 4%;
+    --vanguard-card: 0 0% 12%;
+    --vanguard-text: 0 0% 92%;
+    --vanguard-accent: 180 100% 50%;
+    --vanguard-alert: 0 100% 62%;
+
     /* Alturium theme colors */
     --alturium-bg: 0 0% 4%;
     --alturium-card: 0 0% 10%;

@@ -111,15 +111,15 @@ export function NavigationHeader({
               <span className="hidden sm:inline text-sm">CNL Grid</span>
             </Button>
 
-            {/* Scribe Link */}
+            {/* Vanguard Link */}
             <Button 
               variant="ghost" 
               size="sm" 
               className="flex items-center gap-2"
-              onClick={() => window.location.href = '/scribe'}
+              onClick={() => window.location.href = '/vanguard'}
             >
-              <Mic className="h-4 w-4 text-[hsl(var(--scribe-accent))]" />
-              <span className="hidden sm:inline text-sm">Scribe</span>
+              <Mic className="h-4 w-4 text-[hsl(var(--vanguard-accent))]" />
+              <span className="hidden sm:inline text-sm">Vanguard</span>
             </Button>
 
             {/* Alturium Link */}
@@ -184,9 +184,9 @@ export function NavigationHeader({
                       <Network className="mr-2 h-4 w-4" />
                       CNL Grid™
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => window.location.href = '/scribe'}>
+                    <DropdownMenuItem onClick={() => window.location.href = '/vanguard'}>
                       <Mic className="mr-2 h-4 w-4" />
-                      Scribe
+                      Vanguard
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => window.location.href = '/alturium'}>
                       <Shield className="mr-2 h-4 w-4" />
