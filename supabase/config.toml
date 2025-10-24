@@ -1,1 +1,4 @@
 project_id = "plnnfivkteqgofgwxplv"
+
+[functions.cnl-optimize]
+verify_jwt = false

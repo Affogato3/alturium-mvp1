@@ -58,6 +58,48 @@ export type Database = {
           },
         ]
       }
+      liquidity_nodes: {
+        Row: {
+          account_type: string
+          balance: number
+          created_at: string | null
+          entity: string
+          flow_direction: string | null
+          id: string
+          maturity_date: string | null
+          risk_weight: number | null
+          timestamp: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          account_type: string
+          balance?: number
+          created_at?: string | null
+          entity: string
+          flow_direction?: string | null
+          id?: string
+          maturity_date?: string | null
+          risk_weight?: number | null
+          timestamp?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          account_type?: string
+          balance?: number
+          created_at?: string | null
+          entity?: string
+          flow_direction?: string | null
+          id?: string
+          maturity_date?: string | null
+          risk_weight?: number | null
+          timestamp?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       meeting_analytics: {
         Row: {
           created_at: string | null
