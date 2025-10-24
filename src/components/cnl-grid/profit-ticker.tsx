@@ -106,7 +106,11 @@ export function ProfitTicker() {
           {events.map((event) => (
             <div
               key={event.id}
-              className="p-2 rounded border border-border/50 bg-card/30 hover:bg-card/50 transition-colors cursor-pointer group"
+              className="p-2 rounded border border-border/50 bg-card/30 hover:bg-card/50 hover:border-[hsl(var(--cnl-flow))]/50 transition-all cursor-pointer group relative"
+              onClick={() => {
+                // This would open detailed flow analysis
+                console.log("Analyzing flow:", event);
+              }}
             >
               <div className="flex items-start gap-2">
                 <div 

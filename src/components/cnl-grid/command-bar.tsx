@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Terminal, Send, Zap } from "lucide-react";
+import { Terminal, Send, Zap, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 interface Message {
   type: "user" | "system";
@@ -13,19 +15,19 @@ interface Message {
 
 export function CommandBar() {
   const [input, setInput] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       type: "system",
-      content: "CNL Grid™ Command Line initialized. Ready for capital optimization directives.",
+      content: "CNL Grid™ Cognitive Decision Layer initialized. Connected to Liquidity Tensor Engine. Ready for capital optimization directives.",
       timestamp: new Date()
     }
   ]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isProcessing) return;
 
-    // Add user message
     const userMessage: Message = {
       type: "user",
       content: input,
@@ -33,30 +35,41 @@ export function CommandBar() {
     };
     
     setMessages(prev => [...prev, userMessage]);
+    setIsProcessing(true);
+    setInput("");
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.functions.invoke('cnl-optimize', {
+        body: { 
+          action: "generate_insight",
+          data: { command: input }
+        }
+      });
+
+      if (error) throw error;
+
       const systemMessage: Message = {
         type: "system",
-        content: generateResponse(input),
+        content: data.recommendation || "Analysis complete. Processing recommendation...",
         timestamp: new Date()
       };
       setMessages(prev => [...prev, systemMessage]);
-    }, 1000);
-
-    setInput("");
-  };
-
-  const generateResponse = (query: string) => {
-    const lower = query.toLowerCase();
-    if (lower.includes("optimize") || lower.includes("efficiency")) {
-      return "Analysis complete. Identified $12.4M in idle capital across 47 accounts. Recommend reallocation to high-yield treasury pools (projected +3.8% ROI over 90 days). Execute optimization? [Confirm/Details]";
-    } else if (lower.includes("risk") || lower.includes("volatility")) {
-      return "Current portfolio volatility: 8.7%. FX exposure concentrated in EUR/USD (23% of liquidity). Recommend hedging via forward contracts to reduce risk by 42%. Deploy hedge? [Confirm/Simulate]";
-    } else if (lower.includes("simulate") || lower.includes("scenario")) {
-      return "Scenario simulation initialized. Running 10,000 Monte Carlo iterations for Q3 liquidity stress testing. Results in 3 seconds...";
-    } else {
-      return "Command acknowledged. Processing request through liquidity optimization engine. Stand by for recommendations.";
+    } catch (error) {
+      console.error("Command processing error:", error);
+      toast({
+        title: "Processing Error",
+        description: error instanceof Error ? error.message : "Failed to process command",
+        variant: "destructive"
+      });
+      
+      const errorMessage: Message = {
+        type: "system",
+        content: "Error processing command. Please try again or rephrase your request.",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -97,8 +110,13 @@ export function CommandBar() {
           placeholder="Enter command or query..."
           className="flex-1 bg-background/50 border-border text-foreground placeholder:text-muted-foreground"
         />
-        <Button type="submit" size="sm" className="bg-[hsl(var(--cnl-flow))] hover:bg-[hsl(var(--cnl-flow))]/80">
-          <Send className="w-4 h-4" />
+        <Button 
+          type="submit" 
+          size="sm" 
+          disabled={isProcessing}
+          className="bg-[hsl(var(--cnl-flow))] hover:bg-[hsl(var(--cnl-flow))]/80 disabled:opacity-50"
+        >
+          {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
         </Button>
       </form>
     </div>

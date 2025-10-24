@@ -1,10 +1,119 @@
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Shield, Sparkles, Network, Play } from "lucide-react";
+import { TrendingUp, Shield, Sparkles, Network, Play, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 export function LiquidityConsole() {
+  const [isOptimizing, setIsOptimizing] = useState(false);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  const runOptimization = async () => {
+    setIsOptimizing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('cnl-optimize', {
+        body: { 
+          action: "optimize",
+          data: {
+            idleCapital: 12.4,
+            accounts: 47,
+            currentAllocation: {
+              cash: 8.2,
+              treasury: 2.1,
+              investments: 2.1
+            }
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Optimization Complete",
+        description: "Capital reallocation recommendations generated. Review results below.",
+      });
+    } catch (error) {
+      toast({
+        title: "Optimization Failed",
+        description: error instanceof Error ? error.message : "Failed to run optimization",
+        variant: "destructive"
+      });
+    } finally {
+      setIsOptimizing(false);
+    }
+  };
+
+  const simulateRisk = async () => {
+    setIsSimulating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('cnl-optimize', {
+        body: { 
+          action: "simulate_risk",
+          data: {
+            scenario: "Inflation shock +3%, FX volatility spike EUR/USD",
+            portfolio: {
+              cash: 45.2,
+              debt: 12.8,
+              investments: 22.4,
+              fxExposure: { EUR: 23, GBP: 12, JPY: 8 }
+            }
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Risk Simulation Complete",
+        description: "Countermeasures and hedge recommendations ready.",
+      });
+    } catch (error) {
+      toast({
+        title: "Simulation Failed",
+        description: error instanceof Error ? error.message : "Failed to simulate risk",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSimulating(false);
+    }
+  };
+
+  const analyzeOpportunities = async () => {
+    setIsAnalyzing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('cnl-optimize', {
+        body: { 
+          action: "predict_liquidity",
+          data: {
+            currentLiquidity: 80.4,
+            cashFlowTrend: "positive",
+            upcomingObligations: 23.6,
+            marketConditions: "stable"
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Opportunity Analysis Complete",
+        description: "Growth opportunities identified with ROI projections.",
+      });
+    } catch (error) {
+      toast({
+        title: "Analysis Failed",
+        description: error instanceof Error ? error.message : "Failed to analyze opportunities",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   return (
     <Card className="p-4 bg-black/95 backdrop-blur-sm border-border">
       <Tabs defaultValue="optimize" className="w-full">
@@ -46,9 +155,13 @@ export function LiquidityConsole() {
               <div className="text-xs text-muted-foreground mt-1">90-day projection</div>
             </Card>
           </div>
-          <Button className="w-full bg-[hsl(var(--cnl-profit))] hover:bg-[hsl(var(--cnl-profit))]/80">
-            <Play className="w-4 h-4 mr-2" />
-            Run Optimization
+          <Button 
+            onClick={runOptimization}
+            disabled={isOptimizing}
+            className="w-full bg-[hsl(var(--cnl-profit))] hover:bg-[hsl(var(--cnl-profit))]/80 disabled:opacity-50"
+          >
+            {isOptimizing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Play className="w-4 h-4 mr-2" />}
+            {isOptimizing ? "Optimizing..." : "Run Optimization"}
           </Button>
         </TabsContent>
 
@@ -79,9 +192,14 @@ export function LiquidityConsole() {
               </div>
             </Card>
           </div>
-          <Button className="w-full" variant="outline">
-            <Shield className="w-4 h-4 mr-2" />
-            Deploy Countermeasures
+          <Button 
+            onClick={simulateRisk}
+            disabled={isSimulating}
+            className="w-full" 
+            variant="outline"
+          >
+            {isSimulating ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Shield className="w-4 h-4 mr-2" />}
+            {isSimulating ? "Simulating..." : "Deploy Countermeasures"}
           </Button>
         </TabsContent>
 
@@ -112,9 +230,13 @@ export function LiquidityConsole() {
               </Card>
             ))}
           </div>
-          <Button className="w-full bg-[hsl(var(--cnl-profit))] hover:bg-[hsl(var(--cnl-profit))]/80">
-            <Sparkles className="w-4 h-4 mr-2" />
-            Analyze All Opportunities
+          <Button 
+            onClick={analyzeOpportunities}
+            disabled={isAnalyzing}
+            className="w-full bg-[hsl(var(--cnl-profit))] hover:bg-[hsl(var(--cnl-profit))]/80 disabled:opacity-50"
+          >
+            {isAnalyzing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
+            {isAnalyzing ? "Analyzing..." : "Analyze All Opportunities"}
           </Button>
         </TabsContent>
 
@@ -135,7 +257,14 @@ export function LiquidityConsole() {
               </Card>
             ))}
           </div>
-          <Button className="w-full" variant="outline">
+          <Button 
+            onClick={() => toast({
+              title: "Integration Panel",
+              description: "Data Fusion Layer: 8 systems connected. ERP, Banking APIs, Market Data streaming live.",
+            })}
+            className="w-full" 
+            variant="outline"
+          >
             <Network className="w-4 h-4 mr-2" />
             Configure Integrations
           </Button>
