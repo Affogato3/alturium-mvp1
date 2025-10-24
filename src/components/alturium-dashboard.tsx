@@ -343,7 +343,7 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
                 <Zap className="h-5 w-5 text-alturium-accent" />
                 <h2 className="text-lg font-semibold uppercase tracking-wide">Quick Actions</h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <QuickActionCard
                   icon={Brain}
                   title="AI Analysis"
@@ -355,6 +355,12 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
                   title="Analytics"
                   description="View detailed reports"
                   onClick={() => navigate("/audit")}
+                />
+                <QuickActionCard
+                  icon={Shield}
+                  title="RegTech"
+                  description="Global compliance core"
+                  onClick={() => navigate("/compliance")}
                 />
                 <QuickActionCard
                   icon={Plug}
