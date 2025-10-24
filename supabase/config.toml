@@ -2,3 +2,9 @@ project_id = "plnnfivkteqgofgwxplv"
 
 [functions.cnl-optimize]
 verify_jwt = false
+
+[functions.compliance-engine]
+verify_jwt = false
+
+[functions.compliance-engine]
+verify_jwt = false

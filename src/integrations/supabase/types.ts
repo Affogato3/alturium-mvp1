@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      compliance_events: {
+        Row: {
+          confidence_score: number | null
+          created_at: string | null
+          decision: string
+          decision_payload: Json | null
+          event_data: Json
+          event_type: string
+          id: string
+          ledger_tx_hash: string | null
+          payload_hash: string
+          policy_version: string | null
+          rules_evaluated: string[] | null
+          user_id: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string | null
+          decision: string
+          decision_payload?: Json | null
+          event_data: Json
+          event_type: string
+          id?: string
+          ledger_tx_hash?: string | null
+          payload_hash: string
+          policy_version?: string | null
+          rules_evaluated?: string[] | null
+          user_id: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string | null
+          decision?: string
+          decision_payload?: Json | null
+          event_data?: Json
+          event_type?: string
+          id?: string
+          ledger_tx_hash?: string | null
+          payload_hash?: string
+          policy_version?: string | null
+          rules_evaluated?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       employee_logs: {
         Row: {
           attendance_score: number | null
@@ -57,6 +102,92 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      evidence_artifacts: {
+        Row: {
+          artifact_hash: string
+          artifact_type: string
+          compliance_event_id: string | null
+          created_at: string | null
+          file_name: string | null
+          file_url: string | null
+          id: string
+          metadata: Json | null
+          user_id: string
+        }
+        Insert: {
+          artifact_hash: string
+          artifact_type: string
+          compliance_event_id?: string | null
+          created_at?: string | null
+          file_name?: string | null
+          file_url?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id: string
+        }
+        Update: {
+          artifact_hash?: string
+          artifact_type?: string
+          compliance_event_id?: string | null
+          created_at?: string | null
+          file_name?: string | null
+          file_url?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evidence_artifacts_compliance_event_id_fkey"
+            columns: ["compliance_event_id"]
+            isOneToOne: false
+            referencedRelation: "compliance_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jurisdictions: {
+        Row: {
+          code: string
+          compliance_status: Database["public"]["Enums"]["compliance_status"]
+          created_at: string | null
+          id: string
+          last_audit_date: string | null
+          name: string
+          next_review_date: string | null
+          region: string
+          regulators: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          code: string
+          compliance_status?: Database["public"]["Enums"]["compliance_status"]
+          created_at?: string | null
+          id?: string
+          last_audit_date?: string | null
+          name: string
+          next_review_date?: string | null
+          region: string
+          regulators?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          code?: string
+          compliance_status?: Database["public"]["Enums"]["compliance_status"]
+          created_at?: string | null
+          id?: string
+          last_audit_date?: string | null
+          name?: string
+          next_review_date?: string | null
+          region?: string
+          regulators?: Json | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       liquidity_nodes: {
         Row: {
@@ -320,6 +451,63 @@ export type Database = {
         }
         Relationships: []
       }
+      policies: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          effective_from: string | null
+          expires_at: string | null
+          id: string
+          jurisdiction: string[]
+          priority: number | null
+          rule_id: string
+          rule_json: Json
+          source_url: string | null
+          status: Database["public"]["Enums"]["policy_status"]
+          title: string
+          updated_at: string | null
+          user_id: string
+          version: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          effective_from?: string | null
+          expires_at?: string | null
+          id?: string
+          jurisdiction: string[]
+          priority?: number | null
+          rule_id: string
+          rule_json: Json
+          source_url?: string | null
+          status?: Database["public"]["Enums"]["policy_status"]
+          title: string
+          updated_at?: string | null
+          user_id: string
+          version: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          effective_from?: string | null
+          expires_at?: string | null
+          id?: string
+          jurisdiction?: string[]
+          priority?: number | null
+          rule_id?: string
+          rule_json?: Json
+          source_url?: string | null
+          status?: Database["public"]["Enums"]["policy_status"]
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+          version?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company_name: string | null
@@ -346,6 +534,90 @@ export type Database = {
           id?: string
           industry?: string | null
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      regulation_feed: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          jurisdiction: string
+          published_at: string | null
+          relevance_score: number | null
+          source: string
+          summary: string | null
+          title: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          jurisdiction: string
+          published_at?: string | null
+          relevance_score?: number | null
+          source: string
+          summary?: string | null
+          title: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          jurisdiction?: string
+          published_at?: string | null
+          relevance_score?: number | null
+          source?: string
+          summary?: string | null
+          title?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      risk_clusters: {
+        Row: {
+          affected_entities: string[] | null
+          cluster_name: string
+          created_at: string | null
+          description: string | null
+          detected_at: string | null
+          id: string
+          jurisdiction: string
+          mitigation_status: string | null
+          resolved_at: string | null
+          risk_level: Database["public"]["Enums"]["risk_level"]
+          user_id: string
+        }
+        Insert: {
+          affected_entities?: string[] | null
+          cluster_name: string
+          created_at?: string | null
+          description?: string | null
+          detected_at?: string | null
+          id?: string
+          jurisdiction: string
+          mitigation_status?: string | null
+          resolved_at?: string | null
+          risk_level: Database["public"]["Enums"]["risk_level"]
+          user_id: string
+        }
+        Update: {
+          affected_entities?: string[] | null
+          cluster_name?: string
+          created_at?: string | null
+          description?: string | null
+          detected_at?: string | null
+          id?: string
+          jurisdiction?: string
+          mitigation_status?: string | null
+          resolved_at?: string | null
+          risk_level?: Database["public"]["Enums"]["risk_level"]
           user_id?: string
         }
         Relationships: []
@@ -477,6 +749,13 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "executive" | "analyst" | "auditor"
+      compliance_status:
+        | "compliant"
+        | "pending_update"
+        | "audit_flagged"
+        | "non_compliant"
+      policy_status: "draft" | "staging" | "canary" | "production" | "archived"
+      risk_level: "low" | "medium" | "high" | "critical"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -605,6 +884,14 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "executive", "analyst", "auditor"],
+      compliance_status: [
+        "compliant",
+        "pending_update",
+        "audit_flagged",
+        "non_compliant",
+      ],
+      policy_status: ["draft", "staging", "canary", "production", "archived"],
+      risk_level: ["low", "medium", "high", "critical"],
     },
   },
 } as const
