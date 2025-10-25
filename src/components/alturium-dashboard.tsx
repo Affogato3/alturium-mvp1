@@ -363,6 +363,12 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
                   onClick={() => navigate("/compliance")}
                 />
                 <QuickActionCard
+                  icon={Shield}
+                  title="Ethical Arbiter"
+                  description="AI governance guardian"
+                  onClick={() => navigate("/ethical-arbiter")}
+                />
+                <QuickActionCard
                   icon={Plug}
                   title="Integrations"
                   description="Manage connections"
