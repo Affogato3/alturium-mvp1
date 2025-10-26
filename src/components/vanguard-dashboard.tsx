@@ -39,6 +39,11 @@ import {
   MessageSquare,
   ChevronRight,
 } from "lucide-react";
+import { MissionBoard } from "./vanguard/mission-board";
+import { DiscussionStream } from "./vanguard/discussion-stream";
+import { SmartNotes } from "./vanguard/smart-notes";
+import { AICommandLine } from "./vanguard/ai-command-line";
+import { SyncBar } from "./vanguard/sync-bar";
 
 export const VanguardDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -424,6 +429,27 @@ export const VanguardDashboard = () => {
             ))}
           </div>
         </Card>
+
+        {/* AI Command Line - Natural Language Interface */}
+        <AICommandLine />
+
+        {/* Collaborative Core Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Mission Board - Collaborative Projects */}
+          <MissionBoard />
+
+          {/* Discussion Stream - AI-Organized Threads */}
+          <DiscussionStream />
+        </div>
+
+        {/* Smart Tools Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Smart Notes Panel */}
+          <SmartNotes />
+
+          {/* Instant Sync Bar */}
+          <SyncBar />
+        </div>
 
         {/* Main Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
