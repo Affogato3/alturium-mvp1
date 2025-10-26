@@ -14,6 +14,7 @@ import { VanguardDashboard } from "@/components/vanguard-dashboard";
 import AlturiumDashboard from "@/components/alturium-dashboard";
 import { ComplianceDashboard } from "@/components/compliance-dashboard";
 import { EthicalArbiterDashboard } from "@/components/ethical-arbiter-dashboard";
+import { PCREDashboard } from "@/components/pcre-dashboard";
 import { Session, User } from "@supabase/supabase-js";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -112,6 +113,7 @@ const App = () => {
             <Route path="/vanguard" element={<VanguardDashboard />} />
           <Route path="/compliance" element={<ComplianceDashboard />} />
           <Route path="/ethical-arbiter" element={<EthicalArbiterDashboard />} />
+          <Route path="/pcre" element={<PCREDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>

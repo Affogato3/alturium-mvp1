@@ -369,6 +369,12 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
                   onClick={() => navigate("/ethical-arbiter")}
                 />
                 <QuickActionCard
+                  icon={Brain}
+                  title="Corporate Reflex Engine"
+                  description="Predictive AI • Real-time strategy"
+                  onClick={() => navigate("/pcre")}
+                />
+                <QuickActionCard
                   icon={Plug}
                   title="Integrations"
                   description="Manage connections"
