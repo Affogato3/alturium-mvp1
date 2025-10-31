@@ -147,6 +147,221 @@ export type Database = {
           },
         ]
       }
+      interlock_conflicts: {
+        Row: {
+          affected_departments: string[]
+          auto_resolution_suggested: Json | null
+          conflict_type: string
+          created_at: string
+          description: string
+          id: string
+          predicted_impact_hours: number
+          resolution_status: string
+          resolved_at: string | null
+          severity: string
+          task_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          affected_departments: string[]
+          auto_resolution_suggested?: Json | null
+          conflict_type: string
+          created_at?: string
+          description: string
+          id?: string
+          predicted_impact_hours: number
+          resolution_status?: string
+          resolved_at?: string | null
+          severity: string
+          task_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          affected_departments?: string[]
+          auto_resolution_suggested?: Json | null
+          conflict_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          predicted_impact_hours?: number
+          resolution_status?: string
+          resolved_at?: string | null
+          severity?: string
+          task_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interlock_conflicts_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "interlock_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      interlock_dependencies: {
+        Row: {
+          created_at: string
+          dependency_type: string
+          depends_on_task_id: string
+          id: string
+          task_id: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          dependency_type: string
+          depends_on_task_id: string
+          id?: string
+          task_id: string
+          weight?: number
+        }
+        Update: {
+          created_at?: string
+          dependency_type?: string
+          depends_on_task_id?: string
+          id?: string
+          task_id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interlock_dependencies_depends_on_task_id_fkey"
+            columns: ["depends_on_task_id"]
+            isOneToOne: false
+            referencedRelation: "interlock_tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "interlock_dependencies_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "interlock_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      interlock_reschedules: {
+        Row: {
+          ai_confidence: number | null
+          conflict_id: string | null
+          created_at: string
+          id: string
+          new_end_date: string
+          new_start_date: string
+          old_end_date: string
+          old_start_date: string
+          reason: string
+          stakeholders_notified: string[] | null
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          ai_confidence?: number | null
+          conflict_id?: string | null
+          created_at?: string
+          id?: string
+          new_end_date: string
+          new_start_date: string
+          old_end_date: string
+          old_start_date: string
+          reason: string
+          stakeholders_notified?: string[] | null
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          ai_confidence?: number | null
+          conflict_id?: string | null
+          created_at?: string
+          id?: string
+          new_end_date?: string
+          new_start_date?: string
+          old_end_date?: string
+          old_start_date?: string
+          reason?: string
+          stakeholders_notified?: string[] | null
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interlock_reschedules_conflict_id_fkey"
+            columns: ["conflict_id"]
+            isOneToOne: false
+            referencedRelation: "interlock_conflicts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "interlock_reschedules_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "interlock_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      interlock_tasks: {
+        Row: {
+          conflict_probability: number | null
+          created_at: string
+          department: string
+          description: string | null
+          end_date: string
+          id: string
+          owner_name: string
+          predicted_delay_hours: number | null
+          priority: string
+          progress: number
+          resource_requirement: string | null
+          start_date: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conflict_probability?: number | null
+          created_at?: string
+          department: string
+          description?: string | null
+          end_date: string
+          id?: string
+          owner_name: string
+          predicted_delay_hours?: number | null
+          priority: string
+          progress?: number
+          resource_requirement?: string | null
+          start_date: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conflict_probability?: number | null
+          created_at?: string
+          department?: string
+          description?: string | null
+          end_date?: string
+          id?: string
+          owner_name?: string
+          predicted_delay_hours?: number | null
+          priority?: string
+          progress?: number
+          resource_requirement?: string | null
+          start_date?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       jurisdictions: {
         Row: {
           code: string

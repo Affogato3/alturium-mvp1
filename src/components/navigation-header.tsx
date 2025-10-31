@@ -144,6 +144,17 @@ export function NavigationHeader({
               <span className="hidden sm:inline text-sm">RegTech</span>
             </Button>
 
+            {/* Predictive Interlock Link */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center gap-2"
+              onClick={() => window.location.href = '/predictive-interlock'}
+            >
+              <Activity className="h-4 w-4 text-cyan-400" />
+              <span className="hidden sm:inline text-sm">Interlock™</span>
+            </Button>
+
             {/* Notifications */}
             <Button variant="ghost" size="sm" className="relative">
               <Bell className="h-4 w-4" />

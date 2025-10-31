@@ -18,6 +18,8 @@ import { PCREDashboard } from "@/components/pcre-dashboard";
 import { Session, User } from "@supabase/supabase-js";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import { ScribeDashboard } from "@/components/scribe-dashboard";
+import { PredictiveInterlockDashboard } from "@/components/predictive-interlock-dashboard";
 
 const queryClient = new QueryClient();
 
@@ -114,6 +116,8 @@ const App = () => {
           <Route path="/compliance" element={<ComplianceDashboard />} />
           <Route path="/ethical-arbiter" element={<EthicalArbiterDashboard />} />
           <Route path="/pcre" element={<PCREDashboard />} />
+          <Route path="/scribe" element={<ScribeDashboard />} />
+          <Route path="/predictive-interlock" element={<PredictiveInterlockDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>
