@@ -18,6 +18,7 @@ import {
   Settings, 
   Shield,
   BookOpen,
+  Brain,
   Activity,
   Network,
   Mic
