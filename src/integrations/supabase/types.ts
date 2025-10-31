@@ -59,6 +59,93 @@ export type Database = {
         }
         Relationships: []
       }
+      correlation_edges: {
+        Row: {
+          correlation_value: number | null
+          created_at: string | null
+          edge_type: string | null
+          from_node_id: string | null
+          id: string
+          to_node_id: string | null
+          user_id: string
+          weight: number | null
+        }
+        Insert: {
+          correlation_value?: number | null
+          created_at?: string | null
+          edge_type?: string | null
+          from_node_id?: string | null
+          id?: string
+          to_node_id?: string | null
+          user_id: string
+          weight?: number | null
+        }
+        Update: {
+          correlation_value?: number | null
+          created_at?: string | null
+          edge_type?: string | null
+          from_node_id?: string | null
+          id?: string
+          to_node_id?: string | null
+          user_id?: string
+          weight?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "correlation_edges_from_node_id_fkey"
+            columns: ["from_node_id"]
+            isOneToOne: false
+            referencedRelation: "correlation_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "correlation_edges_to_node_id_fkey"
+            columns: ["to_node_id"]
+            isOneToOne: false
+            referencedRelation: "correlation_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      correlation_nodes: {
+        Row: {
+          created_at: string | null
+          id: string
+          node_type: string | null
+          position_x: number | null
+          position_y: number | null
+          position_z: number | null
+          strength: number | null
+          symbol: string
+          user_id: string
+          volatility: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          node_type?: string | null
+          position_x?: number | null
+          position_y?: number | null
+          position_z?: number | null
+          strength?: number | null
+          symbol: string
+          user_id: string
+          volatility?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          node_type?: string | null
+          position_x?: number | null
+          position_y?: number | null
+          position_z?: number | null
+          strength?: number | null
+          symbol?: string
+          user_id?: string
+          volatility?: number | null
+        }
+        Relationships: []
+      }
       employee_logs: {
         Row: {
           attendance_score: number | null
@@ -146,6 +233,107 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      execution_orders: {
+        Row: {
+          broker: string | null
+          compliance_checked: boolean | null
+          created_at: string | null
+          executed_at: string | null
+          execution_mode: string | null
+          id: string
+          order_type: string
+          price: number | null
+          quantity: number
+          side: string
+          signal_id: string | null
+          status: string | null
+          symbol: string
+          user_id: string
+        }
+        Insert: {
+          broker?: string | null
+          compliance_checked?: boolean | null
+          created_at?: string | null
+          executed_at?: string | null
+          execution_mode?: string | null
+          id?: string
+          order_type: string
+          price?: number | null
+          quantity: number
+          side: string
+          signal_id?: string | null
+          status?: string | null
+          symbol: string
+          user_id: string
+        }
+        Update: {
+          broker?: string | null
+          compliance_checked?: boolean | null
+          created_at?: string | null
+          executed_at?: string | null
+          execution_mode?: string | null
+          id?: string
+          order_type?: string
+          price?: number | null
+          quantity?: number
+          side?: string
+          signal_id?: string | null
+          status?: string | null
+          symbol?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_orders_signal_id_fkey"
+            columns: ["signal_id"]
+            isOneToOne: false
+            referencedRelation: "market_signals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      insider_activities: {
+        Row: {
+          anomaly_score: number | null
+          cluster_id: string | null
+          detected_at: string | null
+          filing_date: string | null
+          id: string
+          insider_name: string | null
+          price: number | null
+          shares: number | null
+          symbol: string
+          transaction_type: string | null
+          user_id: string
+        }
+        Insert: {
+          anomaly_score?: number | null
+          cluster_id?: string | null
+          detected_at?: string | null
+          filing_date?: string | null
+          id?: string
+          insider_name?: string | null
+          price?: number | null
+          shares?: number | null
+          symbol: string
+          transaction_type?: string | null
+          user_id: string
+        }
+        Update: {
+          anomaly_score?: number | null
+          cluster_id?: string | null
+          detected_at?: string | null
+          filing_date?: string | null
+          id?: string
+          insider_name?: string | null
+          price?: number | null
+          shares?: number | null
+          symbol?: string
+          transaction_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       interlock_conflicts: {
         Row: {
@@ -404,6 +592,39 @@ export type Database = {
         }
         Relationships: []
       }
+      kpi_mappings: {
+        Row: {
+          correlation_score: number | null
+          id: string
+          impact_type: string | null
+          kpi_name: string
+          kpi_value: number | null
+          related_symbols: string[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          correlation_score?: number | null
+          id?: string
+          impact_type?: string | null
+          kpi_name: string
+          kpi_value?: number | null
+          related_symbols?: string[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          correlation_score?: number | null
+          id?: string
+          impact_type?: string | null
+          kpi_name?: string
+          kpi_value?: number | null
+          related_symbols?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       liquidity_nodes: {
         Row: {
           account_type: string
@@ -442,6 +663,78 @@ export type Database = {
           risk_weight?: number | null
           timestamp?: string
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      market_scenarios: {
+        Row: {
+          created_at: string | null
+          id: string
+          parameters: Json | null
+          results: Json | null
+          scenario_name: string
+          scenario_type: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          parameters?: Json | null
+          results?: Json | null
+          scenario_name: string
+          scenario_type?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          parameters?: Json | null
+          results?: Json | null
+          scenario_name?: string
+          scenario_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      market_signals: {
+        Row: {
+          audit_ref: string | null
+          confidence: number
+          created_at: string | null
+          explainability: Json | null
+          id: string
+          model_version: string | null
+          signal_type: string
+          status: string | null
+          suggested_action: Json
+          symbol: string
+          user_id: string
+        }
+        Insert: {
+          audit_ref?: string | null
+          confidence: number
+          created_at?: string | null
+          explainability?: Json | null
+          id?: string
+          model_version?: string | null
+          signal_type: string
+          status?: string | null
+          suggested_action: Json
+          symbol: string
+          user_id: string
+        }
+        Update: {
+          audit_ref?: string | null
+          confidence?: number
+          created_at?: string | null
+          explainability?: Json | null
+          id?: string
+          model_version?: string | null
+          signal_type?: string
+          status?: string | null
+          suggested_action?: Json
+          symbol?: string
           user_id?: string
         }
         Relationships: []
@@ -723,6 +1016,87 @@ export type Database = {
         }
         Relationships: []
       }
+      portfolio_positions: {
+        Row: {
+          account: string | null
+          avg_price: number
+          created_at: string | null
+          current_price: number | null
+          id: string
+          qty: number
+          sector: string | null
+          symbol: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          account?: string | null
+          avg_price: number
+          created_at?: string | null
+          current_price?: number | null
+          id?: string
+          qty: number
+          sector?: string | null
+          symbol: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          account?: string | null
+          avg_price?: number
+          created_at?: string | null
+          current_price?: number | null
+          id?: string
+          qty?: number
+          sector?: string | null
+          symbol?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      predictive_flows: {
+        Row: {
+          confidence: number | null
+          created_at: string | null
+          id: string
+          model_version: string | null
+          net_flow: number | null
+          predicted_inflow: number | null
+          predicted_outflow: number | null
+          prediction_horizon: string | null
+          sector: string | null
+          symbol: string
+          user_id: string
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string | null
+          id?: string
+          model_version?: string | null
+          net_flow?: number | null
+          predicted_inflow?: number | null
+          predicted_outflow?: number | null
+          prediction_horizon?: string | null
+          sector?: string | null
+          symbol: string
+          user_id: string
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string | null
+          id?: string
+          model_version?: string | null
+          net_flow?: number | null
+          predicted_inflow?: number | null
+          predicted_outflow?: number | null
+          prediction_horizon?: string | null
+          sector?: string | null
+          symbol?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company_name: string | null
@@ -833,6 +1207,42 @@ export type Database = {
           mitigation_status?: string | null
           resolved_at?: string | null
           risk_level?: Database["public"]["Enums"]["risk_level"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sentiment_data: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          id: string
+          published_at: string | null
+          sentiment_score: number | null
+          source: string | null
+          symbol: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          published_at?: string | null
+          sentiment_score?: number | null
+          source?: string | null
+          symbol: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          published_at?: string | null
+          sentiment_score?: number | null
+          source?: string | null
+          symbol?: string
+          url?: string | null
           user_id?: string
         }
         Relationships: []

@@ -111,6 +111,17 @@ export function NavigationHeader({
               <span className="hidden sm:inline text-sm">CNL Grid</span>
             </Button>
 
+            {/* Quantum Matrix Link */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center gap-2"
+              onClick={() => window.location.href = '/quantum-matrix'}
+            >
+              <Brain className="h-4 w-4 text-[#00E6F6]" />
+              <span className="hidden sm:inline text-sm">Quantum Matrix</span>
+            </Button>
+
             {/* Vanguard Link */}
             <Button 
               variant="ghost" 
