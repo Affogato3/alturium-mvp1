@@ -1,15 +1,16 @@
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
-import { Target, Users, TrendingUp, AlertCircle, ChevronRight, Zap } from "lucide-react";
+import { Target, Users, TrendingUp, AlertCircle, ChevronRight, Zap, Play, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface Mission {
   id: string;
   title: string;
-  status: "active" | "planning" | "blocked" | "complete";
+  status: "active" | "planning" | "blocked" | "completed";
   priority: "critical" | "high" | "medium" | "low";
   progress: number;
   kpiImpact: string;
@@ -19,7 +20,7 @@ interface Mission {
 }
 
 export function MissionBoard() {
-  const [missions] = useState<Mission[]>([
+  const [missions, setMissions] = useState<Mission[]>([
     {
       id: "1",
       title: "Q4 Revenue Acceleration",
@@ -71,7 +72,7 @@ export function MissionBoard() {
       case "active": return "bg-[hsl(var(--vanguard-accent))]/20 text-[hsl(var(--vanguard-accent))] border-[hsl(var(--vanguard-accent))]/30";
       case "planning": return "bg-blue-500/20 text-blue-500 border-blue-500/30";
       case "blocked": return "bg-[hsl(var(--vanguard-alert))]/20 text-[hsl(var(--vanguard-alert))] border-[hsl(var(--vanguard-alert))]/30";
-      case "complete": return "bg-emerald-500/20 text-emerald-500 border-emerald-500/30";
+      case "completed": return "bg-emerald-500/20 text-emerald-500 border-emerald-500/30";
       default: return "bg-[hsl(var(--vanguard-text))]/10 text-[hsl(var(--vanguard-text))]/60";
     }
   };
@@ -82,6 +83,45 @@ export function MissionBoard() {
       case "high": return "shadow-[0_0_20px_rgba(0,255,255,0.3)]";
       default: return "";
     }
+  };
+
+  const handleAccelerateMission = (missionId: string) => {
+    setMissions(prev => prev.map(mission => {
+      if (mission.id === missionId) {
+        const newProgress = Math.min(mission.progress + 15, 100);
+        const newStatus = newProgress === 100 ? "completed" : mission.status;
+        
+        toast.success(`Mission "${mission.title}" accelerated! Progress: ${newProgress}%`, {
+          description: `Boosted efficiency by 15%. ${newStatus === "completed" ? "Mission completed!" : "Keep going!"}`
+        });
+        
+        return {
+          ...mission,
+          progress: newProgress,
+          status: newStatus,
+          lastActivity: "Just now"
+        };
+      }
+      return mission;
+    }));
+  };
+
+  const handleCompleteMission = (missionId: string) => {
+    setMissions(prev => prev.map(mission => {
+      if (mission.id === missionId) {
+        toast.success(`Mission "${mission.title}" marked complete!`, {
+          description: `${mission.kpiImpact} achieved successfully`
+        });
+        
+        return {
+          ...mission,
+          progress: 100,
+          status: "completed",
+          lastActivity: "Just now"
+        };
+      }
+      return mission;
+    }));
   };
 
   return (
@@ -101,7 +141,7 @@ export function MissionBoard() {
           </div>
         </div>
         <Badge variant="outline" className="text-xs">
-          {missions.length} ACTIVE
+          {missions.filter(m => m.status !== "completed").length} ACTIVE
         </Badge>
       </div>
 
@@ -168,6 +208,36 @@ export function MissionBoard() {
                   </span>
                 </div>
               )}
+
+              {/* Action Buttons */}
+              <div className="flex gap-2 mt-4">
+                {mission.status !== "completed" && (
+                  <>
+                    <Button
+                      size="sm"
+                      onClick={() => handleAccelerateMission(mission.id)}
+                      className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30"
+                    >
+                      <Play className="w-3 h-3 mr-1" />
+                      Accelerate +15%
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => handleCompleteMission(mission.id)}
+                      variant="outline"
+                      className="border-green-500/30 text-green-400 hover:bg-green-500/20"
+                    >
+                      <CheckCircle2 className="w-3 h-3 mr-1" />
+                      Complete
+                    </Button>
+                  </>
+                )}
+                {mission.status === "completed" && (
+                  <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                    ✓ Completed • {mission.kpiImpact} achieved
+                  </Badge>
+                )}
+              </div>
             </div>
           ))}
         </div>

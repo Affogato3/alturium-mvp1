@@ -10,7 +10,7 @@ interface Integration {
   id: string;
   name: string;
   icon: string;
-  status: "connected" | "disconnected" | "syncing" | "error";
+  status: "connected" | "disabled" | "syncing" | "error";
   lastSync: string;
   enabled: boolean;
 }
@@ -19,42 +19,95 @@ export function SyncBar() {
   const [integrations, setIntegrations] = useState<Integration[]>([
     { id: "1", name: "Slack", icon: "💬", status: "connected", lastSync: "2m ago", enabled: true },
     { id: "2", name: "Salesforce", icon: "☁️", status: "connected", lastSync: "5m ago", enabled: true },
-    { id: "3", name: "Jira", icon: "📋", status: "syncing", lastSync: "Syncing...", enabled: true },
+    { id: "3", name: "Jira", icon: "📋", status: "connected", lastSync: "8m ago", enabled: true },
     { id: "4", name: "SAP", icon: "💼", status: "connected", lastSync: "1h ago", enabled: true },
-    { id: "5", name: "Asana", icon: "✓", status: "disconnected", lastSync: "Never", enabled: false },
+    { id: "5", name: "Asana", icon: "✓", status: "disabled", lastSync: "Never", enabled: false },
     { id: "6", name: "Teams", icon: "🎯", status: "connected", lastSync: "10m ago", enabled: true },
   ]);
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const toggleIntegration = (id: string) => {
-    setIntegrations((prev) =>
-      prev.map((int) =>
+    const integration = integrations.find(i => i.id === id);
+    if (!integration) return;
+
+    const newEnabled = !integration.enabled;
+    
+    setIntegrations(prev =>
+      prev.map(int =>
         int.id === id
-          ? { ...int, enabled: !int.enabled, status: !int.enabled ? "syncing" : "disconnected" }
+          ? {
+              ...int,
+              enabled: newEnabled,
+              status: newEnabled ? "connected" : "disabled",
+              lastSync: newEnabled ? "Just now" : int.lastSync,
+            }
           : int
       )
     );
-    toast.success("Integration updated");
+
+    toast.success(
+      newEnabled 
+        ? `${integration.name} integration enabled` 
+        : `${integration.name} integration disabled`,
+      {
+        description: newEnabled 
+          ? "Data will now sync automatically" 
+          : "Integration paused"
+      }
+    );
   };
 
   const refreshAll = () => {
     setIsRefreshing(true);
-    setIntegrations((prev) =>
-      prev.map((int) => (int.enabled ? { ...int, status: "syncing" as const } : int))
+    const enabledCount = integrations.filter(i => i.enabled).length;
+    toast.info(`Syncing ${enabledCount} active integration${enabledCount !== 1 ? 's' : ''}...`);
+
+    setIntegrations(prev =>
+      prev.map(integration =>
+        integration.enabled ? { ...integration, status: "syncing" } : integration
+      )
     );
 
     setTimeout(() => {
-      setIntegrations((prev) =>
-        prev.map((int) =>
-          int.enabled
-            ? { ...int, status: "connected" as const, lastSync: "Just now" }
-            : int
-        )
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+      
+      let successCount = 0;
+      let errorCount = 0;
+      
+      setIntegrations(prev =>
+        prev.map(integration => {
+          if (integration.enabled) {
+            const success = Math.random() > 0.1;
+            if (success) successCount++;
+            else errorCount++;
+            
+            return {
+              ...integration,
+              status: success ? "connected" : "error",
+              lastSync: success ? `Just now (${timeStr})` : integration.lastSync,
+            };
+          }
+          return integration;
+        })
       );
+      
       setIsRefreshing(false);
-      toast.success("All integrations synced");
-    }, 2000);
+      
+      if (errorCount === 0) {
+        toast.success(`All ${enabledCount} integrations synced successfully!`, {
+          description: `Last sync: ${timeStr}`
+        });
+      } else {
+        toast.warning(`Sync completed with ${errorCount} error(s)`, {
+          description: `${successCount} integrations synced successfully`
+        });
+      }
+    }, 2500);
   };
 
   const getStatusColor = (status: string) => {
@@ -146,7 +199,7 @@ export function SyncBar() {
         <div className="flex items-center gap-2 text-sm text-[hsl(var(--vanguard-text))]/80">
           <Check className="w-4 h-4 text-[hsl(var(--vanguard-accent))]" />
           <span>
-            All enabled systems synced. Real-time data flow active.
+            {integrations.filter(i => i.enabled).length} integrations active • Real-time data flow enabled
           </span>
         </div>
       </div>

@@ -298,12 +298,26 @@ export const VanguardDashboard = () => {
 
   const runSimulation = () => {
     setSimulationRunning(true);
+    toast.info("Running comprehensive simulation with current parameters...");
+    
     setTimeout(() => {
       const profit = (costDelta[0] * -0.5 + timeDelta[0] * 0.3 + workforceDelta[0] * 0.4).toFixed(1);
       const load = (Math.abs(costDelta[0]) * 0.3 + Math.abs(timeDelta[0]) * 0.5 + Math.abs(workforceDelta[0]) * 0.4).toFixed(1);
       setProfitShift(parseFloat(profit));
       setOperationalLoad(parseFloat(load));
+      
+      // Update audit ledger with simulation results
+      const newAudit = {
+        id: Date.now(),
+        action: `Simulation: Cost ${costDelta[0] > 0 ? '+' : ''}${costDelta[0]}%, Time ${timeDelta[0] > 0 ? '+' : ''}${timeDelta[0]}%, Workforce ${workforceDelta[0] > 0 ? '+' : ''}${workforceDelta[0]}%`,
+        outcome: `Profit Impact: ${parseFloat(profit) > 0 ? '+' : ''}${profit}%, Load: ${load}%`,
+        timestamp: "Just now",
+        verified: true,
+      };
+      setAuditLedger(prev => [newAudit, ...prev]);
+      
       setSimulationRunning(false);
+      toast.success(`Simulation complete! Profit shift: ${parseFloat(profit) > 0 ? '+' : ''}${profit}%, Operational load: ${load}%`);
     }, 2000);
   };
 
@@ -360,13 +374,28 @@ export const VanguardDashboard = () => {
                 className="text-[hsl(var(--vanguard-text))]/60 hover:text-[hsl(var(--vanguard-accent))]"
                 onClick={() => {
                   setSimulationRunning(true);
-                  toast.info("Running comprehensive audit...");
+                  toast.info("Deploying comprehensive audit across all operational metrics...");
+                  
                   setTimeout(() => {
+                    const newProfitShift = (Math.random() * 10 - 2).toFixed(1);
+                    const newOpLoad = (Math.random() * -15).toFixed(1);
+                    
+                    setProfitShift(parseFloat(newProfitShift));
+                    setOperationalLoad(parseFloat(newOpLoad));
+                    
+                    // Add audit to ledger
+                    const auditEntry = {
+                      id: Date.now(),
+                      action: "Full operational audit executed",
+                      outcome: `Efficiency: ${parseFloat(newProfitShift) > 0 ? '+' : ''}${newProfitShift}%, Load: ${newOpLoad}%`,
+                      timestamp: "Just now",
+                      verified: true,
+                    };
+                    setAuditLedger(prev => [auditEntry, ...prev]);
+                    
                     setSimulationRunning(false);
-                    setProfitShift(Math.random() * 10 - 2);
-                    setOperationalLoad(Math.random() * -15);
-                    toast.success("Audit complete. Results updated.");
-                  }, 2000);
+                    toast.success(`Audit complete! Profit shift: ${parseFloat(newProfitShift) > 0 ? '+' : ''}${newProfitShift}%, Load reduced: ${newOpLoad}%`);
+                  }, 2500);
                 }}
               >
                 <Zap className="w-4 h-4 mr-2" />
