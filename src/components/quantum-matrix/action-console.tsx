@@ -17,6 +17,16 @@ export function ActionConsole({ autoExecute, activeMode }: ActionConsoleProps) {
   const { toast } = useToast();
 
   const handleAutoRebalance = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to use auto-rebalancing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsRebalancing(true);
     toast({
       title: "AI Rebalancing Initiated",
@@ -53,6 +63,16 @@ export function ActionConsole({ autoExecute, activeMode }: ActionConsoleProps) {
   };
 
   const handleSimulateShock = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to run simulations.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSimulating(true);
     toast({
       title: "7-Day Shock Simulation Running",

@@ -17,8 +17,24 @@ export function PredictiveFlowPanel() {
   const [flows, setFlows] = useState<FlowData[]>([]);
 
   useEffect(() => {
-    fetchFlows();
-    const interval = setInterval(fetchFlows, 10000);
+    const checkAuthAndFetch = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        console.log('[PredictiveFlowPanel] No active session, skipping fetch');
+        return;
+      }
+      await fetchFlows();
+    };
+
+    checkAuthAndFetch();
+    
+    const interval = setInterval(async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        await fetchFlows();
+      }
+    }, 10000);
+    
     return () => clearInterval(interval);
   }, []);
 

@@ -38,10 +38,25 @@ export function QuantumCorrelationGraph() {
   const lastMouse = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
+    const checkAuthAndFetch = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        console.log('[QuantumCorrelationGraph] No active session, skipping fetch');
+        return;
+      }
+      await fetchGraphData();
+    };
+
     initializeGraph();
-    const interval = setInterval(() => {
-      fetchGraphData();
+    checkAuthAndFetch();
+    
+    const interval = setInterval(async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        await fetchGraphData();
+      }
     }, 5000);
+    
     return () => clearInterval(interval);
   }, []);
 
