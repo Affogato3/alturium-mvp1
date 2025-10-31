@@ -207,8 +207,14 @@ export const ScribeDashboard = () => {
   const handleExport = (format: string) => {
     toast({
       title: "Export started",
-      description: `Generating ${format.toUpperCase()} report...`,
+      description: `Generating ${format.toUpperCase()} report with full meeting intelligence...`,
     });
+    setTimeout(() => {
+      toast({
+        title: "Export complete",
+        description: `Scribe-Meeting-Report.${format} ready for download`,
+      });
+    }, 2000);
   };
 
   const handleApproveAgenda = () => {

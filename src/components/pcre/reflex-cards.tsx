@@ -1,8 +1,11 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, TrendingDown, AlertTriangle, Zap, ChevronRight, Target } from "lucide-react";
+import { TrendingUp, TrendingDown, AlertTriangle, Zap, ChevronRight, Target, ExternalLink, Play, X } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
 
 interface ReflexCard {
   id: string;
@@ -17,10 +20,12 @@ interface ReflexCard {
     ifFollowed: string;
     ifIgnored: string;
   };
+  relatedDashboard?: string;
 }
 
 export function ReflexCards() {
-  const reflexCards: ReflexCard[] = [
+  const navigate = useNavigate();
+  const [reflexCards, setReflexCards] = useState<ReflexCard[]>([
     {
       id: "1",
       type: "risk",
@@ -37,7 +42,8 @@ export function ReflexCards() {
       simulatedOutcome: {
         ifFollowed: "Q4 revenue +$1.2M (6.4% lift), Customer LTV +18%",
         ifIgnored: "Q4 revenue -$840K (4.2% loss), Churn rate +7%"
-      }
+      },
+      relatedDashboard: "/audit"
     },
     {
       id: "2",
@@ -55,7 +61,8 @@ export function ReflexCards() {
       simulatedOutcome: {
         ifFollowed: "Margin improvement +1.8%, Supply resilience +24%",
         ifIgnored: "Competitor captures vendor, pricing advantage lost"
-      }
+      },
+      relatedDashboard: "/vanguard"
     },
     {
       id: "3",
@@ -73,9 +80,12 @@ export function ReflexCards() {
       simulatedOutcome: {
         ifFollowed: "On-time launch probability 89%, Team burnout risk -42%",
         ifIgnored: "Launch delay 6-8 weeks, Revenue impact -$3.2M"
-      }
+      },
+      relatedDashboard: "/scribe"
     }
-  ];
+  ]);
+
+  const [isScanning, setIsScanning] = useState(false);
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -99,22 +109,103 @@ export function ReflexCards() {
     }
   };
 
+  const handleGenerateNewScan = () => {
+    setIsScanning(true);
+    toast.info("Deploying PCRE across all data streams...", {
+      description: "Scanning ERP, CRM, market feeds, and operational metrics"
+    });
+
+    setTimeout(() => {
+      const newCard: ReflexCard = {
+        id: Date.now().toString(),
+        type: Math.random() > 0.6 ? "opportunity" : Math.random() > 0.5 ? "risk" : "trend",
+        title: "Customer Retention Pattern Shift Detected",
+        forecast: "Churn indicators up 8% in premium tier over 7 days",
+        impact: "$450K ARR at risk • Early intervention window available",
+        confidence: 88,
+        timeline: "Optimal action window: 5-8 days",
+        actions: [
+          "Launch targeted re-engagement campaign for at-risk accounts",
+          "Schedule executive touchpoints with top 10 at-risk customers",
+          "Implement usage analytics alerts for early warning"
+        ],
+        simulatedOutcome: {
+          ifFollowed: "Retention rate +6%, Prevent $320K revenue loss",
+          ifIgnored: "Churn acceleration to 15%, Total loss $450K+"
+        },
+        relatedDashboard: "/audit"
+      };
+
+      setReflexCards(prev => [newCard, ...prev]);
+      setIsScanning(false);
+      
+      toast.success("New reflex card generated!", {
+        description: `${newCard.type.toUpperCase()}: ${newCard.title}`
+      });
+    }, 2800);
+  };
+
+  const handleExecuteRecommendations = (card: ReflexCard) => {
+    toast.success(`Executing strategic actions for: ${card.title}`, {
+      description: "Creating tasks, allocating resources, and initiating workflows"
+    });
+
+    setTimeout(() => {
+      toast.success("Execution plan deployed", {
+        description: `${card.actions.length} actions initiated • Teams notified`
+      });
+    }, 1500);
+  };
+
+  const handleRunDeepSimulation = (card: ReflexCard) => {
+    toast.info(`Running Monte Carlo simulation for: ${card.title}`, {
+      description: "1000 iterations • Multi-dimensional impact analysis"
+    });
+
+    setTimeout(() => {
+      if (card.relatedDashboard) {
+        navigate(card.relatedDashboard);
+        toast.success("Simulation complete • Detailed analysis ready");
+      }
+    }, 2500);
+  };
+
+  const handleDismiss = (cardId: string) => {
+    setReflexCards(prev => prev.filter(card => card.id !== cardId));
+    toast.info("Reflex card dismissed", {
+      description: "Card archived to historical analysis"
+    });
+  };
+
+  const handleViewInDashboard = (dashboard: string) => {
+    navigate(dashboard);
+    toast.success("Navigating to related workspace");
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-white">Active Reflex Cards</h2>
           <p className="text-sm text-white/60 mt-1">Real-time strategic predictions and recommendations</p>
         </div>
-        <Button className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30">
-          <Zap className="w-4 h-4 mr-2" />
-          Generate New Scan
+        <Button 
+          onClick={handleGenerateNewScan}
+          disabled={isScanning}
+          className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30 transition-all hover:scale-105"
+        >
+          <Zap className={`w-4 h-4 mr-2 ${isScanning ? 'animate-spin' : ''}`} />
+          {isScanning ? "Scanning..." : "Generate New Scan"}
         </Button>
       </div>
 
       <div className="grid gap-6">
-        {reflexCards.map((card) => (
-          <Card key={card.id} className={`${getTypeColor(card.type)} border p-6 hover:border-opacity-60 transition-all`}>
+        {reflexCards.map((card, index) => (
+          <Card 
+            key={card.id} 
+            className={`${getTypeColor(card.type)} border p-6 hover:border-opacity-60 transition-all animate-fade-in hover:shadow-2xl hover:scale-[1.02]`}
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
             <div className="space-y-4">
               {/* Header */}
               <div className="flex items-start justify-between">
@@ -132,28 +223,29 @@ export function ReflexCards() {
                 <div className="text-right">
                   <div className="text-xs text-white/40 uppercase tracking-wider">Confidence</div>
                   <div className="text-2xl font-bold text-cyan-400">{card.confidence}%</div>
+                  <Progress value={card.confidence} className="h-1 mt-1 w-20" />
                 </div>
               </div>
 
               {/* Forecast */}
-              <div className="space-y-2 p-4 rounded-lg bg-black/40 border border-white/10">
+              <div className="space-y-2 p-4 rounded-lg bg-black/40 border border-white/10 hover:bg-black/50 transition-colors">
                 <div className="text-xs text-white/40 uppercase tracking-wider">📊 Problem Forecast</div>
                 <div className="text-sm text-white/90">{card.forecast}</div>
               </div>
 
               {/* Impact */}
-              <div className="space-y-2 p-4 rounded-lg bg-black/40 border border-white/10">
+              <div className="space-y-2 p-4 rounded-lg bg-black/40 border border-white/10 hover:bg-black/50 transition-colors">
                 <div className="text-xs text-white/40 uppercase tracking-wider">🧩 Likely Impact</div>
-                <div className="text-sm text-white/90">{card.impact}</div>
+                <div className="text-sm text-white/90 font-semibold">{card.impact}</div>
               </div>
 
               {/* Strategic Actions */}
-              <div className="space-y-3 p-4 rounded-lg bg-black/40 border border-white/10">
+              <div className="space-y-3 p-4 rounded-lg bg-black/40 border border-white/10 hover:bg-black/50 transition-colors">
                 <div className="text-xs text-white/40 uppercase tracking-wider">🚀 Strategic Actions</div>
                 <div className="space-y-2">
                   {card.actions.map((action, idx) => (
-                    <div key={idx} className="flex items-start gap-2 text-sm text-white/90">
-                      <ChevronRight className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
+                    <div key={idx} className="flex items-start gap-2 text-sm text-white/90 hover:text-white transition-colors group">
+                      <ChevronRight className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0 group-hover:translate-x-1 transition-transform" />
                       <span>{action}</span>
                     </div>
                   ))}
@@ -162,32 +254,54 @@ export function ReflexCards() {
 
               {/* Simulation Outcomes */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-lg bg-emerald-950/20 border border-emerald-500/30">
+                <div className="p-4 rounded-lg bg-emerald-950/20 border border-emerald-500/30 hover:bg-emerald-950/30 transition-colors">
                   <div className="text-xs text-emerald-400 uppercase tracking-wider mb-2 flex items-center gap-2">
                     <TrendingUp className="w-3 h-3" />
                     If Followed
                   </div>
-                  <div className="text-sm text-white/90">{card.simulatedOutcome.ifFollowed}</div>
+                  <div className="text-sm text-white/90 font-medium">{card.simulatedOutcome.ifFollowed}</div>
                 </div>
-                <div className="p-4 rounded-lg bg-red-950/20 border border-red-500/30">
+                <div className="p-4 rounded-lg bg-red-950/20 border border-red-500/30 hover:bg-red-950/30 transition-colors">
                   <div className="text-xs text-red-400 uppercase tracking-wider mb-2 flex items-center gap-2">
                     <TrendingDown className="w-3 h-3" />
                     If Ignored
                   </div>
-                  <div className="text-sm text-white/90">{card.simulatedOutcome.ifIgnored}</div>
+                  <div className="text-sm text-white/90 font-medium">{card.simulatedOutcome.ifIgnored}</div>
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-3 pt-2">
-                <Button className="flex-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30">
+              <div className="flex items-center gap-3 pt-2 border-t border-white/5">
+                <Button 
+                  onClick={() => handleExecuteRecommendations(card)}
+                  className="flex-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30 transition-all hover:scale-105"
+                >
+                  <Play className="w-4 h-4 mr-2" />
                   Execute Recommendations
                 </Button>
-                <Button variant="outline" className="bg-black/40 hover:bg-black/60 text-white border-white/10">
-                  Run Deep Simulation
+                <Button 
+                  onClick={() => handleRunDeepSimulation(card)}
+                  variant="outline" 
+                  className="bg-black/40 hover:bg-black/60 text-white border-white/10 transition-all hover:scale-105"
+                >
+                  <Zap className="w-4 h-4 mr-2" />
+                  Deep Simulation
                 </Button>
-                <Button variant="ghost" className="text-white/60 hover:text-white">
-                  Dismiss
+                {card.relatedDashboard && (
+                  <Button 
+                    onClick={() => handleViewInDashboard(card.relatedDashboard!)}
+                    variant="ghost" 
+                    className="text-white/60 hover:text-white hover:bg-white/5"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </Button>
+                )}
+                <Button 
+                  onClick={() => handleDismiss(card.id)}
+                  variant="ghost" 
+                  className="text-white/60 hover:text-red-400 hover:bg-red-500/10"
+                >
+                  <X className="w-4 h-4" />
                 </Button>
               </div>
             </div>

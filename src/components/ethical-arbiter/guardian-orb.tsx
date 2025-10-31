@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Shield, Activity, AlertTriangle, CheckCircle2, Play } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
 
 interface Decision {
   id: string;
@@ -69,12 +70,18 @@ export const GuardianOrb = () => {
     }
   };
 
-  const runSimulation = async () => {
+  const runSimulation = async (decisionId: string) => {
     setIsSimulating(true);
-    // Simulate backend call
+    toast.info("Running ethical impact simulation", {
+      description: "Analyzing downstream effects across multiple dimensions"
+    });
+    
     setTimeout(() => {
       setIsSimulating(false);
-    }, 2000);
+      toast.success("Simulation complete", {
+        description: "Predicted outcomes: 94% positive impact, 6% risk factors identified"
+      });
+    }, 2200);
   };
 
   return (
@@ -219,9 +226,9 @@ export const GuardianOrb = () => {
 
               <div className="pt-4 border-t border-slate-700">
                 <Button
-                  onClick={runSimulation}
+                  onClick={() => runSimulation(selectedDecision.id)}
                   disabled={isSimulating}
-                  className="w-full bg-gradient-to-r from-cyan-600 to-violet-600 hover:from-cyan-500 hover:to-violet-500"
+                  className="w-full bg-gradient-to-r from-cyan-600 to-violet-600 hover:from-cyan-500 hover:to-violet-500 transition-all hover:scale-105"
                 >
                   <Play className="h-4 w-4 mr-2" />
                   {isSimulating ? "Running Simulation..." : "Run Impact Simulation"}

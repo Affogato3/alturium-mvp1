@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Lock, Unlock, AlertTriangle } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Lock, Unlock, AlertTriangle, FileText, Shield } from "lucide-react";
 import { toast } from "sonner";
 
 interface GuardianOverrideProps {
@@ -14,28 +17,55 @@ interface GuardianOverrideProps {
 export const GuardianOverride = ({ overrideActive, setOverrideActive }: GuardianOverrideProps) => {
   const [showJustificationDialog, setShowJustificationDialog] = useState(false);
   const [justification, setJustification] = useState("");
+  const [userHash, setUserHash] = useState("");
+  const [overrideHistory, setOverrideHistory] = useState<Array<{
+    timestamp: string;
+    user: string;
+    justification: string;
+  }>>([]);
 
   const handleActivateOverride = () => {
     setShowJustificationDialog(true);
   };
 
   const handleConfirmOverride = () => {
-    if (!justification.trim()) {
-      toast.error("Justification is required to activate override");
+    if (!justification.trim() || !userHash.trim()) {
+      toast.error("Authorization required", {
+        description: "Both authentication and justification are required"
+      });
       return;
     }
     
+    const newEntry = {
+      timestamp: new Date().toLocaleString(),
+      user: userHash,
+      justification: justification
+    };
+    
+    setOverrideHistory(prev => [newEntry, ...prev.slice(0, 9)]);
     setOverrideActive(true);
     setShowJustificationDialog(false);
-    toast.warning("Guardian Override activated - Sandbox Mode enabled", {
-      description: "All ethical checks are bypassed. Use with caution.",
+    
+    toast.warning("Guardian Override Activated", {
+      description: "Sandbox Mode enabled • All decisions logged to immutable audit trail"
     });
+    
     setJustification("");
+    setUserHash("");
+
+    // Auto-deactivate after 30 minutes
+    setTimeout(() => {
+      if (overrideActive) {
+        handleDeactivateOverride();
+      }
+    }, 30 * 60 * 1000);
   };
 
   const handleDeactivateOverride = () => {
     setOverrideActive(false);
-    toast.success("Guardian Override deactivated - Normal mode restored");
+    toast.success("Guardian Override Deactivated", {
+      description: "Normal ethical gatekeeping restored • All systems secure"
+    });
   };
 
   return (
@@ -90,6 +120,32 @@ export const GuardianOverride = ({ overrideActive, setOverrideActive }: Guardian
               Overriding Guardian bypasses all ethical safeguards
             </p>
           </div>
+
+          {/* Override History */}
+          {overrideHistory.length > 0 && (
+            <div className="space-y-2 pt-4 border-t border-white/5">
+              <div className="flex items-center gap-2 text-xs text-white/40 uppercase tracking-wider">
+                <FileText className="h-3 w-3" />
+                <span>Override Audit Log</span>
+              </div>
+              <ScrollArea className="max-h-32">
+                <div className="space-y-2 pr-2">
+                  {overrideHistory.map((entry, idx) => (
+                    <div
+                      key={idx}
+                      className="p-2 rounded bg-black/30 border border-amber-500/20 hover:border-amber-500/40 transition-all text-xs animate-fade-in"
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-amber-400/80 font-mono">{entry.user.substring(0, 12)}...</span>
+                        <span className="text-white/30">{entry.timestamp}</span>
+                      </div>
+                      <p className="text-white/60 text-xs line-clamp-2">{entry.justification}</p>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -104,37 +160,87 @@ export const GuardianOverride = ({ overrideActive, setOverrideActive }: Guardian
           </DialogHeader>
           
           <div className="space-y-4">
-            <p className="text-sm text-slate-400">
-              You are about to bypass the Ethical AI Arbiter. This action will be logged immutably.
-              Please provide a detailed justification.
-            </p>
+            <DialogDescription className="text-amber-400/80">
+              This action requires authorization and will be logged to the immutable audit trail
+            </DialogDescription>
+
+            <div>
+              <label className="text-sm font-semibold text-white/80 mb-2 block">
+                User Authentication Hash
+              </label>
+              <Input
+                type="password"
+                value={userHash}
+                onChange={(e) => setUserHash(e.target.value)}
+                placeholder="Enter your authorization code"
+                className="bg-black/40 border-amber-500/20 text-white placeholder:text-white/30 focus:border-amber-500/40"
+              />
+            </div>
             
-            <Textarea
-              placeholder="Enter your justification for activating Guardian Override..."
-              value={justification}
-              onChange={(e) => setJustification(e.target.value)}
-              rows={6}
-              className="bg-black/40 border-amber-500/30 text-white"
-            />
+            <div>
+              <label className="text-sm font-semibold text-white/80 mb-2 block">
+                Justification (Required)
+              </label>
+              <Textarea
+                placeholder="Provide detailed justification for override activation. This will be recorded in the audit log."
+                value={justification}
+                onChange={(e) => setJustification(e.target.value)}
+                rows={6}
+                className="bg-black/40 border-amber-500/30 text-white resize-none"
+              />
+            </div>
+
+            <div className="p-3 rounded-lg bg-red-950/30 border border-red-500/30">
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-red-400/90">
+                  <strong>Warning:</strong> Override activation bypasses ethical validation. 
+                  All decisions and justifications are permanently logged and subject to compliance review.
+                </p>
+              </div>
+            </div>
           </div>
 
           <DialogFooter>
             <Button
               variant="outline"
-              onClick={() => setShowJustificationDialog(false)}
-              className="border-slate-600"
+              onClick={() => {
+                setShowJustificationDialog(false);
+                setJustification("");
+                setUserHash("");
+              }}
+              className="border-white/10 text-white hover:bg-white/5"
             >
               Cancel
             </Button>
             <Button
               onClick={handleConfirmOverride}
-              className="bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-500 hover:to-red-500"
+              disabled={!justification.trim() || !userHash.trim()}
+              className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white"
             >
-              Confirm Override
+              <Unlock className="h-4 w-4 mr-2" />
+              Activate Override
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 2px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(251, 191, 36, 0.3);
+          border-radius: 2px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(251, 191, 36, 0.5);
+        }
+      `}</style>
     </>
   );
 };
