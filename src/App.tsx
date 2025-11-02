@@ -22,6 +22,7 @@ import { ScribeDashboard } from "@/components/scribe-dashboard";
 import { PredictiveInterlockDashboard } from "@/components/predictive-interlock-dashboard";
 import { QuantumMarketMatrix } from "@/components/quantum-market-matrix";
 import { FinanceFabricDashboard } from "@/components/finance-fabric-dashboard";
+import FinSynapseDashboard from "@/components/finsynapse-dashboard";
 
 const queryClient = new QueryClient();
 
@@ -121,7 +122,8 @@ const App = () => {
           <Route path="/scribe" element={<ScribeDashboard />} />
           <Route path="/predictive-interlock" element={<PredictiveInterlockDashboard />} />
           <Route path="/quantum-matrix" element={<QuantumMarketMatrix />} />
-          <Route path="/finance-fabric" element={<FinanceFabricDashboard />} />
+            <Route path="/finance-fabric" element={<FinanceFabricDashboard />} />
+            <Route path="/finsynapse" element={<FinSynapseDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>

@@ -32,3 +32,18 @@ verify_jwt = true
 
 [functions.fabric-api-keys]
 verify_jwt = true
+
+[functions.finsynapse-reconcile]
+verify_jwt = true
+
+[functions.finsynapse-forecast]
+verify_jwt = true
+
+[functions.finsynapse-rebalance]
+verify_jwt = true
+
+[functions.finsynapse-anomaly]
+verify_jwt = true
+
+[functions.finsynapse-insights]
+verify_jwt = true

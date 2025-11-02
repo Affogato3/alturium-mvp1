@@ -142,6 +142,7 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
     { icon: BarChart3, label: "Analytics", route: "/audit", active: false },
     { icon: Brain, label: "AI Tools", route: "/scribe", active: false },
     { icon: Layers, label: "Finance Fabric", route: "/finance-fabric", active: false },
+    { icon: Brain, label: "FinSynapse", route: "/finsynapse", active: false },
     { icon: Plug, label: "Integrations", route: "/cnl-grid", active: false },
     { icon: Users, label: "Team", route: "/team", active: false },
     { icon: Shield, label: "Security", route: "/security", active: false },
@@ -350,6 +351,12 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
                   title="Finance Fabric"
                   description="Enterprise financial infrastructure"
                   onClick={() => navigate("/finance-fabric")}
+                />
+                <QuickActionCard
+                  icon={Brain}
+                  title="FinSynapse™"
+                  description="Self-learning financial core"
+                  onClick={() => navigate("/finsynapse")}
                 />
                 <QuickActionCard
                   icon={Brain}

@@ -14,6 +14,119 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_insights: {
+        Row: {
+          confidence: number | null
+          created_at: string
+          id: string
+          insight_type: string
+          message: string
+          metadata: Json | null
+          priority: string
+          user_id: string
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          insight_type: string
+          message: string
+          metadata?: Json | null
+          priority?: string
+          user_id: string
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          insight_type?: string
+          message?: string
+          metadata?: Json | null
+          priority?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      anomaly_detections: {
+        Row: {
+          anomaly_type: string
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          resolved_at: string | null
+          risk_score: number
+          status: string
+          transaction_id: string | null
+          user_id: string
+        }
+        Insert: {
+          anomaly_type: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          resolved_at?: string | null
+          risk_score: number
+          status?: string
+          transaction_id?: string | null
+          user_id: string
+        }
+        Update: {
+          anomaly_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          resolved_at?: string | null
+          risk_score?: number
+          status?: string
+          transaction_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "anomaly_detections_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_trail: {
+        Row: {
+          action_type: string
+          created_at: string
+          details: Json | null
+          entity_id: string | null
+          entity_type: string
+          hash_signature: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type: string
+          hash_signature?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string
+          hash_signature?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       compliance_events: {
         Row: {
           confidence_score: number | null
@@ -555,6 +668,45 @@ export type Database = {
           },
         ]
       }
+      financial_accounts: {
+        Row: {
+          account_name: string
+          account_type: string
+          balance: number
+          created_at: string
+          currency: string
+          id: string
+          metadata: Json | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_name: string
+          account_type: string
+          balance?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_name?: string
+          account_type?: string
+          balance?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       insider_activities: {
         Row: {
           anomaly_score: number | null
@@ -883,6 +1035,39 @@ export type Database = {
           kpi_value?: number | null
           related_symbols?: string[] | null
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      liquidity_forecasts: {
+        Row: {
+          confidence_level: number | null
+          created_at: string
+          forecast_date: string
+          id: string
+          predicted_balance: number | null
+          recommendations: Json | null
+          risk_level: string | null
+          user_id: string
+        }
+        Insert: {
+          confidence_level?: number | null
+          created_at?: string
+          forecast_date: string
+          id?: string
+          predicted_balance?: number | null
+          recommendations?: Json | null
+          risk_level?: string | null
+          user_id: string
+        }
+        Update: {
+          confidence_level?: number | null
+          created_at?: string
+          forecast_date?: string
+          id?: string
+          predicted_balance?: number | null
+          recommendations?: Json | null
+          risk_level?: string | null
           user_id?: string
         }
         Relationships: []
@@ -1389,6 +1574,39 @@ export type Database = {
         }
         Relationships: []
       }
+      reconciliation_logs: {
+        Row: {
+          anomalies_found: number | null
+          confidence_score: number | null
+          created_at: string
+          details: Json | null
+          id: string
+          sources_checked: number | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          anomalies_found?: number | null
+          confidence_score?: number | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          sources_checked?: number | null
+          status: string
+          user_id: string
+        }
+        Update: {
+          anomalies_found?: number | null
+          confidence_score?: number | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          sources_checked?: number | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       regulation_feed: {
         Row: {
           created_at: string | null
@@ -1509,6 +1727,39 @@ export type Database = {
         }
         Relationships: []
       }
+      smart_contracts: {
+        Row: {
+          contract_data: Json | null
+          contract_type: string
+          created_at: string
+          executed_at: string | null
+          id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          contract_data?: Json | null
+          contract_type: string
+          created_at?: string
+          executed_at?: string | null
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          contract_data?: Json | null
+          contract_type?: string
+          created_at?: string
+          executed_at?: string | null
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       stock_alerts: {
         Row: {
           alert_type: string
@@ -1544,6 +1795,59 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      transactions: {
+        Row: {
+          account_id: string | null
+          amount: number
+          category: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          status: string
+          transaction_date: string
+          transaction_type: string
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          amount: number
+          category?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          status?: string
+          transaction_date?: string
+          transaction_type: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          amount?: number
+          category?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          status?: string
+          transaction_date?: string
+          transaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "financial_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_preferences: {
         Row: {
