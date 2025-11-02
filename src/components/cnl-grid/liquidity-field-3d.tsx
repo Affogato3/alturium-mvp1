@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Pause, Play } from "lucide-react";
 
 interface LiquidityField3DProps {
   timelinePosition: number;
@@ -9,6 +11,8 @@ export function LiquidityField3D({ timelinePosition }: LiquidityField3DProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [efficiency, setEfficiency] = useState(87.3);
   const [capitalPressure, setCapitalPressure] = useState(142.8);
+  const [isPaused, setIsPaused] = useState(false);
+  const animationRef = useRef<number>();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -39,7 +43,9 @@ export function LiquidityField3D({ timelinePosition }: LiquidityField3DProps) {
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
 
-      rotation += 0.002;
+      if (!isPaused) {
+        rotation += 0.002;
+      }
 
       // Update height map based on timeline
       for (let i = 0; i < gridSize; i++) {
@@ -113,7 +119,7 @@ export function LiquidityField3D({ timelinePosition }: LiquidityField3DProps) {
         }
       }
 
-      requestAnimationFrame(animate);
+      animationRef.current = requestAnimationFrame(animate);
     };
 
     animate();
@@ -124,8 +130,13 @@ export function LiquidityField3D({ timelinePosition }: LiquidityField3DProps) {
       setCapitalPressure(prev => Math.max(100, Math.min(200, prev + (Math.random() - 0.5) * 5)));
     }, 3000);
 
-    return () => clearInterval(metricsInterval);
-  }, [timelinePosition]);
+    return () => {
+      clearInterval(metricsInterval);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [timelinePosition, isPaused]);
 
   return (
     <div className="relative w-full h-full bg-black overflow-hidden">
@@ -142,6 +153,22 @@ export function LiquidityField3D({ timelinePosition }: LiquidityField3DProps) {
         <Badge variant="outline" className="bg-black/80 backdrop-blur-sm border-[hsl(var(--cnl-flow))]">
           <span className="text-[hsl(var(--cnl-flow))]">Capital Pressure: ${capitalPressure.toFixed(1)}M</span>
         </Badge>
+      </div>
+
+      {/* Pause/Play Control */}
+      <div className="absolute top-4 right-4">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setIsPaused(!isPaused)}
+          className="bg-black/80 backdrop-blur-sm border-[hsl(var(--cnl-flow))] hover:bg-[hsl(var(--cnl-flow))]/20"
+        >
+          {isPaused ? (
+            <Play className="h-4 w-4 text-[hsl(var(--cnl-flow))]" />
+          ) : (
+            <Pause className="h-4 w-4 text-[hsl(var(--cnl-flow))]" />
+          )}
+        </Button>
       </div>
 
       {/* Legend */}
