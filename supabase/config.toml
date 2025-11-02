@@ -17,3 +17,18 @@ verify_jwt = true
 
 [functions.generate-report]
 verify_jwt = true
+
+[functions.fabric-accounts]
+verify_jwt = true
+
+[functions.fabric-transactions]
+verify_jwt = true
+
+[functions.fabric-reconciliation]
+verify_jwt = true
+
+[functions.fabric-compliance]
+verify_jwt = true
+
+[functions.fabric-api-keys]
+verify_jwt = true

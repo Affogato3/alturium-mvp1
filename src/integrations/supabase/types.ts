@@ -293,6 +293,268 @@ export type Database = {
           },
         ]
       }
+      fabric_accounts: {
+        Row: {
+          account_number: string
+          account_type: string
+          balance: number
+          client_id: string
+          created_at: string | null
+          currency: string
+          id: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          account_number: string
+          account_type?: string
+          balance?: number
+          client_id: string
+          created_at?: string | null
+          currency?: string
+          id?: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          account_number?: string
+          account_type?: string
+          balance?: number
+          client_id?: string
+          created_at?: string | null
+          currency?: string
+          id?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fabric_api_keys: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          key_hash: string
+          key_prefix: string
+          last_used_at: string | null
+          name: string
+          scopes: Json | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          key_hash: string
+          key_prefix: string
+          last_used_at?: string | null
+          name: string
+          scopes?: Json | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          key_hash?: string
+          key_prefix?: string
+          last_used_at?: string | null
+          name?: string
+          scopes?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fabric_compliance_events: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          id: string
+          rule_triggered: string
+          severity: string
+          status: string
+          transaction_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          rule_triggered: string
+          severity: string
+          status?: string
+          transaction_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          rule_triggered?: string
+          severity?: string
+          status?: string
+          transaction_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fabric_compliance_events_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "fabric_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fabric_integrations: {
+        Row: {
+          api_key_encrypted: string | null
+          config: Json | null
+          created_at: string | null
+          id: string
+          integration_type: string
+          provider: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          api_key_encrypted?: string | null
+          config?: Json | null
+          created_at?: string | null
+          id?: string
+          integration_type: string
+          provider: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          api_key_encrypted?: string | null
+          config?: Json | null
+          created_at?: string | null
+          id?: string
+          integration_type?: string
+          provider?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fabric_ledger_entries: {
+        Row: {
+          amount: number
+          block_hash: string | null
+          created_at: string | null
+          credit_account: string | null
+          currency: string
+          debit_account: string | null
+          description: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          block_hash?: string | null
+          created_at?: string | null
+          credit_account?: string | null
+          currency?: string
+          debit_account?: string | null
+          description?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          block_hash?: string | null
+          created_at?: string | null
+          credit_account?: string | null
+          currency?: string
+          debit_account?: string | null
+          description?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fabric_ledger_entries_credit_account_fkey"
+            columns: ["credit_account"]
+            isOneToOne: false
+            referencedRelation: "fabric_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fabric_ledger_entries_debit_account_fkey"
+            columns: ["debit_account"]
+            isOneToOne: false
+            referencedRelation: "fabric_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fabric_transactions: {
+        Row: {
+          account_id: string | null
+          amount: number
+          category: string | null
+          created_at: string | null
+          currency: string
+          description: string | null
+          id: string
+          initiated_by: string | null
+          metadata: Json | null
+          status: string
+          tx_number: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          amount: number
+          category?: string | null
+          created_at?: string | null
+          currency?: string
+          description?: string | null
+          id?: string
+          initiated_by?: string | null
+          metadata?: Json | null
+          status?: string
+          tx_number: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          amount?: number
+          category?: string | null
+          created_at?: string | null
+          currency?: string
+          description?: string | null
+          id?: string
+          initiated_by?: string | null
+          metadata?: Json | null
+          status?: string
+          tx_number?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fabric_transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "fabric_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       insider_activities: {
         Row: {
           anomaly_score: number | null

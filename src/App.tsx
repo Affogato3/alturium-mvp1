@@ -21,6 +21,7 @@ import NotFound from "./pages/NotFound";
 import { ScribeDashboard } from "@/components/scribe-dashboard";
 import { PredictiveInterlockDashboard } from "@/components/predictive-interlock-dashboard";
 import { QuantumMarketMatrix } from "@/components/quantum-market-matrix";
+import { FinanceFabricDashboard } from "@/components/finance-fabric-dashboard";
 
 const queryClient = new QueryClient();
 
@@ -120,6 +121,7 @@ const App = () => {
           <Route path="/scribe" element={<ScribeDashboard />} />
           <Route path="/predictive-interlock" element={<PredictiveInterlockDashboard />} />
           <Route path="/quantum-matrix" element={<QuantumMarketMatrix />} />
+          <Route path="/finance-fabric" element={<FinanceFabricDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>
