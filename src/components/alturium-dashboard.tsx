@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { 
   Home, BarChart3, Brain, Plug, Users, Shield, 
   Bell, ChevronLeft, ChevronRight, LogOut, User,
-  TrendingUp, Activity, Zap, CheckCircle2, AlertCircle
+  TrendingUp, Activity, Zap, CheckCircle2, AlertCircle, Layers
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -141,6 +141,7 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
     { icon: Home, label: "Dashboard", route: "/", active: true },
     { icon: BarChart3, label: "Analytics", route: "/audit", active: false },
     { icon: Brain, label: "AI Tools", route: "/scribe", active: false },
+    { icon: Layers, label: "Finance Fabric", route: "/finance-fabric", active: false },
     { icon: Plug, label: "Integrations", route: "/cnl-grid", active: false },
     { icon: Users, label: "Team", route: "/team", active: false },
     { icon: Shield, label: "Security", route: "/security", active: false },
@@ -344,6 +345,12 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
                 <h2 className="text-lg font-semibold uppercase tracking-wide">Quick Actions</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <QuickActionCard
+                  icon={Layers}
+                  title="Finance Fabric"
+                  description="Enterprise financial infrastructure"
+                  onClick={() => navigate("/finance-fabric")}
+                />
                 <QuickActionCard
                   icon={Brain}
                   title="AI Analysis"
