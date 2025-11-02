@@ -36,8 +36,21 @@ serve(async (req) => {
       .order('transaction_date', { ascending: false })
       .limit(500);
 
-    if (txError || !transactions || transactions.length === 0) {
-      throw new Error('No transactions found for analysis');
+    if (txError) {
+      throw txError;
+    }
+
+    if (!transactions || transactions.length === 0) {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'No transactions available yet. Add transactions to enable anomaly detection.',
+          total_transactions_analyzed: 0,
+          anomalies_detected: 0,
+          anomalies: []
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const anomalies = [];

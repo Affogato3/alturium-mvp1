@@ -44,7 +44,15 @@ serve(async (req) => {
       .limit(500);
 
     if (!transactions || transactions.length < 10) {
-      throw new Error('Insufficient transaction history for accurate forecasting');
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Add more transactions to enable accurate liquidity forecasting (minimum 10 required).',
+          current_balance: accounts?.reduce((sum, acc) => sum + Number(acc.balance), 0) || 0,
+          forecasts: []
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // Calculate current total balance

@@ -37,8 +37,19 @@ serve(async (req) => {
       .eq('user_id', user.id)
       .eq('status', 'active');
 
-    if (accountsError || !accounts || accounts.length < 2) {
-      throw new Error('Insufficient accounts for rebalancing');
+    if (accountsError) {
+      throw accountsError;
+    }
+
+    if (!accounts || accounts.length < 2) {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Add at least 2 financial accounts to enable autonomous rebalancing.',
+          rebalance_actions: []
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // Calculate total balance and ideal distribution
