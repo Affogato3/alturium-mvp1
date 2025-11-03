@@ -182,52 +182,67 @@ export default function FinSynapseDashboard() {
     setCognitiveStatus("active");
     toast({ title: "Reconciling ledgers...", description: "Cognitive Reconciliation Engine active" });
 
-    const { data, error } = await supabase.functions.invoke("finsynapse-reconcile");
+    try {
+      const { data, error } = await supabase.functions.invoke("finsynapse-reconcile");
+      if (error) throw error;
 
-    if (error) throw error;
+      toast({
+        title: data.anomalies_found > 0 ? "Anomalies Detected" : "All Synced ✅",
+        description: `${data.sources_checked} sources checked | ${data.anomalies_found} anomalies | ${data.confidence_score}% confidence`
+      });
 
-    toast({
-      title: data.anomalies_found > 0 ? "Anomalies Detected" : "All Synced ✅",
-      description: `${data.sources_checked} sources checked | ${data.anomalies_found} anomalies | ${data.confidence_score}% confidence`
-    });
-
-    setCognitiveStatus(data.anomalies_found > 0 ? "critical" : "optimal");
+      setCognitiveStatus(data.anomalies_found > 0 ? "critical" : "optimal");
+    } catch (err: any) {
+      console.error(err);
+      toast({ title: "Reconciliation failed", description: err.message, variant: "destructive" });
+      setCognitiveStatus("critical");
+    }
   };
 
   const handleForecast = async () => {
     setCognitiveStatus("active");
     toast({ title: "Generating liquidity forecast...", description: "Time-series ML active" });
 
-    const { data, error } = await supabase.functions.invoke("finsynapse-forecast", {
-      body: { days: 7 }
-    });
+    try {
+      const { data, error } = await supabase.functions.invoke("finsynapse-forecast", {
+        body: { days: 7 }
+      });
+      if (error) throw error;
 
-    if (error) throw error;
+      toast({
+        title: "Forecast Complete",
+        description: `${data.summary.critical_days} critical days predicted in next 7 days`
+      });
 
-    toast({
-      title: "Forecast Complete",
-      description: `${data.summary.critical_days} critical days predicted in next 7 days`
-    });
-
-    setCognitiveStatus(data.summary.critical_days > 0 ? "critical" : "optimal");
+      setCognitiveStatus(data.summary.critical_days > 0 ? "critical" : "optimal");
+    } catch (err: any) {
+      console.error(err);
+      toast({ title: "Forecast failed", description: err.message, variant: "destructive" });
+      setCognitiveStatus("critical");
+    }
   };
 
   const handleRebalance = async () => {
     setCognitiveStatus("active");
     toast({ title: "Analyzing liquidity distribution...", description: "Autonomous Rebalancer engaged" });
 
-    const { data, error } = await supabase.functions.invoke("finsynapse-rebalance", {
-      body: { auto_execute: optimizeMode }
-    });
+    try {
+      const { data, error } = await supabase.functions.invoke("finsynapse-rebalance", {
+        body: { auto_execute: optimizeMode }
+      });
+      if (error) throw error;
 
-    if (error) throw error;
+      toast({
+        title: optimizeMode ? "Liquidity Normalized" : "Rebalance Plan Ready",
+        description: `${data.rebalance_actions.length} actions | +${data.efficiency_gain}% efficiency`
+      });
 
-    toast({
-      title: optimizeMode ? "Liquidity Normalized" : "Rebalance Plan Ready",
-      description: `${data.rebalance_actions.length} actions | +${data.efficiency_gain}% efficiency`
-    });
-
-    setCognitiveStatus("optimal");
+      setCognitiveStatus("optimal");
+    } catch (err: any) {
+      console.error(err);
+      toast({ title: "Rebalance failed", description: err.message, variant: "destructive" });
+      setCognitiveStatus("critical");
+    }
   };
 
   const handleCreateSampleData = async () => {
@@ -259,12 +274,14 @@ export default function FinSynapseDashboard() {
         const date = new Date(now);
         date.setDate(date.getDate() - i);
         
+        const category = ['income', 'expense', 'transfer'][Math.floor(Math.random() * 3)];
         sampleTransactions.push({
           user_id: user.id,
           amount: Math.random() > 0.5 ? Math.random() * 500 : -Math.random() * 300,
           description: ['Salary', 'Groceries', 'Utilities', 'Investment', 'Shopping'][Math.floor(Math.random() * 5)],
           transaction_date: date.toISOString(),
-          category: ['income', 'expense', 'transfer'][Math.floor(Math.random() * 3)],
+          category,
+          transaction_type: category === 'income' ? 'credit' : (category === 'expense' ? 'debit' : 'transfer'),
           status: 'completed'
         });
       }
@@ -304,16 +321,21 @@ export default function FinSynapseDashboard() {
     setCognitiveStatus("active");
     toast({ title: "Scanning for anomalies...", description: "Neural network analyzing patterns" });
 
-    const { data, error } = await supabase.functions.invoke("finsynapse-anomaly");
+    try {
+      const { data, error } = await supabase.functions.invoke("finsynapse-anomaly");
+      if (error) throw error;
 
-    if (error) throw error;
+      toast({
+        title: data.anomalies_detected > 0 ? `${data.anomalies_detected} Anomalies Found` : "No Anomalies Detected",
+        description: `Analyzed ${data.total_transactions_analyzed} transactions`
+      });
 
-    toast({
-      title: data.anomalies_detected > 0 ? `${data.anomalies_detected} Anomalies Found` : "No Anomalies Detected",
-      description: `Analyzed ${data.total_transactions_analyzed} transactions`
-    });
-
-    setCognitiveStatus(data.anomalies_detected > 3 ? "critical" : "optimal");
+      setCognitiveStatus(data.anomalies_detected > 3 ? "critical" : "optimal");
+    } catch (err: any) {
+      console.error(err);
+      toast({ title: "Anomaly scan failed", description: err.message, variant: "destructive" });
+      setCognitiveStatus("critical");
+    }
   };
 
   const handleQuantumSwitch = () => {
@@ -606,7 +628,7 @@ function ActionButton({
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative bg-black/40 border border-white/10 rounded-lg p-6 hover:border-[#00E6F6]/50 transition-all duration-300 hover:-translate-y-1 group text-left"
+      className="relative bg-black/40 border border-white/10 rounded-lg p-6 hover:border-[#00E6F6]/50 transition-all duration-300 hover:-translate-y-1 group text-left hover-scale animate-fade-in"
       style={{
         boxShadow: isHovered ? `0 10px 40px ${glowColor}20` : "none"
       }}
