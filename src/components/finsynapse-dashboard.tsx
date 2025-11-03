@@ -15,6 +15,7 @@ export default function FinSynapseDashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [optimizeMode, setOptimizeMode] = useState(false);
   const [stealthMode, setStealthMode] = useState(false);
   const [commandInput, setCommandInput] = useState("");
@@ -128,6 +129,11 @@ export default function FinSynapseDashboard() {
 
         setLiveInsights(insightsData || []);
 
+        // Show onboarding if no accounts
+        if (!accountsData || accountsData.length === 0) {
+          setShowOnboarding(true);
+        }
+
         setLoading(false);
       } catch (error: any) {
         console.error("Error loading data:", error);
@@ -222,6 +228,76 @@ export default function FinSynapseDashboard() {
     });
 
     setCognitiveStatus("optimal");
+  };
+
+  const handleCreateSampleData = async () => {
+    try {
+      setCognitiveStatus('active');
+      toast({ title: "Generating sample data...", description: "Creating financial accounts and transactions" });
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Create sample accounts
+      const sampleAccounts = [
+        { account_name: 'Chase Checking', account_type: 'checking', balance: 15000, currency: 'USD', user_id: user.id },
+        { account_name: 'Savings Account', account_type: 'savings', balance: 45000, currency: 'USD', user_id: user.id },
+        { account_name: 'Investment Portfolio', account_type: 'investment', balance: 125000, currency: 'USD', user_id: user.id },
+      ];
+
+      const { error: accountsError } = await supabase
+        .from('financial_accounts')
+        .insert(sampleAccounts);
+
+      if (accountsError) throw accountsError;
+
+      // Create sample transactions
+      const now = new Date();
+      const sampleTransactions = [];
+      
+      for (let i = 0; i < 30; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        
+        sampleTransactions.push({
+          user_id: user.id,
+          amount: Math.random() > 0.5 ? Math.random() * 500 : -Math.random() * 300,
+          description: ['Salary', 'Groceries', 'Utilities', 'Investment', 'Shopping'][Math.floor(Math.random() * 5)],
+          transaction_date: date.toISOString(),
+          category: ['income', 'expense', 'transfer'][Math.floor(Math.random() * 3)],
+          status: 'completed'
+        });
+      }
+
+      const { error: transactionsError } = await supabase
+        .from('transactions')
+        .insert(sampleTransactions);
+
+      if (transactionsError) throw transactionsError;
+
+      toast({ 
+        title: "Sample data created!", 
+        description: "3 accounts and 30 transactions added successfully" 
+      });
+      setCognitiveStatus('optimal');
+      setShowOnboarding(false);
+      
+      // Refresh data
+      const { data: accountsData } = await supabase
+        .from('financial_accounts')
+        .select('*')
+        .eq('user_id', user.id);
+      setAccounts(accountsData || []);
+
+    } catch (error: any) {
+      toast({ 
+        title: "Failed to create sample data", 
+        description: error.message,
+        variant: "destructive"
+      });
+      setCognitiveStatus('optimal');
+      console.error(error);
+    }
   };
 
   const handleAnomalyScan = async () => {
@@ -371,6 +447,38 @@ export default function FinSynapseDashboard() {
 
       {/* Main Content */}
       <main className="relative z-10 p-8 pb-20">
+        {/* Onboarding Banner */}
+        {showOnboarding && (
+          <div className="mb-8 bg-gradient-to-br from-[#00E6F6]/10 via-black/40 to-[#FF0080]/10 border border-[#00E6F6]/30 rounded-lg p-8 backdrop-blur-sm">
+            <div className="text-center space-y-4">
+              <Brain className="h-16 w-16 mx-auto text-[#00E6F6] animate-pulse" />
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-[#00E6F6] to-[#FF0080] bg-clip-text text-transparent">
+                Welcome to FinSynapse™
+              </h2>
+              <p className="text-white/70 max-w-2xl mx-auto">
+                Your self-learning financial intelligence system is ready. Generate sample data to explore 
+                AI-powered reconciliation, liquidity forecasting, and anomaly detection.
+              </p>
+              <div className="flex gap-4 justify-center mt-6">
+                <Button 
+                  onClick={handleCreateSampleData}
+                  className="bg-gradient-to-r from-[#00E6F6] to-[#00B8D4] hover:opacity-90 text-black font-semibold"
+                >
+                  <Zap className="h-4 w-4 mr-2" />
+                  Generate Sample Data
+                </Button>
+                <Button 
+                  onClick={() => setShowOnboarding(false)}
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10"
+                >
+                  Skip for Now
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Quick Action Buttons */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <ActionButton
