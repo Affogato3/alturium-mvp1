@@ -19,6 +19,7 @@ import { Session, User } from "@supabase/supabase-js";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { ScribeDashboard } from "@/components/scribe-dashboard";
+import { HelixCoreDashboard } from "@/components/helix-core/helix-core-dashboard";
 import { PredictiveInterlockDashboard } from "@/components/predictive-interlock-dashboard";
 import { QuantumMarketMatrix } from "@/components/quantum-market-matrix";
 import { FinanceFabricDashboard } from "@/components/finance-fabric-dashboard";
@@ -124,6 +125,7 @@ const App = () => {
           <Route path="/quantum-matrix" element={<QuantumMarketMatrix />} />
             <Route path="/finance-fabric" element={<FinanceFabricDashboard />} />
             <Route path="/finsynapse" element={<FinSynapseDashboard />} />
+            <Route path="/helix-core" element={<HelixCoreDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>

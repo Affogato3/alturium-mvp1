@@ -102,6 +102,15 @@ export default {
           accent: "hsl(var(--vanguard-accent))",
           alert: "hsl(var(--vanguard-alert))",
         },
+        // HelixCore theme colors
+        helix: {
+          bg: "hsl(var(--helix-bg))",
+          card: "hsl(var(--helix-card))",
+          text: "hsl(var(--helix-text))",
+          cyan: "hsl(var(--helix-cyan))",
+          purple: "hsl(var(--helix-purple))",
+          glow: "hsl(var(--helix-glow))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

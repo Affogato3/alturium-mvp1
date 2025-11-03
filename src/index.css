@@ -79,6 +79,14 @@
     --vanguard-accent: 180 100% 50%;
     --vanguard-alert: 0 100% 62%;
 
+    /* HelixCore Theme - Institutional Finance Intelligence */
+    --helix-bg: 0 0% 5%;
+    --helix-card: 0 0% 8%;
+    --helix-text: 0 0% 95%;
+    --helix-cyan: 189 100% 48%;
+    --helix-purple: 270 91% 65%;
+    --helix-glow: 189 100% 48%;
+
     /* Alturium theme colors */
     --alturium-bg: 0 0% 4%;
     --alturium-card: 0 0% 10%;

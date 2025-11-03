@@ -21,7 +21,8 @@ import {
   Brain,
   Activity,
   Network,
-  Mic
+  Mic,
+  Dna
 } from "lucide-react";
 
 interface NavigationHeaderProps {
@@ -134,6 +135,17 @@ export function NavigationHeader({
               <span className="hidden sm:inline text-sm">Vanguard</span>
             </Button>
 
+            {/* HelixCore Link */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center gap-2"
+              onClick={() => window.location.href = '/helix-core'}
+            >
+              <Dna className="h-4 w-4 text-[#00E6F6]" />
+              <span className="hidden sm:inline text-sm">HelixCore™</span>
+            </Button>
+
             {/* Alturium Link */}
             <Button 
               variant="ghost" 
@@ -229,6 +241,10 @@ export function NavigationHeader({
                     <DropdownMenuItem onClick={() => window.location.href = '/compliance'}>
                       <Shield className="mr-2 h-4 w-4" />
                       RegTech Core
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = '/helix-core'}>
+                      <Dna className="mr-2 h-4 w-4" />
+                      HelixCore™
                     </DropdownMenuItem>
                   </>
                 )}
