@@ -22,7 +22,9 @@ import {
   Activity,
   Network,
   Mic,
-  Dna
+  Dna,
+  Inbox,
+  Menu
 } from "lucide-react";
 
 interface NavigationHeaderProps {
@@ -245,6 +247,10 @@ export function NavigationHeader({
                     <DropdownMenuItem onClick={() => window.location.href = '/helix-core'}>
                       <Dna className="mr-2 h-4 w-4" />
                       HelixCore™
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = '/smart-inbox'}>
+                      <Inbox className="mr-2 h-4 w-4" />
+                      Smart Inbox
                     </DropdownMenuItem>
                   </>
                 )}
