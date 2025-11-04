@@ -94,6 +94,39 @@ export type Database = {
           },
         ]
       }
+      audit_events: {
+        Row: {
+          created_at: string
+          description: string | null
+          entity_id: string | null
+          entity_type: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_trail: {
         Row: {
           action_type: string
@@ -123,6 +156,42 @@ export type Database = {
           entity_type?: string
           hash_signature?: string | null
           id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      automation_rules: {
+        Row: {
+          action_json: Json
+          condition_json: Json
+          created_at: string
+          execution_count: number | null
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_json: Json
+          condition_json: Json
+          created_at?: string
+          execution_count?: number | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_json?: Json
+          condition_json?: Json
+          created_at?: string
+          execution_count?: number | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -704,6 +773,66 @@ export type Database = {
           status?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      financial_documents: {
+        Row: {
+          ai_confidence: number | null
+          amount: number | null
+          category: string | null
+          created_at: string
+          currency: string | null
+          description: string | null
+          doc_type: string
+          due_date: string | null
+          extracted_data: Json | null
+          file_url: string | null
+          id: string
+          issue_date: string | null
+          priority: number | null
+          status: string
+          updated_at: string
+          user_id: string
+          vendor_name: string | null
+        }
+        Insert: {
+          ai_confidence?: number | null
+          amount?: number | null
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          doc_type: string
+          due_date?: string | null
+          extracted_data?: Json | null
+          file_url?: string | null
+          id?: string
+          issue_date?: string | null
+          priority?: number | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          vendor_name?: string | null
+        }
+        Update: {
+          ai_confidence?: number | null
+          amount?: number | null
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          doc_type?: string
+          due_date?: string | null
+          extracted_data?: Json | null
+          file_url?: string | null
+          id?: string
+          issue_date?: string | null
+          priority?: number | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          vendor_name?: string | null
         }
         Relationships: []
       }
@@ -1893,6 +2022,42 @@ export type Database = {
           created_at?: string | null
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vendors: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+          name: string
+          risk_score: number | null
+          total_spent: number | null
+          transaction_count: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          name: string
+          risk_score?: number | null
+          total_spent?: number | null
+          transaction_count?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          name?: string
+          risk_score?: number | null
+          total_spent?: number | null
+          transaction_count?: number | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
