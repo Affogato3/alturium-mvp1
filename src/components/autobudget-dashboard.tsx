@@ -11,6 +11,7 @@ import { BudgetDriftGraph } from './autobudget/budget-drift-graph';
 import { AutoRebalanceModal } from './autobudget/auto-rebalance-modal';
 import { CreateRuleDialog } from './autobudget/create-rule-dialog';
 import { DrillDownModal } from './autobudget/drill-down-modal';
+import { RealtimeAlertDock } from './autobudget/realtime-alert-dock';
 
 export const AutoBudgetDashboard = () => {
   const [isReforecasting, setIsReforecasting] = useState(false);
@@ -313,9 +314,9 @@ export const AutoBudgetDashboard = () => {
         />
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
           {/* Left: Department Cards */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="xl:col-span-2 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {budgets.map((dept) => (
                 <DepartmentCard
@@ -352,14 +353,19 @@ export const AutoBudgetDashboard = () => {
             </div>
           </div>
 
-          {/* Right: AI Insights */}
-          <div className="lg:col-span-1">
+          {/* Center-Right: AI Insights */}
+          <div className="xl:col-span-1">
             <AIInsightsPanel
               insights={insights}
               summary={insightSummary}
               onCreateRule={() => setRuleDialogOpen(true)}
               onAskAI={() => toast.info('AI chat feature coming soon')}
             />
+          </div>
+
+          {/* Far Right: Real-Time Alerts */}
+          <div className="xl:col-span-1">
+            <RealtimeAlertDock />
           </div>
         </div>
       </div>
