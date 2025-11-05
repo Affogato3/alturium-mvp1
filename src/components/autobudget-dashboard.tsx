@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Download, Send, Plus } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { RefreshCw, Download, Send, Plus, Target } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { NeuralFabricBackground } from './autobudget/neural-fabric-background';
@@ -12,6 +13,7 @@ import { AutoRebalanceModal } from './autobudget/auto-rebalance-modal';
 import { CreateRuleDialog } from './autobudget/create-rule-dialog';
 import { DrillDownModal } from './autobudget/drill-down-modal';
 import { RealtimeAlertDock } from './autobudget/realtime-alert-dock';
+import { ScenarioSimulator } from './autobudget/scenario-simulator';
 
 export const AutoBudgetDashboard = () => {
   const [isReforecasting, setIsReforecasting] = useState(false);
@@ -19,6 +21,7 @@ export const AutoBudgetDashboard = () => {
   const [budgets, setBudgets] = useState<any[]>([]);
   const [insights, setInsights] = useState<any[]>([]);
   const [insightSummary, setInsightSummary] = useState('');
+  const [scenarioSimOpen, setScenarioSimOpen] = useState(false);
   const [forecastData, setForecastData] = useState<any[]>([]);
   const [rebalanceModalOpen, setRebalanceModalOpen] = useState(false);
   const [ruleDialogOpen, setRuleDialogOpen] = useState(false);
@@ -302,6 +305,14 @@ export const AutoBudgetDashboard = () => {
               <Plus className="w-4 h-4 mr-2" />
               Auto-Rebalance
             </Button>
+            <Button
+              variant="outline"
+              onClick={() => setScenarioSimOpen(true)}
+              className="border-primary/30 hover:bg-primary/10"
+            >
+              <Target className="w-4 w-4 mr-2" />
+              What-If Simulator
+            </Button>
           </div>
         </div>
 
@@ -390,6 +401,19 @@ export const AutoBudgetDashboard = () => {
         onOpenChange={setDrillDownModalOpen}
         data={selectedDrillDown}
       />
+
+      {/* Scenario Simulator Dialog */}
+      <Dialog open={scenarioSimOpen} onOpenChange={setScenarioSimOpen}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto bg-card/95 backdrop-blur-xl border-primary/20">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Target className="h-5 w-5 text-primary" />
+              Budget Scenario Simulator
+            </DialogTitle>
+          </DialogHeader>
+          <ScenarioSimulator />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -391,6 +391,45 @@ export type Database = {
         }
         Relationships: []
       }
+      budget_scenarios: {
+        Row: {
+          base_period: string
+          base_year: number
+          created_at: string
+          description: string | null
+          id: string
+          scenario_data: Json
+          scenario_name: string
+          simulation_results: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          base_period: string
+          base_year: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          scenario_data?: Json
+          scenario_name: string
+          simulation_results?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          base_period?: string
+          base_year?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          scenario_data?: Json
+          scenario_name?: string
+          simulation_results?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       budgets: {
         Row: {
           category: string
