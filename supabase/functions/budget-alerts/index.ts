@@ -23,13 +23,14 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Get user from auth header
-    const authHeader = headers.get("authorization");
-    if (!authHeader) {
+    // Get user from token query parameter
+    const url = new URL(req.url);
+    const token = url.searchParams.get("token");
+    
+    if (!token) {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const token = authHeader.replace("Bearer ", "");
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     
     if (authError || !user) {

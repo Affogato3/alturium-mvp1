@@ -41,11 +41,11 @@ export const useRealtimeBudgetAlerts = () => {
         wsRef.current.close();
       }
 
-      // Connect to WebSocket edge function
-      const wsUrl = `wss://plnnfivkteqgofgwxplv.supabase.co/functions/v1/budget-alerts`;
-      console.log('Connecting to budget alerts WebSocket:', wsUrl);
+      // Connect to WebSocket edge function with token as query param
+      const wsUrl = `wss://plnnfivkteqgofgwxplv.supabase.co/functions/v1/budget-alerts?token=${session.access_token}`;
+      console.log('Connecting to budget alerts WebSocket');
 
-      const ws = new WebSocket(wsUrl, ['Authorization', `Bearer ${session.access_token}`]);
+      const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
