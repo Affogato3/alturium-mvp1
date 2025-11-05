@@ -24,7 +24,8 @@ import {
   Mic,
   Dna,
   Inbox,
-  Menu
+  Menu,
+  DollarSign
 } from "lucide-react";
 
 interface NavigationHeaderProps {
@@ -179,6 +180,17 @@ export function NavigationHeader({
             >
               <Activity className="h-4 w-4 text-cyan-400" />
               <span className="hidden sm:inline text-sm">Interlock™</span>
+            </Button>
+
+            {/* AutoBudget Link */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center gap-2"
+              onClick={() => window.location.href = '/autobudget'}
+            >
+              <DollarSign className="h-4 w-4 text-[#00E6F6]" />
+              <span className="hidden sm:inline text-sm">AutoBudget™</span>
             </Button>
 
             {/* Notifications */}

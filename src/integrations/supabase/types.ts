@@ -241,6 +241,192 @@ export type Database = {
         }
         Relationships: []
       }
+      budget_actuals: {
+        Row: {
+          actual_amount: number
+          budget_id: string
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          transaction_date: string
+          user_id: string
+          vendor_name: string | null
+        }
+        Insert: {
+          actual_amount?: number
+          budget_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          transaction_date: string
+          user_id: string
+          vendor_name?: string | null
+        }
+        Update: {
+          actual_amount?: number
+          budget_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          transaction_date?: string
+          user_id?: string
+          vendor_name?: string | null
+        }
+        Relationships: []
+      }
+      budget_forecasts: {
+        Row: {
+          ai_recommendation: string | null
+          budget_id: string
+          confidence_score: number | null
+          created_at: string
+          drift_percentage: number | null
+          forecast_date: string
+          id: string
+          predicted_amount: number
+          user_id: string
+        }
+        Insert: {
+          ai_recommendation?: string | null
+          budget_id: string
+          confidence_score?: number | null
+          created_at?: string
+          drift_percentage?: number | null
+          forecast_date: string
+          id?: string
+          predicted_amount: number
+          user_id: string
+        }
+        Update: {
+          ai_recommendation?: string | null
+          budget_id?: string
+          confidence_score?: number | null
+          created_at?: string
+          drift_percentage?: number | null
+          forecast_date?: string
+          id?: string
+          predicted_amount?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      budget_rebalances: {
+        Row: {
+          ai_confidence: number | null
+          amount: number
+          approved_at: string | null
+          created_at: string
+          executed_at: string | null
+          from_department: string
+          id: string
+          reason: string | null
+          status: string
+          to_department: string
+          user_id: string
+        }
+        Insert: {
+          ai_confidence?: number | null
+          amount: number
+          approved_at?: string | null
+          created_at?: string
+          executed_at?: string | null
+          from_department: string
+          id?: string
+          reason?: string | null
+          status?: string
+          to_department: string
+          user_id: string
+        }
+        Update: {
+          ai_confidence?: number | null
+          amount?: number
+          approved_at?: string | null
+          created_at?: string
+          executed_at?: string | null
+          from_department?: string
+          id?: string
+          reason?: string | null
+          status?: string
+          to_department?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      budget_rules: {
+        Row: {
+          created_at: string
+          department: string
+          id: string
+          is_active: boolean | null
+          notification_type: string
+          rule_name: string
+          threshold_percentage: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          department: string
+          id?: string
+          is_active?: boolean | null
+          notification_type: string
+          rule_name: string
+          threshold_percentage: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          department?: string
+          id?: string
+          is_active?: boolean | null
+          notification_type?: string
+          rule_name?: string
+          threshold_percentage?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      budgets: {
+        Row: {
+          category: string
+          created_at: string
+          department: string
+          fiscal_period: string
+          fiscal_year: number
+          id: string
+          planned_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          department: string
+          fiscal_period: string
+          fiscal_year: number
+          id?: string
+          planned_amount?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          department?: string
+          fiscal_period?: string
+          fiscal_year?: number
+          id?: string
+          planned_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       compliance_events: {
         Row: {
           confidence_score: number | null

@@ -25,6 +25,7 @@ import { PredictiveInterlockDashboard } from "@/components/predictive-interlock-
 import { QuantumMarketMatrix } from "@/components/quantum-market-matrix";
 import { FinanceFabricDashboard } from "@/components/finance-fabric-dashboard";
 import FinSynapseDashboard from "@/components/finsynapse-dashboard";
+import { AutoBudgetDashboard } from "@/components/autobudget-dashboard";
 
 const queryClient = new QueryClient();
 
@@ -128,6 +129,7 @@ const App = () => {
             <Route path="/finsynapse" element={<FinSynapseDashboard />} />
           <Route path="/helix-core" element={<HelixCoreDashboard />} />
           <Route path="/smart-inbox" element={<SmartInboxDashboard />} />
+          <Route path="/autobudget" element={<AutoBudgetDashboard />} />
           <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>
