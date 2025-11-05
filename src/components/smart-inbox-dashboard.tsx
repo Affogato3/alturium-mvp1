@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Inbox, FileText, TrendingUp, Settings, Clock } from "lucide-react";
+import { Inbox, FileText, TrendingUp, Settings, Clock, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { FluidGradientBackground } from "./smart-inbox/fluid-gradient-background";
 import { DocumentCard } from "./smart-inbox/document-card";
 import { InsightPanel } from "./smart-inbox/insight-panel";
+import { PaymentRail } from "./smart-inbox/payment-rail";
 
 export const SmartInboxDashboard = () => {
   const { toast } = useToast();
@@ -285,43 +286,53 @@ export const SmartInboxDashboard = () => {
                     <TrendingUp className="h-4 w-4" />
                     Approved
                   </TabsTrigger>
+                  <TabsTrigger value="payments" className="gap-2">
+                    <Send className="h-4 w-4" />
+                    Payments
+                  </TabsTrigger>
                   <TabsTrigger value="history" className="gap-2">
                     <Clock className="h-4 w-4" />
                     History
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value={activeTab} className="mt-6 space-y-4">
-                  {loading ? (
-                    <div className="text-center py-12">
-                      <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                      <p className="text-muted-foreground mt-4">Loading documents...</p>
-                    </div>
-                  ) : filteredDocuments.length === 0 ? (
-                    <div className="text-center py-12">
-                      <Inbox className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                      <p className="text-muted-foreground">No documents found</p>
-                      <Button
-                        onClick={handleUploadDocument}
-                        className="mt-4"
-                        variant="outline"
-                      >
-                        Upload Your First Document
-                      </Button>
-                    </div>
-                  ) : (
-                    filteredDocuments.map((doc) => (
-                      <DocumentCard
-                        key={doc.id}
-                        document={doc}
-                        onUpdate={() => {
-                          loadDocuments();
-                          loadForecast();
-                        }}
-                      />
-                    ))
-                  )}
-                </TabsContent>
+                {activeTab === 'payments' ? (
+                  <TabsContent value="payments" className="mt-6">
+                    <PaymentRail />
+                  </TabsContent>
+                ) : (
+                  <TabsContent value={activeTab} className="mt-6 space-y-4">
+                    {loading ? (
+                      <div className="text-center py-12">
+                        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                        <p className="text-muted-foreground mt-4">Loading documents...</p>
+                      </div>
+                    ) : filteredDocuments.length === 0 ? (
+                      <div className="text-center py-12">
+                        <Inbox className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                        <p className="text-muted-foreground">No documents found</p>
+                        <Button
+                          onClick={handleUploadDocument}
+                          className="mt-4"
+                          variant="outline"
+                        >
+                          Upload Your First Document
+                        </Button>
+                      </div>
+                    ) : (
+                      filteredDocuments.map((doc) => (
+                        <DocumentCard
+                          key={doc.id}
+                          document={doc}
+                          onUpdate={() => {
+                            loadDocuments();
+                            loadForecast();
+                          }}
+                        />
+                      ))
+                    )}
+                  </TabsContent>
+                )}
               </Tabs>
             </div>
 

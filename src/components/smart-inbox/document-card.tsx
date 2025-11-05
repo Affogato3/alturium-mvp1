@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
   FileText, CheckCircle, XCircle, CreditCard, Eye, 
-  Sparkles, Calendar, DollarSign, Building2 
+  Sparkles, Calendar, DollarSign, Building2, Send 
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -143,6 +143,41 @@ export const DocumentCard = ({ document, onUpdate }: DocumentCardProps) => {
     }
   };
 
+  const handlePayNow = async () => {
+    setIsProcessing(true);
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      
+      const { error } = await supabase.functions.invoke('payment-initiate', {
+        body: {
+          documentId: document.id,
+          amount: parseFloat(document.amount),
+          vendorName: document.vendor_name,
+          paymentMethod: 'ach',
+          scheduledDate: null,
+          requestedBy: userData.user?.email
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "💳 Payment Initiated",
+        description: "Payment sent for approval",
+      });
+
+      onUpdate();
+    } catch (error: any) {
+      toast({
+        title: "Payment Initiation Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <Card className={`group hover:shadow-2xl transition-all duration-300 bg-card/40 backdrop-blur-xl ${docTypeColors[document.doc_type]} hover:-translate-y-1`}>
       <CardHeader>
@@ -259,6 +294,21 @@ export const DocumentCard = ({ document, onUpdate }: DocumentCardProps) => {
               >
                 <XCircle className="h-4 w-4 mr-2" />
                 Reject
+              </Button>
+            </div>
+          )}
+
+          {/* Pay Now Button for Approved Invoices */}
+          {document.status === 'approved' && document.doc_type === 'invoice' && document.amount && (
+            <div className="pt-3">
+              <Button
+                size="sm"
+                onClick={handlePayNow}
+                disabled={isProcessing}
+                className="w-full bg-primary hover:bg-primary/90 group/btn hover:scale-105 transition-transform"
+              >
+                <Send className="h-4 w-4 mr-2" />
+                Pay Now - ${parseFloat(document.amount).toLocaleString()}
               </Button>
             </div>
           )}

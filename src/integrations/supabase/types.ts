@@ -196,6 +196,51 @@ export type Database = {
         }
         Relationships: []
       }
+      banking_connections: {
+        Row: {
+          account_number_encrypted: string
+          account_type: string
+          api_provider: string
+          bank_name: string
+          connection_status: string
+          created_at: string
+          id: string
+          last_synced_at: string | null
+          metadata: Json | null
+          routing_number: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_number_encrypted: string
+          account_type?: string
+          api_provider?: string
+          bank_name: string
+          connection_status?: string
+          created_at?: string
+          id?: string
+          last_synced_at?: string | null
+          metadata?: Json | null
+          routing_number?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_number_encrypted?: string
+          account_type?: string
+          api_provider?: string
+          bank_name?: string
+          connection_status?: string
+          created_at?: string
+          id?: string
+          last_synced_at?: string | null
+          metadata?: Json | null
+          routing_number?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       compliance_events: {
         Row: {
           confidence_score: number | null
@@ -1534,6 +1579,140 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      payment_approvals: {
+        Row: {
+          amount: number
+          approval_notes: string | null
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          document_id: string | null
+          executed_at: string | null
+          id: string
+          metadata: Json | null
+          payment_method: string
+          requested_by: string | null
+          scheduled_date: string | null
+          status: string
+          user_id: string
+          vendor_name: string
+        }
+        Insert: {
+          amount: number
+          approval_notes?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          document_id?: string | null
+          executed_at?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_method?: string
+          requested_by?: string | null
+          scheduled_date?: string | null
+          status?: string
+          user_id: string
+          vendor_name: string
+        }
+        Update: {
+          amount?: number
+          approval_notes?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          document_id?: string | null
+          executed_at?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_method?: string
+          requested_by?: string | null
+          scheduled_date?: string | null
+          status?: string
+          user_id?: string
+          vendor_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_approvals_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "financial_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_transactions: {
+        Row: {
+          amount: number
+          approval_id: string | null
+          bank_ref: string | null
+          completed_at: string | null
+          created_at: string
+          currency: string
+          document_id: string | null
+          failure_reason: string | null
+          id: string
+          metadata: Json | null
+          payment_method: string
+          status: string
+          transaction_ref: string
+          user_id: string
+          vendor_account: string | null
+          vendor_name: string
+        }
+        Insert: {
+          amount: number
+          approval_id?: string | null
+          bank_ref?: string | null
+          completed_at?: string | null
+          created_at?: string
+          currency?: string
+          document_id?: string | null
+          failure_reason?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_method: string
+          status?: string
+          transaction_ref: string
+          user_id: string
+          vendor_account?: string | null
+          vendor_name: string
+        }
+        Update: {
+          amount?: number
+          approval_id?: string | null
+          bank_ref?: string | null
+          completed_at?: string | null
+          created_at?: string
+          currency?: string
+          document_id?: string | null
+          failure_reason?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_method?: string
+          status?: string
+          transaction_ref?: string
+          user_id?: string
+          vendor_account?: string | null
+          vendor_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_transactions_approval_id_fkey"
+            columns: ["approval_id"]
+            isOneToOne: false
+            referencedRelation: "payment_approvals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_transactions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "financial_documents"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       policies: {
         Row: {
