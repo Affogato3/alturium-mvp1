@@ -79,7 +79,7 @@ If a field is not found, use null. Amount should be a number. Dates should be in
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in document-extract:', error);
     return new Response(JSON.stringify({ 
       error: error.message,

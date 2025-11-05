@@ -75,12 +75,33 @@ export const DocumentCard = ({ document, onUpdate }: DocumentCardProps) => {
   const handleApprove = async () => {
     setIsProcessing(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
       const { error } = await supabase
         .from('financial_documents')
         .update({ status: 'approved' })
         .eq('id', document.id);
 
       if (error) throw error;
+
+      // Auto-allocate to budget if it's an invoice
+      if (document.doc_type === 'invoice' && document.amount) {
+        try {
+          const { data: allocationData, error: allocError } = await supabase.functions.invoke('budget-allocate', {
+            body: { documentId: document.id, userId: user.id }
+          });
+
+          if (!allocError && allocationData?.success) {
+            toast({
+              title: "✅ Document Approved & Allocated",
+              description: `Allocated to ${allocationData.department} budget`,
+            });
+          }
+        } catch (allocError) {
+          console.error('Allocation error:', allocError);
+        }
+      }
 
       // Log audit event
       await supabase.from('audit_events').insert({
@@ -91,10 +112,12 @@ export const DocumentCard = ({ document, onUpdate }: DocumentCardProps) => {
         description: `Approved ${document.doc_type} from ${document.vendor_name || 'Unknown'}`
       });
 
-      toast({
-        title: "✅ Document Approved",
-        description: "Document moved to approved queue",
-      });
+      if (!document.amount || document.doc_type !== 'invoice') {
+        toast({
+          title: "✅ Document Approved",
+          description: "Document moved to approved queue",
+        });
+      }
 
       onUpdate();
     } catch (error: any) {
@@ -230,6 +253,25 @@ export const DocumentCard = ({ document, onUpdate }: DocumentCardProps) => {
               </div>
             )}
           </div>
+
+          {/* Budget Allocation Badge */}
+          {document.extracted_data?.allocated_to_budget && (
+            <div className="mt-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-full bg-primary/20">
+                  <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-semibold text-primary">
+                    Auto-Allocated to Budget
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {document.extracted_data.allocated_department} • {new Date(document.extracted_data.allocated_at).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Expanded Details */}
           {isExpanded && (
