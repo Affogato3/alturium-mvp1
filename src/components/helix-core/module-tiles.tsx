@@ -8,7 +8,8 @@ import {
   Settings, 
   Rocket, 
   Building,
-  ShieldCheck
+  ShieldCheck,
+  Globe
 } from "lucide-react";
 
 interface ModuleTileProps {

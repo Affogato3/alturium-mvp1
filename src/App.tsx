@@ -15,6 +15,8 @@ import AlturiumDashboard from "@/components/alturium-dashboard";
 import { ComplianceDashboard } from "@/components/compliance-dashboard";
 import { EthicalArbiterDashboard } from "@/components/ethical-arbiter-dashboard";
 import { PCREDashboard } from "@/components/pcre-dashboard";
+import { EmbeddedComplianceDashboard } from "@/components/compliance/embedded-compliance-dashboard";
+import { PaymentDashboard } from "@/components/cross-border/payment-dashboard";
 import { Session, User } from "@supabase/supabase-js";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -26,7 +28,6 @@ import { QuantumMarketMatrix } from "@/components/quantum-market-matrix";
 import { FinanceFabricDashboard } from "@/components/finance-fabric-dashboard";
 import FinSynapseDashboard from "@/components/finsynapse-dashboard";
 import { AutoBudgetDashboard } from "@/components/autobudget-dashboard";
-import { EmbeddedComplianceDashboard } from "@/components/compliance/embedded-compliance-dashboard";
 
 const queryClient = new QueryClient();
 
@@ -132,6 +133,7 @@ const App = () => {
           <Route path="/helix-core" element={<HelixCoreDashboard />} />
           <Route path="/smart-inbox" element={<SmartInboxDashboard />} />
           <Route path="/autobudget" element={<AutoBudgetDashboard />} />
+          <Route path="/cross-border-payments" element={<PaymentDashboard />} />
           <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>

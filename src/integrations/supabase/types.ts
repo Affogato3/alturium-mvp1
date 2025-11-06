@@ -598,6 +598,93 @@ export type Database = {
         }
         Relationships: []
       }
+      cross_border_payments: {
+        Row: {
+          amount: number
+          completed_at: string | null
+          compliance_validated: boolean | null
+          corridor: string
+          cost_savings_pct: number | null
+          created_at: string | null
+          from_country: string
+          from_currency: string
+          id: string
+          initiated_at: string | null
+          progress: number | null
+          purpose: string | null
+          selected_rail_id: string | null
+          selected_route_id: string | null
+          status: string
+          to_country: string
+          to_currency: string
+          tracking_data: Json | null
+          transaction_ref: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          completed_at?: string | null
+          compliance_validated?: boolean | null
+          corridor: string
+          cost_savings_pct?: number | null
+          created_at?: string | null
+          from_country: string
+          from_currency: string
+          id?: string
+          initiated_at?: string | null
+          progress?: number | null
+          purpose?: string | null
+          selected_rail_id?: string | null
+          selected_route_id?: string | null
+          status?: string
+          to_country: string
+          to_currency: string
+          tracking_data?: Json | null
+          transaction_ref: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          completed_at?: string | null
+          compliance_validated?: boolean | null
+          corridor?: string
+          cost_savings_pct?: number | null
+          created_at?: string | null
+          from_country?: string
+          from_currency?: string
+          id?: string
+          initiated_at?: string | null
+          progress?: number | null
+          purpose?: string | null
+          selected_rail_id?: string | null
+          selected_route_id?: string | null
+          status?: string
+          to_country?: string
+          to_currency?: string
+          tracking_data?: Json | null
+          transaction_ref?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cross_border_payments_selected_rail_id_fkey"
+            columns: ["selected_rail_id"]
+            isOneToOne: false
+            referencedRelation: "payment_rails"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cross_border_payments_selected_route_id_fkey"
+            columns: ["selected_route_id"]
+            isOneToOne: false
+            referencedRelation: "payment_routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employee_logs: {
         Row: {
           attendance_score: number | null
@@ -1513,6 +1600,56 @@ export type Database = {
         }
         Relationships: []
       }
+      liquidity_pools: {
+        Row: {
+          available_amount: number | null
+          created_at: string | null
+          currency: string
+          id: string
+          last_rebalanced_at: string | null
+          pool_data: Json | null
+          rail_id: string | null
+          rebalance_threshold: number | null
+          reserved_amount: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          available_amount?: number | null
+          created_at?: string | null
+          currency: string
+          id?: string
+          last_rebalanced_at?: string | null
+          pool_data?: Json | null
+          rail_id?: string | null
+          rebalance_threshold?: number | null
+          reserved_amount?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          available_amount?: number | null
+          created_at?: string | null
+          currency?: string
+          id?: string
+          last_rebalanced_at?: string | null
+          pool_data?: Json | null
+          rail_id?: string | null
+          rebalance_threshold?: number | null
+          reserved_amount?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "liquidity_pools_rail_id_fkey"
+            columns: ["rail_id"]
+            isOneToOne: false
+            referencedRelation: "payment_rails"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       market_scenarios: {
         Row: {
           created_at: string | null
@@ -1805,6 +1942,51 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_analytics: {
+        Row: {
+          analytics_data: Json | null
+          avg_cost_savings_pct: number | null
+          avg_settlement_minutes: number | null
+          created_at: string | null
+          id: string
+          period: string
+          success_rate: number | null
+          top_corridor: string | null
+          top_rail_type: string | null
+          total_transactions: number | null
+          total_volume: number | null
+          user_id: string
+        }
+        Insert: {
+          analytics_data?: Json | null
+          avg_cost_savings_pct?: number | null
+          avg_settlement_minutes?: number | null
+          created_at?: string | null
+          id?: string
+          period: string
+          success_rate?: number | null
+          top_corridor?: string | null
+          top_rail_type?: string | null
+          total_transactions?: number | null
+          total_volume?: number | null
+          user_id: string
+        }
+        Update: {
+          analytics_data?: Json | null
+          avg_cost_savings_pct?: number | null
+          avg_settlement_minutes?: number | null
+          created_at?: string | null
+          id?: string
+          period?: string
+          success_rate?: number | null
+          top_corridor?: string | null
+          top_rail_type?: string | null
+          total_transactions?: number | null
+          total_volume?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       payment_approvals: {
         Row: {
           amount: number
@@ -1863,6 +2045,107 @@ export type Database = {
             columns: ["document_id"]
             isOneToOne: false
             referencedRelation: "financial_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_rails: {
+        Row: {
+          avg_latency_ms: number | null
+          config: Json | null
+          created_at: string | null
+          health_score: number | null
+          id: string
+          last_ping_at: string | null
+          rail_name: string
+          rail_type: string
+          status: string
+          success_rate: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          avg_latency_ms?: number | null
+          config?: Json | null
+          created_at?: string | null
+          health_score?: number | null
+          id?: string
+          last_ping_at?: string | null
+          rail_name: string
+          rail_type: string
+          status?: string
+          success_rate?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          avg_latency_ms?: number | null
+          config?: Json | null
+          created_at?: string | null
+          health_score?: number | null
+          id?: string
+          last_ping_at?: string | null
+          rail_name?: string
+          rail_type?: string
+          status?: string
+          success_rate?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payment_routes: {
+        Row: {
+          ai_confidence: number | null
+          compliance_score: number | null
+          corridor: string
+          cost_usd: number
+          created_at: string | null
+          estimated_minutes: number
+          from_currency: string
+          id: string
+          liquidity_available: boolean | null
+          rail_id: string | null
+          route_data: Json | null
+          to_currency: string
+          user_id: string
+        }
+        Insert: {
+          ai_confidence?: number | null
+          compliance_score?: number | null
+          corridor: string
+          cost_usd: number
+          created_at?: string | null
+          estimated_minutes: number
+          from_currency: string
+          id?: string
+          liquidity_available?: boolean | null
+          rail_id?: string | null
+          route_data?: Json | null
+          to_currency: string
+          user_id: string
+        }
+        Update: {
+          ai_confidence?: number | null
+          compliance_score?: number | null
+          corridor?: string
+          cost_usd?: number
+          created_at?: string | null
+          estimated_minutes?: number
+          from_currency?: string
+          id?: string
+          liquidity_available?: boolean | null
+          rail_id?: string | null
+          route_data?: Json | null
+          to_currency?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_routes_rail_id_fkey"
+            columns: ["rail_id"]
+            isOneToOne: false
+            referencedRelation: "payment_rails"
             referencedColumns: ["id"]
           },
         ]
