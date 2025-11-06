@@ -26,6 +26,7 @@ import { QuantumMarketMatrix } from "@/components/quantum-market-matrix";
 import { FinanceFabricDashboard } from "@/components/finance-fabric-dashboard";
 import FinSynapseDashboard from "@/components/finsynapse-dashboard";
 import { AutoBudgetDashboard } from "@/components/autobudget-dashboard";
+import { EmbeddedComplianceDashboard } from "@/components/compliance/embedded-compliance-dashboard";
 
 const queryClient = new QueryClient();
 
@@ -120,6 +121,7 @@ const App = () => {
             <Route path="/cnl-grid" element={<CNLGridDashboard />} />
             <Route path="/vanguard" element={<VanguardDashboard />} />
           <Route path="/compliance" element={<ComplianceDashboard />} />
+          <Route path="/embedded-compliance" element={<EmbeddedComplianceDashboard />} />
           <Route path="/ethical-arbiter" element={<EthicalArbiterDashboard />} />
           <Route path="/pcre" element={<PCREDashboard />} />
           <Route path="/scribe" element={<ScribeDashboard />} />

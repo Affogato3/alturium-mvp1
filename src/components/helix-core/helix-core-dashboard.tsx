@@ -7,9 +7,11 @@ import { AIAvatarOrb } from "./ai-avatar-orb";
 import { ModuleTiles } from "./module-tiles";
 import { useToast } from "@/hooks/use-toast";
 import { Dna } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const HelixCoreDashboard = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [aiState, setAiState] = useState<'idle' | 'analyzing' | 'active'>('idle');
 
   const handleCommand = (command: string) => {
@@ -51,6 +53,18 @@ export const HelixCoreDashboard = () => {
 
   const handleModuleClick = (moduleId: string) => {
     setAiState('analyzing');
+    
+    if (moduleId === 'compliance') {
+      toast({
+        title: "Module Loading",
+        description: "Opening Embedded Compliance Autopilot™...",
+      });
+      setTimeout(() => {
+        navigate('/embedded-compliance');
+        setAiState('idle');
+      }, 1000);
+      return;
+    }
     
     toast({
       title: "Module Loading",

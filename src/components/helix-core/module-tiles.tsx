@@ -7,7 +7,8 @@ import {
   AlertTriangle, 
   Settings, 
   Rocket, 
-  Building 
+  Building,
+  ShieldCheck
 } from "lucide-react";
 
 interface ModuleTileProps {
@@ -83,6 +84,13 @@ export const ModuleTiles = ({ onModuleClick }: { onModuleClick: (module: string)
       icon: <Settings className="h-6 w-6 text-primary" />,
       title: 'Smart Actions',
       description: 'AI-driven optimization recommendations',
+      color: 'primary'
+    },
+    {
+      id: 'compliance',
+      icon: <ShieldCheck className="h-6 w-6 text-primary" />,
+      title: 'Embedded Compliance Autopilot™',
+      description: 'Real-time regulatory monitoring & enforcement',
       color: 'primary'
     },
     {
