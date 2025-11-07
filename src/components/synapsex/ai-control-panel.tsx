@@ -59,167 +59,58 @@ export const AIControlPanel = () => {
 
     const { data } = currentResult;
 
-    if (data.insights) {
+    // Handle narrative/text responses
+    if (data.type === 'narrative' && data.content) {
       return (
-        <div className="space-y-4">
-          <p className="text-[#BFBFBF] text-sm">{data.summary}</p>
-          <div className="space-y-3">
-            {data.insights.map((insight: any, idx: number) => (
-              <div key={idx} className="p-4 bg-[#1A1A1A]/50 border border-[#CFAF6E]/20 rounded-lg">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge className={
-                        insight.priority === 'high' ? 'bg-red-500/20 text-red-400 border-red-500/30' :
-                        insight.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
-                        'bg-green-500/20 text-green-400 border-green-500/30'
-                      }>
-                        {insight.priority}
-                      </Badge>
-                      <span className="text-xs text-[#BFBFBF]">Confidence: {(insight.confidence * 100).toFixed(0)}%</span>
-                    </div>
-                    <p className="text-[#EDEDED]">{insight.message}</p>
-                    {insight.impact_amount && (
-                      <p className="text-[#CFAF6E] mt-2">Potential Impact: ${insight.impact_amount.toLocaleString()}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+        <div className="prose prose-invert max-w-none">
+          <div className="text-[#EDEDED] whitespace-pre-wrap leading-relaxed">
+            {data.content.split('\n').map((line: string, idx: number) => {
+              // Handle markdown-style headers
+              if (line.startsWith('**') && line.endsWith('**')) {
+                const text = line.replace(/\*\*/g, '');
+                return (
+                  <h3 key={idx} className="text-[#CFAF6E] font-bold text-lg mt-4 mb-2">
+                    {text}
+                  </h3>
+                );
+              }
+              // Handle bullet points
+              if (line.trim().startsWith('•') || line.trim().startsWith('-')) {
+                return (
+                  <p key={idx} className="text-[#BFBFBF] ml-4 my-1">
+                    {line}
+                  </p>
+                );
+              }
+              // Handle numbered lists
+              if (/^\d+\./.test(line.trim())) {
+                return (
+                  <p key={idx} className="text-[#BFBFBF] ml-4 my-1 font-medium">
+                    {line}
+                  </p>
+                );
+              }
+              // Regular paragraphs
+              if (line.trim()) {
+                return (
+                  <p key={idx} className="text-[#EDEDED] my-2">
+                    {line}
+                  </p>
+                );
+              }
+              return <br key={idx} />;
+            })}
           </div>
         </div>
       );
     }
 
-    if (data.recommendations) {
-      return (
-        <div className="space-y-4">
-          <p className="text-[#CFAF6E] font-semibold">Total Potential Impact: ${data.total_potential_impact?.toLocaleString()}</p>
-          <div className="space-y-3">
-            {data.recommendations.map((rec: any, idx: number) => (
-              <div key={idx} className="p-4 bg-[#1A1A1A]/50 border border-[#CFAF6E]/20 rounded-lg">
-                <h4 className="text-[#EDEDED] font-semibold mb-2">{rec.title}</h4>
-                <p className="text-[#BFBFBF] text-sm mb-2">{rec.description}</p>
-                <div className="flex items-center gap-4 text-sm">
-                  <span className="text-[#CFAF6E]">Impact: +${rec.impact_amount?.toLocaleString()}</span>
-                  <span className="text-[#BFBFBF]">Confidence: {(rec.confidence * 100).toFixed(0)}%</span>
-                  <Badge variant="outline">{rec.implementation_complexity}</Badge>
-                </div>
-                {rec.reasoning && (
-                  <p className="text-[#BFBFBF] text-xs mt-2 italic">{rec.reasoning}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    if (data.waste_items) {
-      return (
-        <div className="space-y-4">
-          <p className="text-[#CFAF6E] font-semibold">Total Potential Savings: ${data.total_potential_savings?.toLocaleString()}/year</p>
-          <div className="space-y-3">
-            {data.waste_items.map((item: any, idx: number) => (
-              <div key={idx} className="p-4 bg-[#1A1A1A]/50 border border-[#CFAF6E]/20 rounded-lg">
-                <h4 className="text-[#EDEDED] font-semibold mb-2">{item.title}</h4>
-                <p className="text-[#BFBFBF] text-sm mb-2">{item.description}</p>
-                <div className="flex items-center gap-4 text-sm">
-                  <span className="text-red-400">Current Cost: ${item.annual_cost?.toLocaleString()}/year</span>
-                  <span className="text-green-400">Savings: ${item.potential_savings?.toLocaleString()}</span>
-                  <span className="text-[#BFBFBF]">Confidence: {(item.confidence * 100).toFixed(0)}%</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    if (data.overall_score !== undefined) {
-      return (
-        <div className="space-y-4">
-          <div className="flex items-center justify-center">
-            <div className="relative w-48 h-48">
-              <svg className="w-full h-full" viewBox="0 0 200 200">
-                <circle cx="100" cy="100" r="90" fill="none" stroke="#1A1A1A" strokeWidth="12" />
-                <circle 
-                  cx="100" cy="100" r="90" 
-                  fill="none" 
-                  stroke="#CFAF6E" 
-                  strokeWidth="12" 
-                  strokeDasharray={`${(data.overall_score / 100) * 565} 565`}
-                  strokeLinecap="round"
-                  transform="rotate(-90 100 100)"
-                />
-                <text x="100" y="100" textAnchor="middle" dy=".3em" className="text-4xl font-bold fill-[#CFAF6E]">
-                  {data.overall_score}
-                </text>
-                <text x="100" y="130" textAnchor="middle" className="text-sm fill-[#BFBFBF]">
-                  {data.grade}
-                </text>
-              </svg>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            {Object.entries(data.breakdown || {}).map(([key, value]: [string, any]) => (
-              <div key={key} className="p-3 bg-[#1A1A1A]/50 border border-[#CFAF6E]/20 rounded-lg">
-                <div className="text-xs text-[#BFBFBF] mb-1">{key.replace(/_/g, ' ')}</div>
-                <div className="text-xl font-bold text-[#CFAF6E]">{value}</div>
-              </div>
-            ))}
-          </div>
-          <p className="text-[#BFBFBF] text-sm">Industry Percentile: {data.industry_percentile}th</p>
-          {data.insights && (
-            <div className="space-y-2">
-              {data.insights.map((insight: string, idx: number) => (
-                <p key={idx} className="text-[#EDEDED] text-sm">• {insight}</p>
-              ))}
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (data.scenarios) {
-      return (
-        <div className="space-y-4">
-          <p className="text-[#BFBFBF] mb-4">{data.recommendation}</p>
-          <div className="space-y-3">
-            {data.scenarios.map((scenario: any, idx: number) => (
-              <div key={idx} className="p-4 bg-[#1A1A1A]/50 border border-[#CFAF6E]/20 rounded-lg">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-[#EDEDED] font-semibold">{scenario.name}</h4>
-                  <Badge className="bg-[#CFAF6E]/20 text-[#CFAF6E] border-[#CFAF6E]/30">
-                    Confidence: {(scenario.confidence * 100).toFixed(0)}%
-                  </Badge>
-                </div>
-                <div className="grid grid-cols-4 gap-2 text-sm">
-                  <div>
-                    <div className="text-[#BFBFBF] text-xs">Q1</div>
-                    <div className="text-[#EDEDED]">${(scenario.forecast.q1_revenue / 1000000).toFixed(1)}M</div>
-                  </div>
-                  <div>
-                    <div className="text-[#BFBFBF] text-xs">Q2</div>
-                    <div className="text-[#EDEDED]">${(scenario.forecast.q2_revenue / 1000000).toFixed(1)}M</div>
-                  </div>
-                  <div>
-                    <div className="text-[#BFBFBF] text-xs">Q3</div>
-                    <div className="text-[#EDEDED]">${(scenario.forecast.q3_revenue / 1000000).toFixed(1)}M</div>
-                  </div>
-                  <div>
-                    <div className="text-[#BFBFBF] text-xs">Q4</div>
-                    <div className="text-[#EDEDED]">${(scenario.forecast.q4_revenue / 1000000).toFixed(1)}M</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    return <pre className="text-[#EDEDED] text-xs">{JSON.stringify(data, null, 2)}</pre>;
+    // Fallback for any legacy structured data
+    return (
+      <div className="text-[#BFBFBF] text-sm">
+        Analysis complete. Results processed successfully.
+      </div>
+    );
   };
 
   return (

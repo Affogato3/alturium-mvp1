@@ -65,120 +65,57 @@ export const NaturalLanguageQuery = () => {
   const renderResults = (result: QueryResult) => {
     const { results } = result;
 
-    if (results.top_customers) {
+    // Handle narrative/text responses
+    if (results.type === 'narrative' && results.content) {
       return (
-        <div className="space-y-3">
-          <div className="text-sm text-[#BFBFBF]">
-            Total Revenue: ${results.total_revenue?.toLocaleString()} • Avg Margin: {(results.average_margin * 100).toFixed(1)}%
+        <div className="prose prose-invert max-w-none">
+          <div className="text-[#EDEDED] whitespace-pre-wrap leading-relaxed text-sm">
+            {results.content.split('\n').map((line: string, idx: number) => {
+              // Handle markdown-style headers
+              if (line.startsWith('**') && line.endsWith('**')) {
+                const text = line.replace(/\*\*/g, '');
+                return (
+                  <h4 key={idx} className="text-[#CFAF6E] font-bold text-base mt-3 mb-2">
+                    {text}
+                  </h4>
+                );
+              }
+              // Handle bullet points and lists
+              if (line.trim().startsWith('•') || line.trim().startsWith('-') || line.trim().startsWith('✅') || line.trim().startsWith('⚠️') || line.trim().startsWith('💡') || line.trim().startsWith('📊')) {
+                return (
+                  <p key={idx} className="text-[#BFBFBF] ml-4 my-1">
+                    {line}
+                  </p>
+                );
+              }
+              // Handle numbered lists
+              if (/^\d+\./.test(line.trim())) {
+                return (
+                  <p key={idx} className="text-[#BFBFBF] ml-4 my-1 font-medium">
+                    {line}
+                  </p>
+                );
+              }
+              // Regular paragraphs
+              if (line.trim()) {
+                return (
+                  <p key={idx} className="text-[#EDEDED] my-1.5">
+                    {line}
+                  </p>
+                );
+              }
+              return <br key={idx} />;
+            })}
           </div>
-          {results.top_customers.map((customer: any, idx: number) => (
-            <div key={idx} className="p-3 bg-[#1A1A1A]/50 border border-[#CFAF6E]/20 rounded-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-[#EDEDED] font-semibold">{customer.name}</div>
-                  <div className="text-xs text-[#BFBFBF]">{customer.region}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-[#CFAF6E] font-semibold">${customer.revenue.toLocaleString()}</div>
-                  <div className="text-xs text-[#BFBFBF]">Margin: {(customer.margin * 100).toFixed(1)}%</div>
-                </div>
-              </div>
-            </div>
-          ))}
-          {results.insights && (
-            <div className="space-y-2 mt-4">
-              {results.insights.map((insight: string, idx: number) => (
-                <p key={idx} className="text-sm text-[#EDEDED]">• {insight}</p>
-              ))}
-            </div>
-          )}
         </div>
       );
     }
 
-    if (results.root_causes) {
-      return (
-        <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="p-3 bg-[#1A1A1A]/50 border border-red-500/20 rounded-lg">
-              <div className="text-xs text-[#BFBFBF]">Previous Margin</div>
-              <div className="text-xl text-red-400">{(results.previous_margin * 100).toFixed(1)}%</div>
-            </div>
-            <div className="p-3 bg-[#1A1A1A]/50 border border-green-500/20 rounded-lg">
-              <div className="text-xs text-[#BFBFBF]">Current Margin</div>
-              <div className="text-xl text-green-400">{(results.current_margin * 100).toFixed(1)}%</div>
-            </div>
-          </div>
-          <div className="text-sm font-semibold text-[#EDEDED] mb-2">Root Causes:</div>
-          {results.root_causes.map((cause: any, idx: number) => (
-            <div key={idx} className="p-3 bg-[#1A1A1A]/50 border border-[#CFAF6E]/20 rounded-lg">
-              <div className="flex items-center justify-between">
-                <span className="text-[#EDEDED]">{cause.factor}</span>
-                <div className="flex items-center gap-3">
-                  <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
-                    {cause.impact}
-                  </Badge>
-                  <span className="text-xs text-[#BFBFBF]">{(cause.contribution * 100).toFixed(0)}% contribution</span>
-                </div>
-              </div>
-            </div>
-          ))}
-          {results.recommendations && (
-            <div className="mt-4 space-y-2">
-              <div className="text-sm font-semibold text-[#CFAF6E]">Recommendations:</div>
-              {results.recommendations.map((rec: string, idx: number) => (
-                <p key={idx} className="text-sm text-[#EDEDED]">• {rec}</p>
-              ))}
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (results.scenario) {
-      return (
-        <div className="space-y-3">
-          <div className="p-4 bg-[#1A1A1A]/50 border border-[#CFAF6E]/20 rounded-lg">
-            <div className="text-sm text-[#BFBFBF] mb-2">Reallocation Scenario</div>
-            <div className="text-[#EDEDED] font-semibold">
-              ${(results.scenario.amount / 1000000).toFixed(1)}M: {results.scenario.from} → {results.scenario.to}
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 bg-[#1A1A1A]/50 border border-green-500/20 rounded-lg">
-              <div className="text-xs text-[#BFBFBF]">Delivery Time</div>
-              <div className="text-lg text-green-400">{(results.results.delivery_time_improvement * 100).toFixed(0)}%</div>
-            </div>
-            <div className="p-3 bg-[#1A1A1A]/50 border border-green-500/20 rounded-lg">
-              <div className="text-xs text-[#BFBFBF]">Satisfaction</div>
-              <div className="text-lg text-green-400">+{(results.results.customer_satisfaction_delta * 100).toFixed(0)}%</div>
-            </div>
-            <div className="p-3 bg-[#1A1A1A]/50 border border-red-500/20 rounded-lg">
-              <div className="text-xs text-[#BFBFBF]">Lead Gen</div>
-              <div className="text-lg text-red-400">{(results.results.lead_generation_impact * 100).toFixed(0)}%</div>
-            </div>
-            <div className="p-3 bg-[#1A1A1A]/50 border border-[#CFAF6E]/20 rounded-lg">
-              <div className="text-xs text-[#BFBFBF]">Net Profit</div>
-              <div className="text-lg text-[#CFAF6E]">${results.results.net_profit_impact.toLocaleString()}</div>
-            </div>
-          </div>
-          <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
-            Risk: {results.risk_level}
-          </Badge>
-          {results.alternative && (
-            <div className="mt-3 p-3 bg-[#1A1A1A]/50 border border-[#CFAF6E]/20 rounded-lg">
-              <div className="text-xs text-[#BFBFBF] mb-1">Alternative Approach:</div>
-              <div className="text-sm text-[#EDEDED]">{results.alternative.description}</div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
+    // Fallback for any legacy structured data
     return (
-      <pre className="text-[#EDEDED] text-xs whitespace-pre-wrap">
-        {JSON.stringify(results, null, 2)}
-      </pre>
+      <div className="text-[#BFBFBF] text-sm">
+        Query processed successfully.
+      </div>
     );
   };
 
