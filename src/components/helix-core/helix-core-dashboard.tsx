@@ -65,6 +65,18 @@ export const HelixCoreDashboard = () => {
       }, 1000);
       return;
     }
+
+    if (moduleId === 'smart-finance-assistant') {
+      toast({
+        title: "Module Loading",
+        description: "Opening Smart Finance Assistant...",
+      });
+      setTimeout(() => {
+        navigate('/smart-finance-assistant');
+        setAiState('idle');
+      }, 1000);
+      return;
+    }
     
     toast({
       title: "Module Loading",

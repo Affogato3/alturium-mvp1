@@ -96,10 +96,10 @@ export const ModuleTiles = ({ onModuleClick }: { onModuleClick: (module: string)
       color: 'primary'
     },
     {
-      id: 'synapsex-ai',
+      id: 'smart-finance-assistant',
       icon: <Brain className="h-6 w-6 text-accent" />,
-      title: 'SynapseX AI Command Center',
-      description: 'Full-cycle financial modeling with AI optimization',
+      title: 'Smart Finance Assistant',
+      description: 'AI-powered financial intelligence with natural language queries',
       color: 'accent'
     },
     {
