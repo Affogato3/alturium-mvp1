@@ -9,7 +9,8 @@ import {
   Rocket, 
   Building,
   ShieldCheck,
-  Globe
+  Globe,
+  Brain
 } from "lucide-react";
 
 interface ModuleTileProps {
@@ -93,6 +94,13 @@ export const ModuleTiles = ({ onModuleClick }: { onModuleClick: (module: string)
       title: 'Embedded Compliance Autopilot™',
       description: 'Real-time regulatory monitoring & enforcement',
       color: 'primary'
+    },
+    {
+      id: 'synapsex-ai',
+      icon: <Brain className="h-6 w-6 text-accent" />,
+      title: 'SynapseX AI Command Center',
+      description: 'Full-cycle financial modeling with AI optimization',
+      color: 'accent'
     },
     {
       id: 'execution',

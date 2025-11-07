@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_analysis_logs: {
+        Row: {
+          ai_model: string | null
+          analysis_type: string
+          confidence_score: number | null
+          created_at: string
+          id: string
+          input_data: Json
+          output_data: Json
+          user_id: string
+        }
+        Insert: {
+          ai_model?: string | null
+          analysis_type: string
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          input_data?: Json
+          output_data?: Json
+          user_id: string
+        }
+        Update: {
+          ai_model?: string | null
+          analysis_type?: string
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          input_data?: Json
+          output_data?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_insights: {
         Row: {
           confidence: number | null
@@ -43,6 +76,36 @@ export type Database = {
           message?: string
           metadata?: Json | null
           priority?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_narratives: {
+        Row: {
+          context_data: Json | null
+          created_at: string
+          generated_text: string
+          id: string
+          key_insights: Json | null
+          narrative_type: string
+          user_id: string
+        }
+        Insert: {
+          context_data?: Json | null
+          created_at?: string
+          generated_text: string
+          id?: string
+          key_insights?: Json | null
+          narrative_type: string
+          user_id: string
+        }
+        Update: {
+          context_data?: Json | null
+          created_at?: string
+          generated_text?: string
+          id?: string
+          key_insights?: Json | null
+          narrative_type?: string
           user_id?: string
         }
         Relationships: []
@@ -511,6 +574,51 @@ export type Database = {
         }
         Relationships: []
       }
+      connector_health: {
+        Row: {
+          auto_heal_count: number | null
+          connector_name: string
+          connector_type: string
+          created_at: string
+          health_score: number | null
+          id: string
+          last_error: string | null
+          last_sync_at: string | null
+          metadata: Json | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_heal_count?: number | null
+          connector_name: string
+          connector_type: string
+          created_at?: string
+          health_score?: number | null
+          id?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          metadata?: Json | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_heal_count?: number | null
+          connector_name?: string
+          connector_type?: string
+          created_at?: string
+          health_score?: number | null
+          id?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          metadata?: Json | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       correlation_edges: {
         Row: {
           correlation_value: number | null
@@ -685,6 +793,42 @@ export type Database = {
           },
         ]
       }
+      data_quality_reports: {
+        Row: {
+          auto_fixes_applied: Json | null
+          created_at: string
+          dataset_name: string
+          id: string
+          issues_found: Json | null
+          quality_score: number | null
+          recommendations: Json | null
+          report_type: string
+          user_id: string
+        }
+        Insert: {
+          auto_fixes_applied?: Json | null
+          created_at?: string
+          dataset_name: string
+          id?: string
+          issues_found?: Json | null
+          quality_score?: number | null
+          recommendations?: Json | null
+          report_type: string
+          user_id: string
+        }
+        Update: {
+          auto_fixes_applied?: Json | null
+          created_at?: string
+          dataset_name?: string
+          id?: string
+          issues_found?: Json | null
+          quality_score?: number | null
+          recommendations?: Json | null
+          report_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       employee_logs: {
         Row: {
           attendance_score: number | null
@@ -728,6 +872,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      entity_mappings: {
+        Row: {
+          canonical_id: string
+          confidence_score: number | null
+          created_at: string
+          entity_type: string
+          id: string
+          mapping_metadata: Json | null
+          source_id: string
+          source_system: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          canonical_id: string
+          confidence_score?: number | null
+          created_at?: string
+          entity_type: string
+          id?: string
+          mapping_metadata?: Json | null
+          source_id: string
+          source_system: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          canonical_id?: string
+          confidence_score?: number | null
+          created_at?: string
+          entity_type?: string
+          id?: string
+          mapping_metadata?: Json | null
+          source_id?: string
+          source_system?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       evidence_artifacts: {
         Row: {
@@ -1942,6 +2125,51 @@ export type Database = {
         }
         Relationships: []
       }
+      optimization_recommendations: {
+        Row: {
+          ai_reasoning: string | null
+          applied_at: string | null
+          confidence_level: number | null
+          created_at: string
+          description: string | null
+          id: string
+          impact_amount: number | null
+          implementation_complexity: string | null
+          recommendation_type: string
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          ai_reasoning?: string | null
+          applied_at?: string | null
+          confidence_level?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          impact_amount?: number | null
+          implementation_complexity?: string | null
+          recommendation_type: string
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          ai_reasoning?: string | null
+          applied_at?: string | null
+          confidence_level?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          impact_amount?: number | null
+          implementation_complexity?: string | null
+          recommendation_type?: string
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       payment_analytics: {
         Row: {
           analytics_data: Json | null
@@ -2507,6 +2735,42 @@ export type Database = {
         }
         Relationships: []
       }
+      scenario_forecasts: {
+        Row: {
+          base_assumptions: Json | null
+          confidence_score: number | null
+          created_at: string
+          forecast_data: Json | null
+          id: string
+          scenario_name: string
+          scenario_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          base_assumptions?: Json | null
+          confidence_score?: number | null
+          created_at?: string
+          forecast_data?: Json | null
+          id?: string
+          scenario_name: string
+          scenario_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          base_assumptions?: Json | null
+          confidence_score?: number | null
+          created_at?: string
+          forecast_data?: Json | null
+          id?: string
+          scenario_name?: string
+          scenario_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       sentiment_data: {
         Row: {
           content: string | null
@@ -2664,6 +2928,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      trust_scores: {
+        Row: {
+          calculated_at: string
+          compliance_readiness_score: number | null
+          data_completeness_score: number | null
+          forecast_accuracy_score: number | null
+          id: string
+          industry_percentile: number | null
+          overall_score: number
+          score_breakdown: Json | null
+          user_id: string
+        }
+        Insert: {
+          calculated_at?: string
+          compliance_readiness_score?: number | null
+          data_completeness_score?: number | null
+          forecast_accuracy_score?: number | null
+          id?: string
+          industry_percentile?: number | null
+          overall_score: number
+          score_breakdown?: Json | null
+          user_id: string
+        }
+        Update: {
+          calculated_at?: string
+          compliance_readiness_score?: number | null
+          data_completeness_score?: number | null
+          forecast_accuracy_score?: number | null
+          id?: string
+          industry_percentile?: number | null
+          overall_score?: number
+          score_breakdown?: Json | null
+          user_id?: string
+        }
+        Relationships: []
       }
       user_preferences: {
         Row: {

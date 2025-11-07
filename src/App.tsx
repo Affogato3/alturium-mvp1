@@ -28,6 +28,9 @@ import { QuantumMarketMatrix } from "@/components/quantum-market-matrix";
 import { FinanceFabricDashboard } from "@/components/finance-fabric-dashboard";
 import FinSynapseDashboard from "@/components/finsynapse-dashboard";
 import { AutoBudgetDashboard } from "@/components/autobudget-dashboard";
+import { SynapseXCore } from "@/components/synapsex-core";
+import { CrossBorderPaymentDashboard } from "@/components/cross-border/payment-dashboard";
+import { AIControlPanel } from "@/components/synapsex/ai-control-panel";
 
 const queryClient = new QueryClient();
 
@@ -133,6 +136,9 @@ const App = () => {
           <Route path="/helix-core" element={<HelixCoreDashboard />} />
           <Route path="/smart-inbox" element={<SmartInboxDashboard />} />
           <Route path="/autobudget" element={<AutoBudgetDashboard />} />
+          <Route path="/synapsex" element={<SynapseXCore />} />
+          <Route path="/cross-border-payments" element={<CrossBorderPaymentDashboard />} />
+          <Route path="/synapsex-ai" element={<AIControlPanel />} />
           <Route path="/cross-border-payments" element={<PaymentDashboard />} />
           <Route path="*" element={<NotFound />} />
           </Routes>
