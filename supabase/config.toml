@@ -62,3 +62,6 @@ verify_jwt = true
 
 [functions.data-quality-repair]
 verify_jwt = true
+
+[functions.chart-explain]
+verify_jwt = true

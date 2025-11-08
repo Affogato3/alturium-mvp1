@@ -5,6 +5,7 @@ import { AnalystConsole } from "./analyst-console";
 import { DataQualityMonitor } from "./data-quality-monitor";
 import { PatternDiscovery } from "./pattern-discovery";
 import { InsightCards } from "./insight-cards";
+import { InteractiveDashboard } from "./interactive-dashboard";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const AIDataAnalysisDashboard = () => {
@@ -27,35 +28,47 @@ export const AIDataAnalysisDashboard = () => {
         </motion.div>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Column */}
-          <div className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <InsightCards />
-            </motion.div>
-          </div>
+        <div className="grid grid-cols-1 gap-6">
+          {/* Interactive Dashboard - Full Width */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <InteractiveDashboard />
+          </motion.div>
 
-          {/* Right Column */}
-          <div className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <DataQualityMonitor />
-            </motion.div>
+          {/* Two Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Column */}
+            <div className="space-y-6">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <InsightCards />
+              </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <PatternDiscovery />
-            </motion.div>
+            {/* Right Column */}
+            <div className="space-y-6">
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <DataQualityMonitor />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <PatternDiscovery />
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
