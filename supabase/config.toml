@@ -47,3 +47,18 @@ verify_jwt = true
 
 [functions.finsynapse-insights]
 verify_jwt = true
+
+[functions.data-quality-scan]
+verify_jwt = true
+
+[functions.pattern-discovery]
+verify_jwt = true
+
+[functions.generate-insights]
+verify_jwt = true
+
+[functions.analyst-query]
+verify_jwt = true
+
+[functions.data-quality-repair]
+verify_jwt = true

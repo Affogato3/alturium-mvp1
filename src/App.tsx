@@ -30,6 +30,7 @@ import FinSynapseDashboard from "@/components/finsynapse-dashboard";
 import { AutoBudgetDashboard } from "@/components/autobudget-dashboard";
 import { SynapseXCore } from "@/components/synapsex-core";
 import { SmartFinanceAssistant } from "@/components/synapsex/smart-finance-assistant";
+import { AIDataAnalysisDashboard } from "@/components/ai-data-analysis/ai-data-analysis-dashboard";
 
 const queryClient = new QueryClient();
 
@@ -138,6 +139,7 @@ const App = () => {
           <Route path="/synapsex" element={<SynapseXCore />} />
           <Route path="/cross-border-payments" element={<PaymentDashboard />} />
           <Route path="/smart-finance-assistant" element={<SmartFinanceAssistant />} />
+          <Route path="/ai-data-analysis" element={<AIDataAnalysisDashboard />} />
           <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>
