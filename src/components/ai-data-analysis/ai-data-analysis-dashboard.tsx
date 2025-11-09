@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IntelligenceOrb } from "./intelligence-orb";
 import { AnalystConsole } from "./analyst-console";
 import { DataQualityMonitor } from "./data-quality-monitor";
 import { PatternDiscovery } from "./pattern-discovery";
 import { InsightCards } from "./insight-cards";
 import { InteractiveDashboard } from "./interactive-dashboard";
+import { EmbeddedAnalyticsPanel } from "./embedded-analytics-panel";
+import { ProactiveAlerts } from "./proactive-alerts";
+import { ROICalculator } from "./roi-calculator";
+import { ExecutiveReportGenerator } from "./executive-report-generator";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const AIDataAnalysisDashboard = () => {
@@ -27,50 +32,96 @@ export const AIDataAnalysisDashboard = () => {
           </p>
         </motion.div>
 
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 gap-6">
-          {/* Interactive Dashboard - Full Width */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <InteractiveDashboard />
-          </motion.div>
+        {/* Main Content with Tabs */}
+        <Tabs defaultValue="analytics" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto">
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="workflow">Workflow</TabsTrigger>
+            <TabsTrigger value="alerts">Alerts</TabsTrigger>
+            <TabsTrigger value="roi">ROI</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
+          </TabsList>
 
-          {/* Two Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left Column */}
-            <div className="space-y-6">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <InsightCards />
-              </motion.div>
+          <TabsContent value="analytics" className="space-y-6">
+            {/* Interactive Dashboard - Full Width */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <InteractiveDashboard />
+            </motion.div>
+
+            {/* Two Column Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Left Column */}
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <InsightCards />
+                </motion.div>
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <DataQualityMonitor />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <PatternDiscovery />
+                </motion.div>
+              </div>
             </div>
+          </TabsContent>
 
-            {/* Right Column */}
-            <div className="space-y-6">
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <DataQualityMonitor />
-              </motion.div>
+          <TabsContent value="workflow">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <EmbeddedAnalyticsPanel />
+            </motion.div>
+          </TabsContent>
 
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <PatternDiscovery />
-              </motion.div>
-            </div>
-          </div>
-        </div>
+          <TabsContent value="alerts">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <ProactiveAlerts />
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="roi">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <ROICalculator />
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="reports">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <ExecutiveReportGenerator />
+            </motion.div>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Intelligence Orb */}

@@ -64,4 +64,22 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.chart-explain]
-verify_jwt = true
+verify_jwt = false
+
+[functions.workflow-insights]
+verify_jwt = false
+
+[functions.monitor-alerts]
+verify_jwt = false
+
+[functions.calculate-roi]
+verify_jwt = false
+
+[functions.generate-executive-report]
+verify_jwt = false
+
+[functions.send-alert]
+verify_jwt = false
+
+[functions.execute-action]
+verify_jwt = false
