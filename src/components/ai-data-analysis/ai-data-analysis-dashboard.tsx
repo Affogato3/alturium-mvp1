@@ -11,6 +11,8 @@ import { EmbeddedAnalyticsPanel } from "./embedded-analytics-panel";
 import { ProactiveAlerts } from "./proactive-alerts";
 import { ROICalculator } from "./roi-calculator";
 import { ExecutiveReportGenerator } from "./executive-report-generator";
+import { DataSourceConnector } from "./data-source-connector";
+import { CollaborationPanel } from "./collaboration-panel";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const AIDataAnalysisDashboard = () => {
@@ -43,6 +45,15 @@ export const AIDataAnalysisDashboard = () => {
           </TabsList>
 
           <TabsContent value="analytics" className="space-y-6">
+            {/* Data Source Connector - Full Width */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+            >
+              <DataSourceConnector />
+            </motion.div>
+
             {/* Interactive Dashboard - Full Width */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -52,8 +63,8 @@ export const AIDataAnalysisDashboard = () => {
               <InteractiveDashboard />
             </motion.div>
 
-            {/* Two Column Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Three Column Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left Column */}
               <div className="space-y-6">
                 <motion.div
@@ -65,22 +76,33 @@ export const AIDataAnalysisDashboard = () => {
                 </motion.div>
               </div>
 
-              {/* Right Column */}
+              {/* Middle Column */}
               <div className="space-y-6">
                 <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
                   <DataQualityMonitor />
                 </motion.div>
 
                 <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
                   <PatternDiscovery />
+                </motion.div>
+              </div>
+
+              {/* Right Column - Collaboration */}
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <CollaborationPanel />
                 </motion.div>
               </div>
             </div>
