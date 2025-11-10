@@ -17,6 +17,13 @@ import { SmartFilters } from "./smart-filters";
 import { VersionHistory } from "./version-history";
 import { DashboardBuilder } from "./dashboard-builder";
 import { ExportPanel } from "./export-panel";
+import { PatternRecognition } from "./pattern-recognition";
+import { ComparativeAnalysis } from "./comparative-analysis";
+import { ValueAssessment } from "./value-assessment";
+import { SelfOptimization } from "./self-optimization";
+import { MultiModalInput } from "./multi-modal-input";
+import { SemanticUnderstanding } from "./semantic-understanding";
+import { PerceptionSystems } from "./perception-systems";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const AIDataAnalysisDashboard = () => {

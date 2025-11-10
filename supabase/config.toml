@@ -101,3 +101,33 @@ verify_jwt = false
 
 [functions.sync-data-source]
 verify_jwt = false
+
+[functions.pattern-recognition]
+verify_jwt = false
+
+[functions.comparative-analysis]
+verify_jwt = false
+
+[functions.value-assessment]
+verify_jwt = false
+
+[functions.self-optimization]
+verify_jwt = false
+
+[functions.multi-modal-process]
+verify_jwt = false
+
+[functions.semantic-analysis]
+verify_jwt = false
+
+[functions.perception-process]
+verify_jwt = false
+
+[functions.document-classify]
+verify_jwt = false
+
+[functions.document-extract]
+verify_jwt = false
+
+[functions.document-verify]
+verify_jwt = false

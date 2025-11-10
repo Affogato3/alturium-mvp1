@@ -25,11 +25,12 @@ export const ExportPanel = () => {
 
   const handleExport = async () => {
     try {
+      const format = selectedFormat === "excel" || selectedFormat === "csv" ? "word" : selectedFormat;
       await exportReport(
         "AI Data Analysis",
         { dataset: "all", filters: [], metrics: [] },
         "Comprehensive analytics export with AI-generated insights and recommendations",
-        selectedFormat === "csv" ? "word" : selectedFormat,
+        format as "pdf" | "word",
         includeCharts ? [] : undefined
       );
       

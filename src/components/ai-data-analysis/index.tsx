@@ -15,4 +15,11 @@ export { SmartFilters } from "./smart-filters";
 export { VersionHistory } from "./version-history";
 export { DashboardBuilder } from "./dashboard-builder";
 export { ExportPanel } from "./export-panel";
+export { PatternRecognition } from "./pattern-recognition";
+export { ComparativeAnalysis } from "./comparative-analysis";
+export { ValueAssessment } from "./value-assessment";
+export { SelfOptimization } from "./self-optimization";
+export { MultiModalInput } from "./multi-modal-input";
+export { SemanticUnderstanding } from "./semantic-understanding";
+export { PerceptionSystems } from "./perception-systems";
 
