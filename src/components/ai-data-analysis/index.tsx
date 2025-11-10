@@ -11,4 +11,8 @@ export { ROICalculator } from "./roi-calculator";
 export { ExecutiveReportGenerator } from "./executive-report-generator";
 export { DataSourceConnector } from "./data-source-connector";
 export { CollaborationPanel } from "./collaboration-panel";
+export { SmartFilters } from "./smart-filters";
+export { VersionHistory } from "./version-history";
+export { DashboardBuilder } from "./dashboard-builder";
+export { ExportPanel } from "./export-panel";
 

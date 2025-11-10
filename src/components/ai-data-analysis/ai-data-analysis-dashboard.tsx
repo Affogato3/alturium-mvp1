@@ -13,6 +13,10 @@ import { ROICalculator } from "./roi-calculator";
 import { ExecutiveReportGenerator } from "./executive-report-generator";
 import { DataSourceConnector } from "./data-source-connector";
 import { CollaborationPanel } from "./collaboration-panel";
+import { SmartFilters } from "./smart-filters";
+import { VersionHistory } from "./version-history";
+import { DashboardBuilder } from "./dashboard-builder";
+import { ExportPanel } from "./export-panel";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const AIDataAnalysisDashboard = () => {
@@ -36,20 +40,40 @@ export const AIDataAnalysisDashboard = () => {
 
         {/* Main Content with Tabs */}
         <Tabs defaultValue="analytics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto">
+          <TabsList className="grid w-full grid-cols-7 lg:w-auto">
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="workflow">Workflow</TabsTrigger>
             <TabsTrigger value="alerts">Alerts</TabsTrigger>
             <TabsTrigger value="roi">ROI</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
+            <TabsTrigger value="builder">Builder</TabsTrigger>
+            <TabsTrigger value="export">Export</TabsTrigger>
           </TabsList>
 
           <TabsContent value="analytics" className="space-y-6">
+            {/* Smart Filters & Version History - Top Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.05 }}
+              >
+                <SmartFilters />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.05 }}
+              >
+                <VersionHistory />
+              </motion.div>
+            </div>
+
             {/* Data Source Connector - Full Width */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 }}
+              transition={{ delay: 0.1 }}
             >
               <DataSourceConnector />
             </motion.div>
@@ -141,6 +165,24 @@ export const AIDataAnalysisDashboard = () => {
               animate={{ opacity: 1, y: 0 }}
             >
               <ExecutiveReportGenerator />
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="builder">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <DashboardBuilder />
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="export">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <ExportPanel />
             </motion.div>
           </TabsContent>
         </Tabs>
