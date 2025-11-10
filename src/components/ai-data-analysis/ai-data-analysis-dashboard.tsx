@@ -47,8 +47,9 @@ export const AIDataAnalysisDashboard = () => {
 
         {/* Main Content with Tabs */}
         <Tabs defaultValue="analytics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7 lg:w-auto">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 gap-2">
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="intelligence">AI Intelligence</TabsTrigger>
             <TabsTrigger value="workflow">Workflow</TabsTrigger>
             <TabsTrigger value="alerts">Alerts</TabsTrigger>
             <TabsTrigger value="roi">ROI</TabsTrigger>
@@ -137,6 +138,53 @@ export const AIDataAnalysisDashboard = () => {
                 </motion.div>
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="intelligence" className="space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <Tabs defaultValue="patterns" className="w-full">
+                <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 gap-2 mb-6">
+                  <TabsTrigger value="patterns">Patterns</TabsTrigger>
+                  <TabsTrigger value="benchmark">Benchmark</TabsTrigger>
+                  <TabsTrigger value="valuation">Valuation</TabsTrigger>
+                  <TabsTrigger value="optimize">Self-Optimize</TabsTrigger>
+                  <TabsTrigger value="multimodal">Multi-Modal</TabsTrigger>
+                  <TabsTrigger value="semantic">Semantic</TabsTrigger>
+                  <TabsTrigger value="perception">Perception</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="patterns">
+                  <PatternRecognition />
+                </TabsContent>
+                
+                <TabsContent value="benchmark">
+                  <ComparativeAnalysis />
+                </TabsContent>
+                
+                <TabsContent value="valuation">
+                  <ValueAssessment />
+                </TabsContent>
+                
+                <TabsContent value="optimize">
+                  <SelfOptimization />
+                </TabsContent>
+                
+                <TabsContent value="multimodal">
+                  <MultiModalInput />
+                </TabsContent>
+                
+                <TabsContent value="semantic">
+                  <SemanticUnderstanding />
+                </TabsContent>
+                
+                <TabsContent value="perception">
+                  <PerceptionSystems />
+                </TabsContent>
+              </Tabs>
+            </motion.div>
           </TabsContent>
 
           <TabsContent value="workflow">
