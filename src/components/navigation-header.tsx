@@ -25,7 +25,8 @@ import {
   Dna,
   Inbox,
   Menu,
-  DollarSign
+  DollarSign,
+  Globe
 } from "lucide-react";
 
 interface NavigationHeaderProps {
@@ -191,6 +192,17 @@ export function NavigationHeader({
             >
               <DollarSign className="h-4 w-4 text-[#00E6F6]" />
               <span className="hidden sm:inline text-sm">AutoBudget™</span>
+            </Button>
+
+            {/* Market Map Link */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center gap-2"
+              onClick={() => window.location.href = '/market-map'}
+            >
+              <Globe className="h-4 w-4 text-primary" />
+              <span className="hidden sm:inline text-sm">Market Map</span>
             </Button>
 
             {/* Notifications */}
