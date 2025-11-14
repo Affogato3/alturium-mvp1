@@ -36,8 +36,12 @@ export function AutoPlaybooks() {
 
       if (error) throw error;
       
-      setPlaybooks(prev => [...prev, data.playbook]);
-      toast.success("Playbook generated");
+      if (data?.playbook) {
+        setPlaybooks(prev => [...prev, data.playbook]);
+        toast.success("Playbook generated");
+      } else {
+        toast.error("Failed to generate playbook");
+      }
     } catch (error: any) {
       toast.error(error.message || "Generation failed");
     } finally {
@@ -62,7 +66,7 @@ export function AutoPlaybooks() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {playbooks.map((playbook, idx) => (
+        {playbooks.filter(p => p).map((playbook, idx) => (
           <motion.div
             key={playbook.id}
             initial={{ opacity: 0, y: 20 }}
