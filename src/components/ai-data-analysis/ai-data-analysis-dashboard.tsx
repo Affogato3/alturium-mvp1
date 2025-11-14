@@ -24,6 +24,7 @@ import { SelfOptimization } from "./self-optimization";
 import { MultiModalInput } from "./multi-modal-input";
 import { SemanticUnderstanding } from "./semantic-understanding";
 import { PerceptionSystems } from "./perception-systems";
+import { MarketMapDashboard } from "../market-map";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const AIDataAnalysisDashboard = () => {
@@ -47,9 +48,10 @@ export const AIDataAnalysisDashboard = () => {
 
         {/* Main Content with Tabs */}
         <Tabs defaultValue="analytics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 gap-2">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-9 gap-2">
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="intelligence">AI Intelligence</TabsTrigger>
+            <TabsTrigger value="marketmap">🌍 Market Map</TabsTrigger>
             <TabsTrigger value="workflow">Workflow</TabsTrigger>
             <TabsTrigger value="alerts">Alerts</TabsTrigger>
             <TabsTrigger value="roi">ROI</TabsTrigger>
@@ -185,6 +187,10 @@ export const AIDataAnalysisDashboard = () => {
                 </TabsContent>
               </Tabs>
             </motion.div>
+          </TabsContent>
+
+          <TabsContent value="marketmap" className="space-y-6">
+            <MarketMapDashboard />
           </TabsContent>
 
           <TabsContent value="workflow">
