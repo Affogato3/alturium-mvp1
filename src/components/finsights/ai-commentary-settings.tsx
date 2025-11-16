@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -20,6 +20,14 @@ export const AICommentarySettings = () => {
     custom_instructions: "",
     model: "google/gemini-2.5-flash",
   });
+
+  useEffect(() => {
+    // Load existing AI settings
+    const saved = localStorage.getItem("finsights_ai_settings");
+    if (saved) {
+      setSettings(JSON.parse(saved));
+    }
+  }, []);
 
   const handleSave = () => {
     localStorage.setItem("finsights_ai_settings", JSON.stringify(settings));

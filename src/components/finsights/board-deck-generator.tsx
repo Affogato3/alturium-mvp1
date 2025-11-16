@@ -10,10 +10,12 @@ import { CalendarIcon, Sparkles, Download } from "lucide-react";
 import { format as formatDate } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { GeneratedReportCard } from "./generated-report-card";
 
 export const BoardDeckGenerator = () => {
   const { toast } = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedReport, setGeneratedReport] = useState<any>(null);
   const [dateRange, setDateRange] = useState<any>({ from: new Date(), to: new Date() });
   const [format, setFormat] = useState("pdf");
   const [config, setConfig] = useState({
@@ -53,13 +55,29 @@ export const BoardDeckGenerator = () => {
 
       if (error) throw error;
 
+      // Save to report history
+      const history = JSON.parse(localStorage.getItem("finsights_report_history") || "[]");
+      history.unshift({
+        id: Date.now().toString(),
+        type: "Board Deck",
+        generated_at: data.generated_at,
+        format: format,
+        slide_count: data.slide_count,
+        file_size: "~2.5 MB",
+        data: data,
+      });
+      // Keep only last 10 reports
+      if (history.length > 10) {
+        history.pop();
+      }
+      localStorage.setItem("finsights_report_history", JSON.stringify(history));
+
+      setGeneratedReport(data);
+
       toast({
         title: "Board Deck Generated!",
         description: `Your comprehensive ${data.slide_count}-slide board deck is ready.`,
       });
-
-      // In a real implementation, this would download the file
-      console.log("Generated deck:", data);
     } catch (error: any) {
       toast({
         title: "Generation Failed",
@@ -73,12 +91,19 @@ export const BoardDeckGenerator = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-white">Generate Board Deck</h2>
-        <p className="text-slate-400 mt-1">
-          Create a comprehensive, board-ready presentation in seconds
-        </p>
-      </div>
+      {generatedReport ? (
+        <GeneratedReportCard
+          report={generatedReport}
+          onClose={() => setGeneratedReport(null)}
+        />
+      ) : (
+        <>
+          <div>
+            <h2 className="text-2xl font-bold text-white">Generate Board Deck</h2>
+            <p className="text-slate-400 mt-1">
+              Create a comprehensive, board-ready presentation in seconds
+            </p>
+          </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Date Range */}
@@ -311,6 +336,8 @@ export const BoardDeckGenerator = () => {
           </Button>
         </div>
       </Card>
+        </>
+      )}
     </div>
   );
 };

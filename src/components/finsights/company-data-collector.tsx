@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,14 @@ export const CompanyDataCollector = () => {
     employee_count: "",
     recent_events: "",
   });
+
+  useEffect(() => {
+    // Load existing data on mount
+    const saved = localStorage.getItem("finsights_company_data");
+    if (saved) {
+      setCompanyData(JSON.parse(saved));
+    }
+  }, []);
 
   const handleSave = () => {
     // Save to localStorage for now (in production, save to database)

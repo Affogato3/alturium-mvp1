@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Download, GitCompare, Clock } from "lucide-react";
+import { FileText, Download, GitCompare, Clock, X } from "lucide-react";
+import { useReportDownload } from "@/hooks/use-report-download";
+import { GeneratedReportCard } from "./generated-report-card";
 
 interface ReportVersion {
   id: string;
@@ -11,38 +13,23 @@ interface ReportVersion {
   format: string;
   slide_count: number;
   file_size: string;
+  data: any;
 }
 
 export const ReportVersionHistory = () => {
-  const [versions] = useState<ReportVersion[]>([
-    {
-      id: "1",
-      type: "Board Deck",
-      generated_at: "2025-01-15T14:30:00Z",
-      format: "pdf",
-      slide_count: 18,
-      file_size: "2.4 MB",
-    },
-    {
-      id: "2",
-      type: "Board Deck",
-      generated_at: "2024-12-15T09:00:00Z",
-      format: "pptx",
-      slide_count: 20,
-      file_size: "3.1 MB",
-    },
-    {
-      id: "3",
-      type: "Board Deck",
-      generated_at: "2024-11-15T09:00:00Z",
-      format: "pdf",
-      slide_count: 17,
-      file_size: "2.2 MB",
-    },
-  ]);
-
+  const { downloadPDF, downloadJSON, isDownloading } = useReportDownload();
+  const [versions, setVersions] = useState<ReportVersion[]>([]);
   const [compareMode, setCompareMode] = useState(false);
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
+  const [viewingReport, setViewingReport] = useState<any>(null);
+
+  useEffect(() => {
+    // Load report history from localStorage
+    const history = localStorage.getItem("finsights_report_history");
+    if (history) {
+      setVersions(JSON.parse(history));
+    }
+  }, []);
 
   const toggleVersionSelection = (id: string) => {
     if (selectedVersions.includes(id)) {
@@ -51,6 +38,31 @@ export const ReportVersionHistory = () => {
       setSelectedVersions([...selectedVersions, id]);
     }
   };
+
+  const handleDownload = (version: ReportVersion) => {
+    if (version.data) {
+      if (version.format === "pdf") {
+        downloadPDF(version.data);
+      } else {
+        downloadJSON(version.data);
+      }
+    }
+  };
+
+  const handleView = (version: ReportVersion) => {
+    if (version.data) {
+      setViewingReport(version.data);
+    }
+  };
+
+  if (viewingReport) {
+    return (
+      <GeneratedReportCard
+        report={viewingReport}
+        onClose={() => setViewingReport(null)}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -140,14 +152,27 @@ export const ReportVersionHistory = () => {
                     />
                   </div>
                 ) : (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-slate-700"
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    Download
-                  </Button>
+                  <>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-slate-700"
+                      onClick={() => handleView(version)}
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      View
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-slate-700"
+                      onClick={() => handleDownload(version)}
+                      disabled={isDownloading}
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download
+                    </Button>
+                  </>
                 )}
               </div>
             </div>
