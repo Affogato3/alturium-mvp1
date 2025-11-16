@@ -69,63 +69,94 @@ export function GlobalSynapseMap() {
           </Button>
         </div>
 
-        {/* Interactive World Map Placeholder */}
+        {/* Interactive World Map with Events */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="relative h-96 rounded-lg bg-gradient-to-br from-background/30 to-primary/10 border border-primary/20 overflow-hidden"
+          className="relative h-96 rounded-lg bg-background/80 border border-border/40 overflow-hidden"
         >
-          {/* Animated Network Lines */}
-          <svg className="absolute inset-0 w-full h-full">
-            {[...Array(20)].map((_, i) => (
-              <motion.line
-                key={i}
-                x1={`${Math.random() * 100}%`}
-                y1={`${Math.random() * 100}%`}
-                x2={`${Math.random() * 100}%`}
-                y2={`${Math.random() * 100}%`}
-                stroke="rgba(207, 175, 110, 0.2)"
-                strokeWidth="1"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: [0, 0.5, 0] }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  delay: i * 0.2
-                }}
-              />
-            ))}
+          {/* World Map SVG Background */}
+          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet">
+            {/* Continents outline - simplified world map */}
+            <path
+              d="M 150 100 L 200 80 L 250 90 L 280 70 L 320 85 L 350 75 L 380 90 L 400 100 L 420 90 L 450 100 L 470 110 L 490 100 L 510 120 L 520 110 L 540 130 L 550 120 L 570 140 L 580 130 L 600 150 L 620 140 L 640 160 L 650 170 L 640 180 L 630 190 L 620 200 L 600 210 L 580 200 L 560 210 L 540 220 L 520 210 L 500 220 L 480 230 L 460 220 L 440 230 L 420 240 L 400 230 L 380 240 L 360 250 L 340 240 L 320 250 L 300 240 L 280 230 L 260 240 L 240 230 L 220 220 L 200 210 L 180 200 L 170 180 L 160 160 L 155 140 L 150 120 Z"
+              fill="hsl(var(--muted))"
+              fillOpacity="0.3"
+              stroke="hsl(var(--border))"
+              strokeWidth="0.5"
+            />
+            <path
+              d="M 100 250 L 120 240 L 140 250 L 160 240 L 180 250 L 200 260 L 220 250 L 240 260 L 260 270 L 240 280 L 220 290 L 200 280 L 180 290 L 160 300 L 140 290 L 120 300 L 100 290 L 90 270 Z"
+              fill="hsl(var(--muted))"
+              fillOpacity="0.3"
+              stroke="hsl(var(--border))"
+              strokeWidth="0.5"
+            />
+            <path
+              d="M 700 150 L 720 140 L 740 150 L 760 140 L 780 150 L 800 160 L 820 150 L 840 160 L 860 170 L 880 180 L 900 190 L 910 210 L 900 230 L 880 240 L 860 230 L 840 240 L 820 250 L 800 240 L 780 250 L 760 260 L 740 250 L 720 240 L 700 230 L 690 210 L 695 190 L 700 170 Z"
+              fill="hsl(var(--muted))"
+              fillOpacity="0.3"
+              stroke="hsl(var(--border))"
+              strokeWidth="0.5"
+            />
           </svg>
 
-          {/* Event Nodes */}
-          <div className="absolute inset-0 p-4">
-            {events.map((event, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: idx * 0.1 }}
-                className="absolute cursor-pointer"
-                style={{
-                  left: `${event.x || Math.random() * 80 + 10}%`,
-                  top: `${event.y || Math.random() * 80 + 10}%`
-                }}
-                onClick={() => handleEventAnalysis(event)}
-              >
-                <div className="relative">
-                  <motion.div
-                    className="w-4 h-4 rounded-full bg-primary"
-                    animate={{
-                      boxShadow: [
-                        '0 0 0 0 rgba(207, 175, 110, 0.7)',
-                        '0 0 0 10px rgba(207, 175, 110, 0)',
-                      ]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                </div>
-              </motion.div>
-            ))}
+          {/* Event Dots */}
+          <div className="absolute inset-0">
+            {events.map((event, idx) => {
+              // Determine color based on severity
+              let dotColor = 'hsl(var(--primary))'; // default gold
+              let glowColor = 'rgba(207, 175, 110, 0.7)';
+              
+              if (event.severity >= 9) {
+                dotColor = 'hsl(0, 84%, 60%)'; // red for critical
+                glowColor = 'rgba(239, 68, 68, 0.7)';
+              } else if (event.severity >= 7) {
+                dotColor = 'hsl(262, 83%, 58%)'; // indigo for high importance
+                glowColor = 'rgba(99, 102, 241, 0.7)';
+              } else if (event.severity >= 5) {
+                dotColor = 'hsl(25, 95%, 53%)'; // orange for medium
+                glowColor = 'rgba(249, 115, 22, 0.7)';
+              } else {
+                dotColor = 'hsl(142, 76%, 36%)'; // green for normal
+                glowColor = 'rgba(34, 197, 94, 0.7)';
+              }
+
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="absolute cursor-pointer group"
+                  style={{
+                    left: `${event.x || Math.random() * 80 + 10}%`,
+                    top: `${event.y || Math.random() * 80 + 10}%`
+                  }}
+                  onClick={() => handleEventAnalysis(event)}
+                >
+                  <div className="relative">
+                    <motion.div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: dotColor }}
+                      animate={{
+                        boxShadow: [
+                          `0 0 0 0 ${glowColor}`,
+                          `0 0 0 12px ${glowColor.replace('0.7', '0')}`,
+                        ]
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                    {/* Tooltip on hover */}
+                    <div className="absolute left-4 top-0 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none">
+                      <div className="bg-background/95 backdrop-blur-sm border border-border rounded-md px-2 py-1 text-xs whitespace-nowrap shadow-lg">
+                        {event.title || 'Event'}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
 
           {/* Center Text */}
