@@ -10,7 +10,7 @@ import { NavigationHeader } from "@/components/navigation-header";
 import { AuditDashboard } from "@/components/audit-dashboard";
 import { CNLGridDashboard } from "@/components/cnl-grid-dashboard";
 import { supabase } from "@/integrations/supabase/client";
-import { VanguardDashboard } from "@/components/vanguard-dashboard";
+import { ScribeDashboard } from "@/components/scribe-dashboard";
 import AlturiumDashboard from "@/components/alturium-dashboard";
 import { ComplianceDashboard } from "@/components/compliance-dashboard";
 import { EthicalArbiterDashboard } from "@/components/ethical-arbiter-dashboard";
@@ -20,7 +20,6 @@ import { PaymentDashboard } from "@/components/cross-border/payment-dashboard";
 import { Session, User } from "@supabase/supabase-js";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import { ScribeDashboard } from "@/components/scribe-dashboard";
 import { HelixCoreDashboard } from "@/components/helix-core/helix-core-dashboard";
 import { SmartInboxDashboard } from "@/components/smart-inbox-dashboard";
 import { PredictiveInterlockDashboard } from "@/components/predictive-interlock-dashboard";
@@ -124,8 +123,8 @@ const App = () => {
                 </div>
               } />
             <Route path="/cnl-grid" element={<CNLGridDashboard />} />
-            <Route path="/vanguard" element={<VanguardDashboard />} />
-          <Route path="/compliance" element={<ComplianceDashboard />} />
+            <Route path="/vanguard" element={<ScribeDashboard />} />
+            <Route path="/scribe" element={<ScribeDashboard />} />
           <Route path="/embedded-compliance" element={<EmbeddedComplianceDashboard />} />
           <Route path="/ethical-arbiter" element={<EthicalArbiterDashboard />} />
           <Route path="/pcre" element={<PCREDashboard />} />
