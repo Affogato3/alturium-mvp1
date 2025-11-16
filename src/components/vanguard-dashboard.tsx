@@ -39,13 +39,14 @@ import {
   MessageSquare,
   ChevronRight,
 } from "lucide-react";
-import { MissionBoard } from "./vanguard/mission-board";
-import { DiscussionStream } from "./vanguard/discussion-stream";
-import { SmartNotes } from "./vanguard/smart-notes";
-import { AICommandLine } from "./vanguard/ai-command-line";
-import { SyncBar } from "./vanguard/sync-bar";
+import { MissionBoard } from "./scribe/mission-board";
+import { DiscussionStream } from "./scribe/discussion-stream";
+import { SmartNotes } from "./scribe/smart-notes";
+import { AICommandLine } from "./scribe/ai-command-line";
+import { SyncBar } from "./scribe/sync-bar";
+import { InstantReports } from "./scribe/instant-reports";
 
-export const VanguardDashboard = () => {
+export const ScribeDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [simulationRunning, setSimulationRunning] = useState(false);
   const [ghostMode, setGhostMode] = useState(false);
