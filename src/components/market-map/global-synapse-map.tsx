@@ -73,32 +73,50 @@ export function GlobalSynapseMap() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="relative h-96 rounded-lg bg-background/80 border border-border/40 overflow-hidden"
+          className="relative h-96 rounded-lg bg-gradient-to-b from-background via-background/95 to-background/90 border border-border/40 overflow-hidden"
         >
-          {/* World Map SVG Background */}
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet">
-            {/* Continents outline - simplified world map */}
-            <path
-              d="M 150 100 L 200 80 L 250 90 L 280 70 L 320 85 L 350 75 L 380 90 L 400 100 L 420 90 L 450 100 L 470 110 L 490 100 L 510 120 L 520 110 L 540 130 L 550 120 L 570 140 L 580 130 L 600 150 L 620 140 L 640 160 L 650 170 L 640 180 L 630 190 L 620 200 L 600 210 L 580 200 L 560 210 L 540 220 L 520 210 L 500 220 L 480 230 L 460 220 L 440 230 L 420 240 L 400 230 L 380 240 L 360 250 L 340 240 L 320 250 L 300 240 L 280 230 L 260 240 L 240 230 L 220 220 L 200 210 L 180 200 L 170 180 L 160 160 L 155 140 L 150 120 Z"
-              fill="hsl(var(--muted))"
-              fillOpacity="0.3"
-              stroke="hsl(var(--border))"
-              strokeWidth="0.5"
-            />
-            <path
-              d="M 100 250 L 120 240 L 140 250 L 160 240 L 180 250 L 200 260 L 220 250 L 240 260 L 260 270 L 240 280 L 220 290 L 200 280 L 180 290 L 160 300 L 140 290 L 120 300 L 100 290 L 90 270 Z"
-              fill="hsl(var(--muted))"
-              fillOpacity="0.3"
-              stroke="hsl(var(--border))"
-              strokeWidth="0.5"
-            />
-            <path
-              d="M 700 150 L 720 140 L 740 150 L 760 140 L 780 150 L 800 160 L 820 150 L 840 160 L 860 170 L 880 180 L 900 190 L 910 210 L 900 230 L 880 240 L 860 230 L 840 240 L 820 250 L 800 240 L 780 250 L 760 260 L 740 250 L 720 240 L 700 230 L 690 210 L 695 190 L 700 170 Z"
-              fill="hsl(var(--muted))"
-              fillOpacity="0.3"
-              stroke="hsl(var(--border))"
-              strokeWidth="0.5"
-            />
+          {/* World Map SVG Background - Detailed */}
+          <svg className="absolute inset-0 w-full h-full opacity-40" viewBox="0 0 2000 1000" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="mapGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="hsl(var(--muted))" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="hsl(var(--muted))" stopOpacity="0.2" />
+              </linearGradient>
+            </defs>
+            
+            {/* North America */}
+            <path d="M 150,200 L 180,180 L 220,170 L 250,160 L 280,155 L 310,160 L 340,170 L 370,165 L 400,175 L 420,190 L 440,200 L 450,220 L 460,240 L 465,260 L 460,280 L 450,300 L 440,320 L 420,330 L 400,340 L 380,350 L 360,360 L 340,365 L 320,370 L 300,375 L 280,370 L 260,360 L 240,350 L 220,340 L 200,330 L 180,320 L 160,310 L 145,290 L 140,270 L 135,250 L 140,230 L 145,210 Z" 
+              fill="url(#mapGradient)" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.6"/>
+            
+            {/* South America */}
+            <path d="M 380,450 L 400,440 L 420,445 L 435,460 L 445,480 L 450,500 L 448,520 L 442,540 L 435,560 L 425,580 L 415,600 L 405,615 L 395,625 L 385,630 L 375,628 L 365,620 L 355,610 L 348,595 L 343,580 L 340,565 L 338,550 L 340,535 L 345,520 L 352,505 L 360,490 L 370,475 L 378,460 Z"
+              fill="url(#mapGradient)" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.6"/>
+            
+            {/* Europe */}
+            <path d="M 900,180 L 920,175 L 940,180 L 955,190 L 965,205 L 970,220 L 968,235 L 960,245 L 945,250 L 930,248 L 915,243 L 905,235 L 898,225 L 895,210 L 897,195 Z"
+              fill="url(#mapGradient)" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.6"/>
+            
+            {/* Africa */}
+            <path d="M 920,280 L 940,275 L 960,280 L 980,290 L 995,305 L 1005,325 L 1010,345 L 1012,365 L 1010,385 L 1005,405 L 998,425 L 988,442 L 975,455 L 960,465 L 945,470 L 930,468 L 915,460 L 903,448 L 893,433 L 886,415 L 882,397 L 880,380 L 882,363 L 887,346 L 895,330 L 905,315 L 913,300 L 918,287 Z"
+              fill="url(#mapGradient)" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.6"/>
+            
+            {/* Asia */}
+            <path d="M 1050,160 L 1100,155 L 1150,160 L 1200,170 L 1250,180 L 1290,195 L 1320,210 L 1345,230 L 1365,250 L 1380,270 L 1390,290 L 1395,310 L 1393,330 L 1385,345 L 1370,355 L 1350,360 L 1330,358 L 1310,350 L 1290,340 L 1270,330 L 1250,320 L 1230,310 L 1210,300 L 1190,290 L 1170,280 L 1150,270 L 1130,260 L 1110,250 L 1090,240 L 1070,225 L 1055,210 L 1045,190 L 1042,175 Z"
+              fill="url(#mapGradient)" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.6"/>
+            
+            {/* Australia */}
+            <path d="M 1450,580 L 1480,575 L 1510,580 L 1535,595 L 1552,615 L 1560,635 L 1558,655 L 1548,670 L 1532,680 L 1512,683 L 1492,680 L 1472,672 L 1455,660 L 1443,645 L 1438,628 L 1440,610 L 1445,595 Z"
+              fill="url(#mapGradient)" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.6"/>
+            
+            {/* Latitude/Longitude grid lines */}
+            {[...Array(10)].map((_, i) => (
+              <line key={`lat-${i}`} x1="0" y1={i * 100} x2="2000" y2={i * 100} 
+                stroke="hsl(var(--border))" strokeWidth="0.5" opacity="0.2" strokeDasharray="5,5" />
+            ))}
+            {[...Array(20)].map((_, i) => (
+              <line key={`lon-${i}`} x1={i * 100} y1="0" x2={i * 100} y2="1000" 
+                stroke="hsl(var(--border))" strokeWidth="0.5" opacity="0.2" strokeDasharray="5,5" />
+            ))}
           </svg>
 
           {/* Event Dots */}
