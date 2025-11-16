@@ -11,6 +11,7 @@ import { AuditDashboard } from "@/components/audit-dashboard";
 import { CNLGridDashboard } from "@/components/cnl-grid-dashboard";
 import { supabase } from "@/integrations/supabase/client";
 import { ScribeDashboard } from "@/components/scribe-dashboard";
+import { FinSightsDashboard } from "@/components/finsights-dashboard";
 import AlturiumDashboard from "@/components/alturium-dashboard";
 import { ComplianceDashboard } from "@/components/compliance-dashboard";
 import { EthicalArbiterDashboard } from "@/components/ethical-arbiter-dashboard";
@@ -141,6 +142,7 @@ const App = () => {
           <Route path="/smart-finance-assistant" element={<SmartFinanceAssistant />} />
           <Route path="/ai-data-analysis" element={<AIDataAnalysisDashboard />} />
           <Route path="/market-map" element={<MarketMapDashboard />} />
+          <Route path="/finsights" element={<FinSightsDashboard />} />
           <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>
