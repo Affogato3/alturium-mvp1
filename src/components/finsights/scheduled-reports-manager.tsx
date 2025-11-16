@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,20 +22,16 @@ interface ScheduledReport {
 
 export const ScheduledReportsManager = () => {
   const { toast } = useToast();
-  const [schedules, setSchedules] = useState<ScheduledReport[]>([
-    {
-      id: "1",
-      name: "Monthly Board Deck",
-      frequency: "monthly",
-      day_of_period: 1,
-      time: "09:00",
-      format: "pdf",
-      active: true,
-      last_run: "2025-01-01T09:00:00Z",
-      next_run: "2025-02-01T09:00:00Z",
-    },
-  ]);
+  const [schedules, setSchedules] = useState<ScheduledReport[]>([]);
   const [showNewSchedule, setShowNewSchedule] = useState(false);
+
+  useEffect(() => {
+    // Load schedules from localStorage
+    const saved = localStorage.getItem("finsights_schedules");
+    if (saved) {
+      setSchedules(JSON.parse(saved));
+    }
+  }, []);
   const [newSchedule, setNewSchedule] = useState({
     name: "",
     frequency: "monthly",
@@ -58,7 +54,9 @@ export const ScheduledReportsManager = () => {
       next_run: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     };
 
-    setSchedules([...schedules, schedule]);
+    const newSchedules = [...schedules, schedule];
+    setSchedules(newSchedules);
+    localStorage.setItem("finsights_schedules", JSON.stringify(newSchedules));
     setShowNewSchedule(false);
     setNewSchedule({
       name: "",
@@ -76,15 +74,17 @@ export const ScheduledReportsManager = () => {
   };
 
   const toggleSchedule = (id: string) => {
-    setSchedules(
-      schedules.map((s) =>
-        s.id === id ? { ...s, active: !s.active } : s
-      )
+    const newSchedules = schedules.map((s) =>
+      s.id === id ? { ...s, active: !s.active } : s
     );
+    setSchedules(newSchedules);
+    localStorage.setItem("finsights_schedules", JSON.stringify(newSchedules));
   };
 
   const deleteSchedule = (id: string) => {
-    setSchedules(schedules.filter((s) => s.id !== id));
+    const newSchedules = schedules.filter((s) => s.id !== id);
+    setSchedules(newSchedules);
+    localStorage.setItem("finsights_schedules", JSON.stringify(newSchedules));
     toast({
       title: "Schedule Deleted",
       description: "The scheduled report has been removed.",

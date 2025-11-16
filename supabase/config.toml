@@ -134,3 +134,6 @@ verify_jwt = false
 
 [functions.market-synapse]
 verify_jwt = false
+
+[functions.generate-board-deck]
+verify_jwt = false
