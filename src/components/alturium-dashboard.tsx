@@ -140,6 +140,7 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
   const navItems = [
     { icon: Home, label: "Dashboard", route: "/", active: true },
     { icon: BarChart3, label: "Analytics", route: "/audit", active: false },
+    { icon: TrendingUp, label: "Trade Execution", route: "/trade-execution", active: false },
     { icon: Brain, label: "AI Tools", route: "/scribe", active: false },
     { icon: Layers, label: "Finance Fabric", route: "/finance-fabric", active: false },
     { icon: Brain, label: "FinSynapse", route: "/finsynapse", active: false },
@@ -363,6 +364,12 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
                   title="AI Analysis"
                   description="Run predictive models"
                   onClick={() => navigate("/scribe")}
+                />
+                <QuickActionCard
+                  icon={TrendingUp}
+                  title="Trade Execution"
+                  description="Advanced charting & trading terminal"
+                  onClick={() => navigate("/trade-execution")}
                 />
                 <QuickActionCard
                   icon={BarChart3}
