@@ -137,3 +137,6 @@ verify_jwt = false
 
 [functions.generate-board-deck]
 verify_jwt = false
+
+[functions.financial-intelligence-analysis]
+verify_jwt = false

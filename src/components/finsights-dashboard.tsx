@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart3, Settings, Calendar, History, TrendingUp, FileText } from "lucide-react";
+import { BarChart3, Settings, Calendar, History, TrendingUp, FileText, Brain } from "lucide-react";
 import { CompanyDataCollector } from "./finsights/company-data-collector";
 import { BoardDeckGenerator } from "./finsights/board-deck-generator";
 import { BrandingConfigurator } from "./finsights/branding-configurator";
@@ -9,6 +9,7 @@ import { ScheduledReportsManager } from "./finsights/scheduled-reports-manager";
 import { ReportVersionHistory } from "./finsights/report-version-history";
 import { AICommentarySettings } from "./finsights/ai-commentary-settings";
 import { AnalyticsDashboard } from "./finsights/analytics-dashboard";
+import { FinancialIntelligence } from "./finsights/financial-intelligence";
 
 export const FinSightsDashboard = () => {
   const [activeTab, setActiveTab] = useState("generate");
@@ -32,7 +33,7 @@ export const FinSightsDashboard = () => {
         {/* Main Content */}
         <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="p-6">
-            <TabsList className="grid grid-cols-7 gap-2 bg-slate-900/50 p-1">
+            <TabsList className="grid grid-cols-8 gap-2 bg-slate-900/50 p-1">
               <TabsTrigger value="generate" className="data-[state=active]:bg-indigo-600">
                 <FileText className="w-4 h-4 mr-2" />
                 Generate
@@ -60,6 +61,10 @@ export const FinSightsDashboard = () => {
               <TabsTrigger value="analytics" className="data-[state=active]:bg-indigo-600">
                 <TrendingUp className="w-4 h-4 mr-2" />
                 Analytics
+              </TabsTrigger>
+              <TabsTrigger value="intelligence" className="data-[state=active]:bg-indigo-600">
+                <Brain className="w-4 h-4 mr-2" />
+                Intelligence
               </TabsTrigger>
             </TabsList>
 
@@ -89,6 +94,10 @@ export const FinSightsDashboard = () => {
 
             <TabsContent value="analytics" className="mt-6">
               <AnalyticsDashboard />
+            </TabsContent>
+
+            <TabsContent value="intelligence" className="mt-6">
+              <FinancialIntelligence />
             </TabsContent>
           </Tabs>
         </Card>
