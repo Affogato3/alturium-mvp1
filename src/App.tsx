@@ -32,6 +32,7 @@ import { SynapseXCore } from "@/components/synapsex-core";
 import { SmartFinanceAssistant } from "@/components/synapsex/smart-finance-assistant";
 import { AIDataAnalysisDashboard } from "@/components/ai-data-analysis/ai-data-analysis-dashboard";
 import { MarketMapDashboard } from "@/components/market-map";
+import { TradeExecutionInterface } from "@/components/trade-execution-interface";
 
 const queryClient = new QueryClient();
 
@@ -143,6 +144,7 @@ const App = () => {
           <Route path="/ai-data-analysis" element={<AIDataAnalysisDashboard />} />
           <Route path="/market-map" element={<MarketMapDashboard />} />
           <Route path="/finsights" element={<FinSightsDashboard />} />
+          <Route path="/trade-execution" element={<TradeExecutionInterface />} />
           <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>
