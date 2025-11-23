@@ -14,6 +14,71 @@ export type Database = {
   }
   public: {
     Tables: {
+      action_items: {
+        Row: {
+          amount: number | null
+          brief_id: string | null
+          created_at: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          impact: string | null
+          metadata: Json | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          snoozed_until: string | null
+          status: string | null
+          title: string
+          type: string
+          urgency: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number | null
+          brief_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          impact?: string | null
+          metadata?: Json | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          snoozed_until?: string | null
+          status?: string | null
+          title: string
+          type: string
+          urgency: string
+          user_id: string
+        }
+        Update: {
+          amount?: number | null
+          brief_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          impact?: string | null
+          metadata?: Json | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          snoozed_until?: string | null
+          status?: string | null
+          title?: string
+          type?: string
+          urgency?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "action_items_brief_id_fkey"
+            columns: ["brief_id"]
+            isOneToOne: false
+            referencedRelation: "daily_briefs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_analysis_logs: {
         Row: {
           ai_model: string | null
@@ -301,6 +366,45 @@ export type Database = {
           routing_number?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      brief_preferences: {
+        Row: {
+          alert_thresholds: Json | null
+          created_at: string | null
+          delivery_time: string | null
+          email_enabled: boolean | null
+          enabled_sections: Json | null
+          metric_priorities: Json | null
+          timezone: string | null
+          updated_at: string | null
+          user_id: string
+          verbosity: string | null
+        }
+        Insert: {
+          alert_thresholds?: Json | null
+          created_at?: string | null
+          delivery_time?: string | null
+          email_enabled?: boolean | null
+          enabled_sections?: Json | null
+          metric_priorities?: Json | null
+          timezone?: string | null
+          updated_at?: string | null
+          user_id: string
+          verbosity?: string | null
+        }
+        Update: {
+          alert_thresholds?: Json | null
+          created_at?: string | null
+          delivery_time?: string | null
+          email_enabled?: boolean | null
+          enabled_sections?: Json | null
+          metric_priorities?: Json | null
+          timezone?: string | null
+          updated_at?: string | null
+          user_id?: string
+          verbosity?: string | null
         }
         Relationships: []
       }
@@ -792,6 +896,75 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      daily_briefs: {
+        Row: {
+          action_items_count: number | null
+          ai_insights: Json | null
+          brief_date: string
+          burn_rate: number | null
+          cash_amount: number | null
+          cash_change: number | null
+          created_at: string | null
+          email_html: string | null
+          email_opened_at: string | null
+          email_sent_at: string | null
+          email_text: string | null
+          expenses: number | null
+          id: string
+          raw_metrics: Json | null
+          revenue: number | null
+          revenue_change: number | null
+          runway_months: number | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          action_items_count?: number | null
+          ai_insights?: Json | null
+          brief_date: string
+          burn_rate?: number | null
+          cash_amount?: number | null
+          cash_change?: number | null
+          created_at?: string | null
+          email_html?: string | null
+          email_opened_at?: string | null
+          email_sent_at?: string | null
+          email_text?: string | null
+          expenses?: number | null
+          id?: string
+          raw_metrics?: Json | null
+          revenue?: number | null
+          revenue_change?: number | null
+          runway_months?: number | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          action_items_count?: number | null
+          ai_insights?: Json | null
+          brief_date?: string
+          burn_rate?: number | null
+          cash_amount?: number | null
+          cash_change?: number | null
+          created_at?: string | null
+          email_html?: string | null
+          email_opened_at?: string | null
+          email_sent_at?: string | null
+          email_text?: string | null
+          expenses?: number | null
+          id?: string
+          raw_metrics?: Json | null
+          revenue?: number | null
+          revenue_change?: number | null
+          runway_months?: number | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       data_quality_reports: {
         Row: {
@@ -1312,6 +1485,45 @@ export type Database = {
           metadata?: Json | null
           status?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      financial_anomalies: {
+        Row: {
+          acknowledged: boolean | null
+          anomaly_date: string
+          anomaly_type: string
+          context: Json | null
+          created_at: string | null
+          description: string | null
+          id: string
+          resolved: boolean | null
+          severity: string
+          user_id: string
+        }
+        Insert: {
+          acknowledged?: boolean | null
+          anomaly_date: string
+          anomaly_type: string
+          context?: Json | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          resolved?: boolean | null
+          severity: string
+          user_id: string
+        }
+        Update: {
+          acknowledged?: boolean | null
+          anomaly_date?: string
+          anomaly_type?: string
+          context?: Json | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          resolved?: boolean | null
+          severity?: string
           user_id?: string
         }
         Relationships: []
@@ -2122,6 +2334,42 @@ export type Database = {
           title?: string
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      metric_history: {
+        Row: {
+          comparison_type: string | null
+          comparison_value: number | null
+          created_at: string | null
+          id: string
+          metric_date: string
+          metric_name: string
+          percentile: number | null
+          user_id: string
+          value: number | null
+        }
+        Insert: {
+          comparison_type?: string | null
+          comparison_value?: number | null
+          created_at?: string | null
+          id?: string
+          metric_date: string
+          metric_name: string
+          percentile?: number | null
+          user_id: string
+          value?: number | null
+        }
+        Update: {
+          comparison_type?: string | null
+          comparison_value?: number | null
+          created_at?: string | null
+          id?: string
+          metric_date?: string
+          metric_name?: string
+          percentile?: number | null
+          user_id?: string
+          value?: number | null
         }
         Relationships: []
       }
