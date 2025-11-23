@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { 
   Home, BarChart3, Brain, Plug, Users, Shield, 
   Bell, ChevronLeft, ChevronRight, LogOut, User,
-  TrendingUp, Activity, Zap, CheckCircle2, AlertCircle, Layers
+  TrendingUp, Activity, Zap, CheckCircle2, AlertCircle, Layers, Mail
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -140,6 +140,7 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
   const navItems = [
     { icon: Home, label: "Dashboard", route: "/", active: true },
     { icon: BarChart3, label: "Analytics", route: "/audit", active: false },
+    { icon: Mail, label: "Daily Briefing", route: "/daily-briefing", active: false },
     { icon: TrendingUp, label: "Trade Execution", route: "/trade-execution", active: false },
     { icon: Brain, label: "AI Tools", route: "/scribe", active: false },
     { icon: Layers, label: "Finance Fabric", route: "/finance-fabric", active: false },
@@ -364,6 +365,12 @@ export default function AlturiumDashboard({ userRole, userName, onSignOut }: Alt
                   title="AI Analysis"
                   description="Run predictive models"
                   onClick={() => navigate("/scribe")}
+                />
+                <QuickActionCard
+                  icon={Mail}
+                  title="Daily Briefing"
+                  description="AI-powered financial intelligence"
+                  onClick={() => navigate("/daily-briefing")}
                 />
                 <QuickActionCard
                   icon={TrendingUp}
