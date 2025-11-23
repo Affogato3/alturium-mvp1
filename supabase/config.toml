@@ -140,3 +140,9 @@ verify_jwt = false
 
 [functions.financial-intelligence-analysis]
 verify_jwt = false
+
+[functions.generate-daily-brief]
+verify_jwt = true
+
+[functions.send-daily-brief]
+verify_jwt = true
