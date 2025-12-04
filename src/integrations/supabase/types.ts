@@ -1887,6 +1887,138 @@ export type Database = {
         }
         Relationships: []
       }
+      kalman_anomalies: {
+        Row: {
+          ai_classification: Json | null
+          anomaly_type: string
+          created_at: string | null
+          detected_at: string | null
+          id: string
+          impact_analysis: Json | null
+          innovation: number | null
+          metric_name: string
+          resolved_at: string | null
+          severity: string
+          status: string | null
+          std_deviations: number | null
+          user_id: string
+        }
+        Insert: {
+          ai_classification?: Json | null
+          anomaly_type: string
+          created_at?: string | null
+          detected_at?: string | null
+          id?: string
+          impact_analysis?: Json | null
+          innovation?: number | null
+          metric_name: string
+          resolved_at?: string | null
+          severity: string
+          status?: string | null
+          std_deviations?: number | null
+          user_id: string
+        }
+        Update: {
+          ai_classification?: Json | null
+          anomaly_type?: string
+          created_at?: string | null
+          detected_at?: string | null
+          id?: string
+          impact_analysis?: Json | null
+          innovation?: number | null
+          metric_name?: string
+          resolved_at?: string | null
+          severity?: string
+          status?: string | null
+          std_deviations?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      kalman_insights: {
+        Row: {
+          confidence: number | null
+          created_at: string | null
+          executive_summary: string | null
+          explanation: string | null
+          id: string
+          insight_type: string
+          metadata: Json | null
+          metric_name: string
+          recommendations: Json | null
+          user_id: string
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string | null
+          executive_summary?: string | null
+          explanation?: string | null
+          id?: string
+          insight_type: string
+          metadata?: Json | null
+          metric_name: string
+          recommendations?: Json | null
+          user_id: string
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string | null
+          executive_summary?: string | null
+          explanation?: string | null
+          id?: string
+          insight_type?: string
+          metadata?: Json | null
+          metric_name?: string
+          recommendations?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      kalman_states: {
+        Row: {
+          covariance_matrix: Json
+          created_at: string | null
+          id: string
+          kalman_gain: number | null
+          last_updated_at: string | null
+          measurement_noise: Json | null
+          metric_name: string
+          model_type: string | null
+          process_noise: Json | null
+          signal_to_noise_ratio: number | null
+          state_vector: Json
+          user_id: string
+        }
+        Insert: {
+          covariance_matrix?: Json
+          created_at?: string | null
+          id?: string
+          kalman_gain?: number | null
+          last_updated_at?: string | null
+          measurement_noise?: Json | null
+          metric_name: string
+          model_type?: string | null
+          process_noise?: Json | null
+          signal_to_noise_ratio?: number | null
+          state_vector?: Json
+          user_id: string
+        }
+        Update: {
+          covariance_matrix?: Json
+          created_at?: string | null
+          id?: string
+          kalman_gain?: number | null
+          last_updated_at?: string | null
+          measurement_noise?: Json | null
+          metric_name?: string
+          model_type?: string | null
+          process_noise?: Json | null
+          signal_to_noise_ratio?: number | null
+          state_vector?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
       kpi_mappings: {
         Row: {
           correlation_score: number | null
@@ -2337,6 +2469,93 @@ export type Database = {
         }
         Relationships: []
       }
+      metric_estimates: {
+        Row: {
+          confidence_interval_68_lower: number | null
+          confidence_interval_68_upper: number | null
+          confidence_interval_95_lower: number | null
+          confidence_interval_95_upper: number | null
+          created_at: string | null
+          data_quality_score: number | null
+          estimated_value: number
+          id: string
+          innovation: number | null
+          kalman_gain: number | null
+          metric_name: string
+          timestamp: string
+          user_id: string
+        }
+        Insert: {
+          confidence_interval_68_lower?: number | null
+          confidence_interval_68_upper?: number | null
+          confidence_interval_95_lower?: number | null
+          confidence_interval_95_upper?: number | null
+          created_at?: string | null
+          data_quality_score?: number | null
+          estimated_value: number
+          id?: string
+          innovation?: number | null
+          kalman_gain?: number | null
+          metric_name: string
+          timestamp?: string
+          user_id: string
+        }
+        Update: {
+          confidence_interval_68_lower?: number | null
+          confidence_interval_68_upper?: number | null
+          confidence_interval_95_lower?: number | null
+          confidence_interval_95_upper?: number | null
+          created_at?: string | null
+          data_quality_score?: number | null
+          estimated_value?: number
+          id?: string
+          innovation?: number | null
+          kalman_gain?: number | null
+          metric_name?: string
+          timestamp?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      metric_forecasts: {
+        Row: {
+          confidence_interval_lower: number | null
+          confidence_interval_upper: number | null
+          created_at: string | null
+          forecast_date: string
+          forecast_horizon_days: number | null
+          id: string
+          metric_name: string
+          model_confidence: number | null
+          predicted_value: number
+          user_id: string
+        }
+        Insert: {
+          confidence_interval_lower?: number | null
+          confidence_interval_upper?: number | null
+          created_at?: string | null
+          forecast_date: string
+          forecast_horizon_days?: number | null
+          id?: string
+          metric_name: string
+          model_confidence?: number | null
+          predicted_value: number
+          user_id: string
+        }
+        Update: {
+          confidence_interval_lower?: number | null
+          confidence_interval_upper?: number | null
+          created_at?: string | null
+          forecast_date?: string
+          forecast_horizon_days?: number | null
+          id?: string
+          metric_name?: string
+          model_confidence?: number | null
+          predicted_value?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       metric_history: {
         Row: {
           comparison_type: string | null
@@ -2370,6 +2589,45 @@ export type Database = {
           percentile?: number | null
           user_id?: string
           value?: number | null
+        }
+        Relationships: []
+      }
+      metric_observations: {
+        Row: {
+          confidence: number | null
+          created_at: string | null
+          id: string
+          latency_seconds: number | null
+          metadata: Json | null
+          metric_name: string
+          observed_value: number
+          source: string
+          timestamp: string
+          user_id: string
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string | null
+          id?: string
+          latency_seconds?: number | null
+          metadata?: Json | null
+          metric_name: string
+          observed_value: number
+          source: string
+          timestamp?: string
+          user_id: string
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string | null
+          id?: string
+          latency_seconds?: number | null
+          metadata?: Json | null
+          metric_name?: string
+          observed_value?: number
+          source?: string
+          timestamp?: string
+          user_id?: string
         }
         Relationships: []
       }

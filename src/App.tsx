@@ -147,6 +147,7 @@ const App = () => {
           <Route path="/finsights" element={<FinSightsDashboard />} />
           <Route path="/trade-execution" element={<TradeExecutionInterface />} />
           <Route path="/daily-briefing" element={<DailyBriefingDashboard />} />
+          <Route path="/kalman-filter" element={<KalmanFilterDashboard />} />
           <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>
