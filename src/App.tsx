@@ -34,6 +34,7 @@ import { AIDataAnalysisDashboard } from "@/components/ai-data-analysis/ai-data-a
 import { MarketMapDashboard } from "@/components/market-map";
 import { TradeExecutionInterface } from "@/components/trade-execution-interface";
 import { DailyBriefingDashboard } from "@/components/daily-briefing-dashboard";
+import { KalmanFilterDashboard } from "@/components/kalman-filter";
 
 const queryClient = new QueryClient();
 
