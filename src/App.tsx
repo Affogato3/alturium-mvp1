@@ -36,6 +36,14 @@ import { TradeExecutionInterface } from "@/components/trade-execution-interface"
 import { DailyBriefingDashboard } from "@/components/daily-briefing-dashboard";
 import { KalmanFilterDashboard } from "@/components/kalman-filter";
 import { FinalystDashboard } from "@/components/finalyst";
+import { 
+  ComplianceRiskDashboard, 
+  StrategicDecisionDashboard, 
+  ClientRelationshipDashboard, 
+  OperationsSuiteDashboard, 
+  BusinessIntelligenceDashboard, 
+  TechInfrastructureDashboard 
+} from "@/components/business-modules";
 
 const queryClient = new QueryClient();
 
