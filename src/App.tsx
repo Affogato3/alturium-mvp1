@@ -159,6 +159,12 @@ const App = () => {
           <Route path="/daily-briefing" element={<DailyBriefingDashboard />} />
           <Route path="/kalman-filter" element={<KalmanFilterDashboard />} />
           <Route path="/finalyst" element={<FinalystDashboard />} />
+          <Route path="/compliance-risk" element={<ComplianceRiskDashboard />} />
+          <Route path="/strategic-decision" element={<StrategicDecisionDashboard />} />
+          <Route path="/client-management" element={<ClientRelationshipDashboard />} />
+          <Route path="/operations-suite" element={<OperationsSuiteDashboard />} />
+          <Route path="/business-intelligence" element={<BusinessIntelligenceDashboard />} />
+          <Route path="/tech-infrastructure" element={<TechInfrastructureDashboard />} />
           <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>
