@@ -94,14 +94,32 @@ export const ClientRelationshipDashboard = () => {
     { name: "Enterprise Ltd", value: "$180K", health: 78, stage: "Active", lastContact: "5 days ago" },
   ];
 
+  const renderValue = (value: any): string => {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "number") return value.toLocaleString();
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    if (Array.isArray(value)) return value.map(v => renderValue(v)).join(", ");
+    if (typeof value === "object") {
+      return Object.entries(value)
+        .map(([k, v]) => `${k}: ${renderValue(v)}`)
+        .join(", ");
+    }
+    return String(value);
+  };
+
   const renderResultContent = () => {
     if (!result) return null;
     const { data } = result;
 
+    if (typeof data === "string") {
+      return <p className="text-[#BFBFBF] whitespace-pre-wrap">{data}</p>;
+    }
+
     if (data.narrative) {
       return (
         <div className="prose prose-invert max-w-none">
-          {data.narrative.split("\n").map((line: string, i: number) => {
+          {String(data.narrative).split("\n").map((line: string, i: number) => {
             if (line.startsWith("##")) {
               return <h3 key={i} className="text-[#CFAF6E] mt-4 mb-2">{line.replace(/##/g, "")}</h3>;
             }
@@ -120,30 +138,50 @@ export const ClientRelationshipDashboard = () => {
           <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
             <div className="flex justify-between items-center mb-2">
               <span className="text-[#BFBFBF]">Client Health Score</span>
-              <Badge variant={data.client_score > 70 ? "default" : "destructive"}>{data.client_score}/100</Badge>
+              <Badge variant={data.client_score > 70 ? "default" : "destructive"}>{renderValue(data.client_score)}/100</Badge>
             </div>
-            <Progress value={data.client_score} className="h-2" />
+            <Progress value={typeof data.client_score === "number" ? data.client_score : 0} className="h-2" />
           </div>
         )}
         {data.predictions && (
           <div className="space-y-2">
             <h4 className="text-[#CFAF6E] font-semibold">Predictions</h4>
-            {Object.entries(data.predictions).map(([key, value]: [string, any]) => (
-              <div key={key} className="p-3 bg-[#1A1A1A] rounded border border-[#CFAF6E]/10">
-                <span className="text-[#EDEDED]">{key.replace(/_/g, " ")}: </span>
-                <span className="text-[#CFAF6E]">{typeof value === "object" ? JSON.stringify(value) : value}</span>
-              </div>
-            ))}
+            {Array.isArray(data.predictions) ? (
+              data.predictions.map((pred: any, i: number) => (
+                <div key={i} className="p-3 bg-[#1A1A1A] rounded border border-[#CFAF6E]/10">
+                  <span className="text-[#EDEDED]">
+                    {typeof pred === "string" ? pred : (pred.title || pred.description || renderValue(pred))}
+                  </span>
+                </div>
+              ))
+            ) : (
+              Object.entries(data.predictions).map(([key, value]: [string, any]) => (
+                <div key={key} className="p-3 bg-[#1A1A1A] rounded border border-[#CFAF6E]/10">
+                  <span className="text-[#EDEDED]">{key.replace(/_/g, " ")}: </span>
+                  <span className="text-[#CFAF6E]">{renderValue(value)}</span>
+                </div>
+              ))
+            )}
           </div>
         )}
-        {data.action_items && (
+        {data.action_items && Array.isArray(data.action_items) && (
           <div className="space-y-2">
             <h4 className="text-[#CFAF6E] font-semibold">Action Items</h4>
             {data.action_items.map((item: any, i: number) => (
               <div key={i} className="p-3 bg-gradient-to-r from-[#CFAF6E]/10 to-transparent rounded border border-[#CFAF6E]/20">
-                <span className="text-[#EDEDED]">{item.action || item}</span>
+                <span className="text-[#EDEDED]">
+                  {typeof item === "string" ? item : (item.action || item.title || renderValue(item))}
+                </span>
               </div>
             ))}
+          </div>
+        )}
+        {/* Fallback for unknown data structures */}
+        {!data.client_score && !data.predictions && !data.action_items && (
+          <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
+            <pre className="text-[#BFBFBF] text-sm whitespace-pre-wrap overflow-auto">
+              {JSON.stringify(data, null, 2)}
+            </pre>
           </div>
         )}
       </div>

@@ -91,14 +91,32 @@ export const StrategicDecisionDashboard = () => {
     { subject: "Brand", A: 65 },
   ];
 
+  const renderValue = (value: any): string => {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "number") return value.toLocaleString();
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    if (Array.isArray(value)) return value.map(v => renderValue(v)).join(", ");
+    if (typeof value === "object") {
+      return Object.entries(value)
+        .map(([k, v]) => `${k}: ${renderValue(v)}`)
+        .join(", ");
+    }
+    return String(value);
+  };
+
   const renderResultContent = () => {
     if (!result) return null;
     const { data } = result;
 
+    if (typeof data === "string") {
+      return <p className="text-[#BFBFBF] whitespace-pre-wrap">{data}</p>;
+    }
+
     if (data.narrative) {
       return (
         <div className="prose prose-invert max-w-none">
-          {data.narrative.split("\n").map((line: string, i: number) => {
+          {String(data.narrative).split("\n").map((line: string, i: number) => {
             if (line.startsWith("##")) {
               return <h3 key={i} className="text-[#CFAF6E] mt-4 mb-2">{line.replace(/##/g, "")}</h3>;
             }
@@ -120,31 +138,39 @@ export const StrategicDecisionDashboard = () => {
           <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
             <div className="flex justify-between items-center mb-2">
               <span className="text-[#BFBFBF]">Confidence Score</span>
-              <Badge>{data.confidence_score}%</Badge>
+              <Badge>{renderValue(data.confidence_score)}%</Badge>
             </div>
-            <Progress value={data.confidence_score} className="h-2" />
+            <Progress value={typeof data.confidence_score === "number" ? data.confidence_score : 0} className="h-2" />
           </div>
         )}
-        {data.scenarios && (
+        {data.scenarios && Array.isArray(data.scenarios) && (
           <div className="space-y-2">
             <h4 className="text-[#CFAF6E] font-semibold">Strategic Scenarios</h4>
             {data.scenarios.map((scenario: any, i: number) => (
               <div key={i} className="p-3 bg-[#1A1A1A] rounded border border-[#CFAF6E]/10">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[#EDEDED] font-medium">{scenario.name || `Scenario ${i + 1}`}</span>
-                  <Badge variant="outline">{scenario.probability || "N/A"}%</Badge>
+                  <span className="text-[#EDEDED] font-medium">
+                    {typeof scenario === "string" ? scenario : (scenario.name || `Scenario ${i + 1}`)}
+                  </span>
+                  {scenario.probability !== undefined && (
+                    <Badge variant="outline">{renderValue(scenario.probability)}%</Badge>
+                  )}
                 </div>
-                <p className="text-sm text-[#BFBFBF]">{scenario.description}</p>
+                {scenario.description && (
+                  <p className="text-sm text-[#BFBFBF]">{renderValue(scenario.description)}</p>
+                )}
               </div>
             ))}
           </div>
         )}
-        {data.recommendations && (
+        {data.recommendations && Array.isArray(data.recommendations) && (
           <div className="space-y-2">
             <h4 className="text-[#CFAF6E] font-semibold">Strategic Recommendations</h4>
             {data.recommendations.map((rec: any, i: number) => (
               <div key={i} className="p-3 bg-gradient-to-r from-[#CFAF6E]/10 to-transparent rounded border border-[#CFAF6E]/20">
-                <span className="text-[#EDEDED]">{rec.action || rec}</span>
+                <span className="text-[#EDEDED]">
+                  {typeof rec === "string" ? rec : (rec.action || rec.recommendation || rec.title || renderValue(rec))}
+                </span>
               </div>
             ))}
           </div>
@@ -153,13 +179,30 @@ export const StrategicDecisionDashboard = () => {
           <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
             <h4 className="text-[#CFAF6E] font-semibold mb-3">Financial Projections</h4>
             <div className="grid grid-cols-3 gap-4">
-              {Object.entries(data.financial_projections).map(([key, value]: [string, any]) => (
-                <div key={key}>
-                  <p className="text-xs text-[#BFBFBF]">{key.replace(/_/g, " ").toUpperCase()}</p>
-                  <p className="text-lg font-bold text-[#EDEDED]">{typeof value === "number" ? `$${value.toLocaleString()}` : value}</p>
-                </div>
-              ))}
+              {Array.isArray(data.financial_projections) ? (
+                data.financial_projections.map((proj: any, i: number) => (
+                  <div key={i}>
+                    <p className="text-xs text-[#BFBFBF]">{proj.name || proj.metric || `Projection ${i + 1}`}</p>
+                    <p className="text-lg font-bold text-[#EDEDED]">{renderValue(proj.value || proj)}</p>
+                  </div>
+                ))
+              ) : (
+                Object.entries(data.financial_projections).map(([key, value]: [string, any]) => (
+                  <div key={key}>
+                    <p className="text-xs text-[#BFBFBF]">{key.replace(/_/g, " ").toUpperCase()}</p>
+                    <p className="text-lg font-bold text-[#EDEDED]">{renderValue(value)}</p>
+                  </div>
+                ))
+              )}
             </div>
+          </div>
+        )}
+        {/* Fallback for unknown data structures */}
+        {!data.confidence_score && !data.scenarios && !data.recommendations && !data.financial_projections && (
+          <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
+            <pre className="text-[#BFBFBF] text-sm whitespace-pre-wrap overflow-auto">
+              {JSON.stringify(data, null, 2)}
+            </pre>
           </div>
         )}
       </div>

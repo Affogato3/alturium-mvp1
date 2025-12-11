@@ -106,14 +106,32 @@ export const BusinessIntelligenceDashboard = () => {
     { label: "Win Rate", value: "32%", change: "+3%", positive: true },
   ];
 
+  const renderValue = (value: any): string => {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "number") return value.toLocaleString();
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    if (Array.isArray(value)) return value.map(v => renderValue(v)).join(", ");
+    if (typeof value === "object") {
+      return Object.entries(value)
+        .map(([k, v]) => `${k}: ${renderValue(v)}`)
+        .join(", ");
+    }
+    return String(value);
+  };
+
   const renderResultContent = () => {
     if (!result) return null;
     const { data } = result;
 
+    if (typeof data === "string") {
+      return <p className="text-[#BFBFBF] whitespace-pre-wrap">{data}</p>;
+    }
+
     if (data.narrative) {
       return (
         <div className="prose prose-invert max-w-none">
-          {data.narrative.split("\n").map((line: string, i: number) => {
+          {String(data.narrative).split("\n").map((line: string, i: number) => {
             if (line.startsWith("##")) {
               return <h3 key={i} className="text-[#CFAF6E] mt-4 mb-2">{line.replace(/##/g, "")}</h3>;
             }
@@ -128,13 +146,16 @@ export const BusinessIntelligenceDashboard = () => {
 
     return (
       <div className="space-y-4">
-        {data.insights && (
+        {data.insights && Array.isArray(data.insights) && (
           <div className="space-y-2">
             <h4 className="text-[#CFAF6E] font-semibold">Key Insights</h4>
             {data.insights.map((insight: any, i: number) => (
               <div key={i} className="p-3 bg-[#1A1A1A] rounded border border-[#CFAF6E]/10">
-                <span className="text-[#EDEDED]">{insight.title || insight}</span>
-                {insight.description && <p className="text-sm text-[#BFBFBF] mt-1">{insight.description}</p>}
+                <span className="text-[#EDEDED]">
+                  {typeof insight === "string" ? insight : (insight.title || insight.summary || renderValue(insight))}
+                </span>
+                {insight.description && <p className="text-sm text-[#BFBFBF] mt-1">{String(insight.description)}</p>}
+                {insight.details && <p className="text-sm text-[#BFBFBF] mt-1">{String(insight.details)}</p>}
               </div>
             ))}
           </div>
@@ -143,16 +164,25 @@ export const BusinessIntelligenceDashboard = () => {
           <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
             <h4 className="text-[#CFAF6E] font-semibold mb-3">Forecasts</h4>
             <div className="grid grid-cols-2 gap-4">
-              {Object.entries(data.forecasts).map(([key, value]: [string, any]) => (
-                <div key={key}>
-                  <p className="text-xs text-[#BFBFBF]">{key.replace(/_/g, " ").toUpperCase()}</p>
-                  <p className="text-lg font-bold text-[#EDEDED]">{typeof value === "number" ? value.toLocaleString() : value}</p>
-                </div>
-              ))}
+              {Array.isArray(data.forecasts) ? (
+                data.forecasts.map((forecast: any, i: number) => (
+                  <div key={i} className="p-2 bg-[#0A0A0A] rounded">
+                    <p className="text-xs text-[#BFBFBF]">{forecast.metric || forecast.name || `Forecast ${i + 1}`}</p>
+                    <p className="text-lg font-bold text-[#EDEDED]">{renderValue(forecast.value || forecast.projected_value || forecast)}</p>
+                  </div>
+                ))
+              ) : (
+                Object.entries(data.forecasts).map(([key, value]: [string, any]) => (
+                  <div key={key}>
+                    <p className="text-xs text-[#BFBFBF]">{key.replace(/_/g, " ").toUpperCase()}</p>
+                    <p className="text-lg font-bold text-[#EDEDED]">{renderValue(value)}</p>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
-        {data.anomalies && data.anomalies.length > 0 && (
+        {data.anomalies && Array.isArray(data.anomalies) && data.anomalies.length > 0 && (
           <div className="space-y-2">
             <h4 className="text-amber-500 font-semibold flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
@@ -160,19 +190,31 @@ export const BusinessIntelligenceDashboard = () => {
             </h4>
             {data.anomalies.map((anomaly: any, i: number) => (
               <div key={i} className="p-3 bg-amber-500/10 rounded border border-amber-500/20">
-                <span className="text-[#EDEDED]">{anomaly.description || anomaly}</span>
+                <span className="text-[#EDEDED]">
+                  {typeof anomaly === "string" ? anomaly : (anomaly.description || anomaly.summary || renderValue(anomaly))}
+                </span>
               </div>
             ))}
           </div>
         )}
-        {data.recommendations && (
+        {data.recommendations && Array.isArray(data.recommendations) && (
           <div className="space-y-2">
             <h4 className="text-[#CFAF6E] font-semibold">Recommendations</h4>
             {data.recommendations.map((rec: any, i: number) => (
               <div key={i} className="p-3 bg-gradient-to-r from-[#CFAF6E]/10 to-transparent rounded border border-[#CFAF6E]/20">
-                <span className="text-[#EDEDED]">{rec.action || rec}</span>
+                <span className="text-[#EDEDED]">
+                  {typeof rec === "string" ? rec : (rec.action || rec.recommendation || rec.title || renderValue(rec))}
+                </span>
               </div>
             ))}
+          </div>
+        )}
+        {/* Fallback for any other data structure */}
+        {!data.insights && !data.forecasts && !data.anomalies && !data.recommendations && (
+          <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
+            <pre className="text-[#BFBFBF] text-sm whitespace-pre-wrap overflow-auto">
+              {JSON.stringify(data, null, 2)}
+            </pre>
           </div>
         )}
       </div>
