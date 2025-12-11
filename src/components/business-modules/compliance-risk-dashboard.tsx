@@ -64,15 +64,33 @@ export const ComplianceRiskDashboard = () => {
     }
   };
 
+  const renderValue = (value: any): string => {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "number") return value.toLocaleString();
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    if (Array.isArray(value)) return value.map(v => renderValue(v)).join(", ");
+    if (typeof value === "object") {
+      return Object.entries(value)
+        .map(([k, v]) => `${k}: ${renderValue(v)}`)
+        .join(", ");
+    }
+    return String(value);
+  };
+
   const renderResultContent = () => {
     if (!result) return null;
 
     const { data } = result;
 
+    if (typeof data === "string") {
+      return <p className="text-[#BFBFBF] whitespace-pre-wrap">{data}</p>;
+    }
+
     if (data.narrative) {
       return (
         <div className="prose prose-invert max-w-none">
-          {data.narrative.split("\n").map((line: string, i: number) => {
+          {String(data.narrative).split("\n").map((line: string, i: number) => {
             if (line.startsWith("##")) {
               return <h3 key={i} className="text-[#CFAF6E] mt-4 mb-2">{line.replace(/##/g, "")}</h3>;
             }
@@ -98,34 +116,40 @@ export const ComplianceRiskDashboard = () => {
             <div className="flex justify-between items-center mb-2">
               <span className="text-[#BFBFBF]">Overall Risk Score</span>
               <Badge variant={data.risk_score > 70 ? "destructive" : data.risk_score > 40 ? "secondary" : "default"}>
-                {data.risk_score}/100
+                {renderValue(data.risk_score)}/100
               </Badge>
             </div>
-            <Progress value={data.risk_score} className="h-2" />
+            <Progress value={typeof data.risk_score === "number" ? data.risk_score : 0} className="h-2" />
           </div>
         )}
-        {data.findings && (
+        {data.findings && Array.isArray(data.findings) && (
           <div className="space-y-2">
             <h4 className="text-[#CFAF6E] font-semibold">Findings</h4>
             {data.findings.map((finding: any, i: number) => (
               <div key={i} className="p-3 bg-[#1A1A1A] rounded border border-[#CFAF6E]/10">
                 <div className="flex items-center gap-2 mb-1">
                   <AlertTriangle className="w-4 h-4 text-amber-500" />
-                  <span className="text-[#EDEDED]">{finding.title || finding}</span>
+                  <span className="text-[#EDEDED]">
+                    {typeof finding === "string" ? finding : (finding.title || finding.description || renderValue(finding))}
+                  </span>
                 </div>
-                {finding.description && <p className="text-sm text-[#BFBFBF]">{finding.description}</p>}
+                {finding.description && typeof finding.description === "string" && (
+                  <p className="text-sm text-[#BFBFBF]">{finding.description}</p>
+                )}
               </div>
             ))}
           </div>
         )}
-        {data.recommendations && (
+        {data.recommendations && Array.isArray(data.recommendations) && (
           <div className="space-y-2">
             <h4 className="text-[#CFAF6E] font-semibold">Recommendations</h4>
             {data.recommendations.map((rec: any, i: number) => (
               <div key={i} className="p-3 bg-[#1A1A1A] rounded border border-green-500/20">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span className="text-[#EDEDED]">{rec.action || rec}</span>
+                  <span className="text-[#EDEDED]">
+                    {typeof rec === "string" ? rec : (rec.action || rec.recommendation || rec.title || renderValue(rec))}
+                  </span>
                 </div>
               </div>
             ))}
@@ -134,7 +158,15 @@ export const ComplianceRiskDashboard = () => {
         {data.summary && (
           <div className="p-4 bg-gradient-to-r from-[#CFAF6E]/10 to-transparent rounded-lg border border-[#CFAF6E]/20">
             <h4 className="text-[#CFAF6E] font-semibold mb-2">Summary</h4>
-            <p className="text-[#BFBFBF]">{data.summary}</p>
+            <p className="text-[#BFBFBF]">{typeof data.summary === "string" ? data.summary : renderValue(data.summary)}</p>
+          </div>
+        )}
+        {/* Fallback for unknown data structures */}
+        {!data.risk_score && !data.findings && !data.recommendations && !data.summary && (
+          <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
+            <pre className="text-[#BFBFBF] text-sm whitespace-pre-wrap overflow-auto">
+              {JSON.stringify(data, null, 2)}
+            </pre>
           </div>
         )}
       </div>

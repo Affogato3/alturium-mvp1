@@ -92,14 +92,32 @@ export const TechInfrastructureDashboard = () => {
     { type: "success", message: "Security scan completed - no issues", time: "6h ago" },
   ];
 
+  const renderValue = (value: any): string => {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "number") return value.toLocaleString();
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    if (Array.isArray(value)) return value.map(v => renderValue(v)).join(", ");
+    if (typeof value === "object") {
+      return Object.entries(value)
+        .map(([k, v]) => `${k}: ${renderValue(v)}`)
+        .join(", ");
+    }
+    return String(value);
+  };
+
   const renderResultContent = () => {
     if (!result) return null;
     const { data } = result;
 
+    if (typeof data === "string") {
+      return <p className="text-[#BFBFBF] whitespace-pre-wrap">{data}</p>;
+    }
+
     if (data.narrative) {
       return (
         <div className="prose prose-invert max-w-none">
-          {data.narrative.split("\n").map((line: string, i: number) => {
+          {String(data.narrative).split("\n").map((line: string, i: number) => {
             if (line.startsWith("##")) {
               return <h3 key={i} className="text-[#CFAF6E] mt-4 mb-2">{line.replace(/##/g, "")}</h3>;
             }
@@ -118,12 +136,12 @@ export const TechInfrastructureDashboard = () => {
           <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
             <div className="flex justify-between items-center mb-2">
               <span className="text-[#BFBFBF]">System Health Score</span>
-              <Badge variant={data.health_score > 80 ? "default" : "destructive"}>{data.health_score}/100</Badge>
+              <Badge variant={data.health_score > 80 ? "default" : "destructive"}>{renderValue(data.health_score)}/100</Badge>
             </div>
-            <Progress value={data.health_score} className="h-2" />
+            <Progress value={typeof data.health_score === "number" ? data.health_score : 0} className="h-2" />
           </div>
         )}
-        {data.issues && data.issues.length > 0 && (
+        {data.issues && Array.isArray(data.issues) && data.issues.length > 0 && (
           <div className="space-y-2">
             <h4 className="text-amber-500 font-semibold flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" />
@@ -131,13 +149,15 @@ export const TechInfrastructureDashboard = () => {
             </h4>
             {data.issues.map((issue: any, i: number) => (
               <div key={i} className="p-3 bg-amber-500/10 rounded border border-amber-500/20">
-                <span className="text-[#EDEDED]">{issue.description || issue}</span>
-                {issue.severity && <Badge className="ml-2" variant="outline">{issue.severity}</Badge>}
+                <span className="text-[#EDEDED]">
+                  {typeof issue === "string" ? issue : (issue.description || issue.message || renderValue(issue))}
+                </span>
+                {issue.severity && <Badge className="ml-2" variant="outline">{String(issue.severity)}</Badge>}
               </div>
             ))}
           </div>
         )}
-        {data.security_findings && data.security_findings.length > 0 && (
+        {data.security_findings && Array.isArray(data.security_findings) && data.security_findings.length > 0 && (
           <div className="space-y-2">
             <h4 className="text-red-500 font-semibold flex items-center gap-2">
               <Shield className="w-4 h-4" />
@@ -145,17 +165,21 @@ export const TechInfrastructureDashboard = () => {
             </h4>
             {data.security_findings.map((finding: any, i: number) => (
               <div key={i} className="p-3 bg-red-500/10 rounded border border-red-500/20">
-                <span className="text-[#EDEDED]">{finding.description || finding}</span>
+                <span className="text-[#EDEDED]">
+                  {typeof finding === "string" ? finding : (finding.description || finding.message || renderValue(finding))}
+                </span>
               </div>
             ))}
           </div>
         )}
-        {data.optimizations && (
+        {data.optimizations && Array.isArray(data.optimizations) && (
           <div className="space-y-2">
             <h4 className="text-[#CFAF6E] font-semibold">Optimization Recommendations</h4>
             {data.optimizations.map((opt: any, i: number) => (
               <div key={i} className="p-3 bg-gradient-to-r from-[#CFAF6E]/10 to-transparent rounded border border-[#CFAF6E]/20">
-                <span className="text-[#EDEDED]">{opt.recommendation || opt}</span>
+                <span className="text-[#EDEDED]">
+                  {typeof opt === "string" ? opt : (opt.recommendation || opt.title || renderValue(opt))}
+                </span>
               </div>
             ))}
           </div>
@@ -163,7 +187,15 @@ export const TechInfrastructureDashboard = () => {
         {data.cost_savings && (
           <div className="p-4 bg-gradient-to-r from-green-500/10 to-transparent rounded-lg border border-green-500/20">
             <h4 className="text-green-500 font-semibold mb-2">Potential Cost Savings</h4>
-            <p className="text-2xl font-bold text-[#EDEDED]">{data.cost_savings}</p>
+            <p className="text-2xl font-bold text-[#EDEDED]">{renderValue(data.cost_savings)}</p>
+          </div>
+        )}
+        {/* Fallback for unknown data structures */}
+        {!data.health_score && !data.issues && !data.security_findings && !data.optimizations && !data.cost_savings && (
+          <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
+            <pre className="text-[#BFBFBF] text-sm whitespace-pre-wrap overflow-auto">
+              {JSON.stringify(data, null, 2)}
+            </pre>
           </div>
         )}
       </div>

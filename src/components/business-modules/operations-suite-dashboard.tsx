@@ -90,14 +90,32 @@ export const OperationsSuiteDashboard = () => {
     { name: "Support Ticket - #4521", stage: "Resolution", progress: 90, status: "active" },
   ];
 
+  const renderValue = (value: any): string => {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "number") return value.toLocaleString();
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    if (Array.isArray(value)) return value.map(v => renderValue(v)).join(", ");
+    if (typeof value === "object") {
+      return Object.entries(value)
+        .map(([k, v]) => `${k}: ${renderValue(v)}`)
+        .join(", ");
+    }
+    return String(value);
+  };
+
   const renderResultContent = () => {
     if (!result) return null;
     const { data } = result;
 
+    if (typeof data === "string") {
+      return <p className="text-[#BFBFBF] whitespace-pre-wrap">{data}</p>;
+    }
+
     if (data.narrative) {
       return (
         <div className="prose prose-invert max-w-none">
-          {data.narrative.split("\n").map((line: string, i: number) => {
+          {String(data.narrative).split("\n").map((line: string, i: number) => {
             if (line.startsWith("##")) {
               return <h3 key={i} className="text-[#CFAF6E] mt-4 mb-2">{line.replace(/##/g, "")}</h3>;
             }
@@ -116,35 +134,39 @@ export const OperationsSuiteDashboard = () => {
           <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
             <div className="flex justify-between items-center mb-2">
               <span className="text-[#BFBFBF]">Process Efficiency Score</span>
-              <Badge>{data.efficiency_score}%</Badge>
+              <Badge>{renderValue(data.efficiency_score)}%</Badge>
             </div>
-            <Progress value={data.efficiency_score} className="h-2" />
+            <Progress value={typeof data.efficiency_score === "number" ? data.efficiency_score : 0} className="h-2" />
           </div>
         )}
-        {data.bottlenecks && (
+        {data.bottlenecks && Array.isArray(data.bottlenecks) && (
           <div className="space-y-2">
             <h4 className="text-[#CFAF6E] font-semibold">Identified Bottlenecks</h4>
             {data.bottlenecks.map((bottleneck: any, i: number) => (
               <div key={i} className="p-3 bg-[#1A1A1A] rounded border border-amber-500/20">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-amber-500" />
-                  <span className="text-[#EDEDED]">{bottleneck.name || bottleneck}</span>
+                  <span className="text-[#EDEDED]">
+                    {typeof bottleneck === "string" ? bottleneck : (bottleneck.name || bottleneck.description || renderValue(bottleneck))}
+                  </span>
                 </div>
-                {bottleneck.impact && <p className="text-sm text-[#BFBFBF] mt-1">Impact: {bottleneck.impact}</p>}
+                {bottleneck.impact && <p className="text-sm text-[#BFBFBF] mt-1">Impact: {renderValue(bottleneck.impact)}</p>}
               </div>
             ))}
           </div>
         )}
-        {data.optimizations && (
+        {data.optimizations && Array.isArray(data.optimizations) && (
           <div className="space-y-2">
             <h4 className="text-[#CFAF6E] font-semibold">Optimization Recommendations</h4>
             {data.optimizations.map((opt: any, i: number) => (
               <div key={i} className="p-3 bg-gradient-to-r from-green-500/10 to-transparent rounded border border-green-500/20">
                 <div className="flex items-center gap-2">
                   <Zap className="w-4 h-4 text-green-500" />
-                  <span className="text-[#EDEDED]">{opt.recommendation || opt}</span>
+                  <span className="text-[#EDEDED]">
+                    {typeof opt === "string" ? opt : (opt.recommendation || opt.title || renderValue(opt))}
+                  </span>
                 </div>
-                {opt.savings && <p className="text-sm text-green-400 mt-1">Projected savings: {opt.savings}</p>}
+                {opt.savings && <p className="text-sm text-green-400 mt-1">Projected savings: {renderValue(opt.savings)}</p>}
               </div>
             ))}
           </div>
@@ -152,7 +174,15 @@ export const OperationsSuiteDashboard = () => {
         {data.projected_savings && (
           <div className="p-4 bg-gradient-to-r from-[#CFAF6E]/10 to-transparent rounded-lg border border-[#CFAF6E]/20">
             <h4 className="text-[#CFAF6E] font-semibold mb-2">Projected Savings</h4>
-            <p className="text-2xl font-bold text-[#EDEDED]">{data.projected_savings}</p>
+            <p className="text-2xl font-bold text-[#EDEDED]">{renderValue(data.projected_savings)}</p>
+          </div>
+        )}
+        {/* Fallback for unknown data structures */}
+        {!data.efficiency_score && !data.bottlenecks && !data.optimizations && !data.projected_savings && (
+          <div className="p-4 bg-[#1A1A1A] rounded-lg border border-[#CFAF6E]/20">
+            <pre className="text-[#BFBFBF] text-sm whitespace-pre-wrap overflow-auto">
+              {JSON.stringify(data, null, 2)}
+            </pre>
           </div>
         )}
       </div>
