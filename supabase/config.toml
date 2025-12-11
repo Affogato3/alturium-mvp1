@@ -146,3 +146,57 @@ verify_jwt = true
 
 [functions.send-daily-brief]
 verify_jwt = true
+
+[functions.budget-insights]
+verify_jwt = false
+
+[functions.budget-forecast]
+verify_jwt = false
+
+[functions.budget-rebalance]
+verify_jwt = false
+
+[functions.budget-simulate]
+verify_jwt = false
+
+[functions.budget-alerts]
+verify_jwt = false
+
+[functions.budget-allocate]
+verify_jwt = false
+
+[functions.kalman-estimate]
+verify_jwt = false
+
+[functions.finalyst-analyze]
+verify_jwt = false
+
+[functions.inbox-forecast]
+verify_jwt = false
+
+[functions.payment-initiate]
+verify_jwt = false
+
+[functions.payment-execute]
+verify_jwt = false
+
+[functions.payment-approve]
+verify_jwt = false
+
+[functions.payment-route-optimize]
+verify_jwt = false
+
+[functions.payment-cross-border-execute]
+verify_jwt = false
+
+[functions.payment-analytics-fetch]
+verify_jwt = false
+
+[functions.synapsex-ai-analyze]
+verify_jwt = false
+
+[functions.synapsex-nlq]
+verify_jwt = false
+
+[functions.business-intelligence-engine]
+verify_jwt = false
